@@ -1,0 +1,6 @@
+*.o
+*.elf
+*.ELF
+*.irx
+*.IRX
+.vs
