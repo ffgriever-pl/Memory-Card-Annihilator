@@ -1,4 +1,4 @@
-#include "Include\GUIFrameTimerPS2.h"
+#include "Include/GUIFrameTimerPS2.h"
 
 #define T0_COUNT ((volatile u32*)0x10000000)
 #define T0_MODE ((volatile u32*)0x10000010)

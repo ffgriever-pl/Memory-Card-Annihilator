@@ -1,4 +1,4 @@
-#include "Include\GUIControlMenuLabel.h"
+#include "Include/GUIControlMenuLabel.h"
 
 
 CGUIControlMenuLabel::CGUIControlMenuLabel(void)
