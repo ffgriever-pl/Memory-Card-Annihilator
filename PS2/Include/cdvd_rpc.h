@@ -52,6 +52,21 @@ int CDVD_GetDir(const char *pathname, const char *extensions, enum CDVD_getMode 
 void CDVD_FlushCache();
 unsigned int CDVD_GetSize();
 
+#define CDVD_TYPE_DETECT            SCECdDETCT
+#define CDVD_TYPE_DETECT_CD         SCECdDETCTCD
+#define CDVD_TYPE_DETECT_DVDSINGLE  SCECdDETCTDVDS
+#define CDVD_TYPE_DETECT_DVDDUAL    SCECdDETCTDVDD
+#define CDVD_TYPE_PS1CD             SCECdPSCD
+#define CDVD_TYPE_PS1CDDA           SCECdPSCDDA
+#define CDVD_TYPE_PS2CD             SCECdPS2CD
+#define CDVD_TYPE_PS2CDDA           SCECdPS2CDDA
+#define CDVD_TYPE_PS2DVD            SCECdPS2DVD
+#define CDVD_TYPE_UNKNOWN           SCECdUNKNOWN
+#define CDVD_TYPE_NODISK            SCECdNODISC
+#define CDVD_TYPE_ILLEGAL           SCECdIllegalMedia
+#define CDVD_TYPE_DVDVIDEO          SCECdDVDV
+#define CDVD_TYPE_CDDA              SCECdCDDA
+
 
 #ifdef __cplusplus
 }

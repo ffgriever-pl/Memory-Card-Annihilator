@@ -231,6 +231,7 @@ bool CGUIFramePS2Modules::loadCdvdModules()
 	if (!m_modules_cdvd)
 	{
 		int ret;
+		sceCdInit(SCECdINoD);
 		SifExecModuleBuffer(cdvd_irx, size_cdvd_irx, 0, NULL, &ret);
 		CDVD_Init();
 		m_modules_cdvd = true;
@@ -240,7 +241,7 @@ bool CGUIFramePS2Modules::loadCdvdModules()
 		bool doloop = true;
 		while (doloop)
 		{
-			int type = CDVD_GetDiskType();
+			int type = sceCdGetDiskType();
 			sio_printf("Disk type: %d\n", type);
 			switch (type)
 			{
@@ -256,7 +257,7 @@ bool CGUIFramePS2Modules::loadCdvdModules()
 				case CDVD_TYPE_PS2DVD:
 					doloop = false;
 					//cdInit(CDVD_INIT_EXIT);
-					cdInit(CDVD_INIT_INIT);
+					//cdInit(CDVD_INIT_INIT);
 					m_modules_cdvd_init = true;
 					break;
 				case CDVD_TYPE_UNKNOWN:

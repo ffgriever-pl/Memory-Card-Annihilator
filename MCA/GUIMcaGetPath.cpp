@@ -118,7 +118,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 					currmassfound = true;
 				} else if ( (*k).name == "cdfs:")
 				{
-					int type = CDVD_GetDiskType();
+					int type = sceCdGetDiskType();
 
 					switch (type)
 					{
@@ -181,7 +181,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 			}
 			if (!currcdromfound && !m_save)
 			{
-				int type = CDVD_GetDiskType();
+				int type = sceCdGetDiskType();
 
 				switch (type)
 				{
@@ -910,7 +910,7 @@ void CGUIMcaGetPath::doSubLevel(CIGUIFrameTexture *prevBuffTex, float alpha)
 			bool valid = false;
 			while(doloop)
 			{
-				type = CDVD_GetDiskType();
+				type = sceCdGetDiskType();
 				sio_printf("Disc type: %d\n", type);
 				switch (type)
 				{
