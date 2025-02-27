@@ -3,8 +3,10 @@
 # |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
 .SILENT:
 
-EE_BIN = ../bin/mca2warn.elf
-EE_BIN_COMPR = ../bin/mca2warn-pack.elf
+EE_BIN = ../bin/mca2warn_$(MGMODE).elf
+EE_BIN_COMPR = ../bin/mca2warn-pack_$(MGMODE).elf
+
+#El_isra: define 'MGMODE' to either ARCADE, DEVELOPER or PROTOTYPE
 
 EE_OBJS =	res/resources.o ../PS2/GUIFramePS2Modules.o GUIMcaMan.o GUIMcaLang.o \
 			../GUIFramework/IGUIFrameTimer.o ../GUIFramework/IGUIFrameRenderer.o \
@@ -48,6 +50,16 @@ all:
 	echo "Compressing..."
 	ps2-packer $(EE_BIN) $(EE_BIN_COMPR) | grep "File compressed"
 
+ifdef MGMODE
+$(info -- Building for $(MGMODE) MemoryCards)
+EE_CFLAGS += -DMGMODE=\"$(MGMODE)\"
+EE_LIBS += -liopreboot
+EE_OBJS += ../PS2/ioprp_$(MGMODE).o
+
+../PS2/ioprp_$(MGMODE).c:
+	bin2c IOPRP_$(MGMODE).IMG ../PS2/ioprp_$(MGMODE).c ioprp
+endif
+
 clean:
 	echo "Cleaning..."
 	rm -f $(EE_BIN) $(EE_OBJS) $(EE_BIN_COMPR)
@@ -56,6 +68,10 @@ run:
 	echo "Running..."
 	ps2client execee host:$(EE_BIN)
 
+allkeys:
+	$(MAKE) clean all MGMODE=DEVELOPER
+	$(MAKE) clean all MGMODE=ARCADE
+	$(MAKE) clean all MGMODE=PROTOTYPE
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal

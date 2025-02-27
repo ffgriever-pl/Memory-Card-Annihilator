@@ -98,6 +98,28 @@ void CGUIMcaAbout::drawMessage(float alpha)
 		, 00.00f, 1.0f
 		, 0, 0, 0, alpha
 	);
+#ifdef MGMODE
+	CResources::verdana18s.printUTF8Box(
+		"MG MODE: "
+		MGMODE
+		"\nAlt MG By El_isra"
+		, m_x+8 +2, m_y+240 +2
+		, 402, 164
+		, CIGUIFrameFont<CGUITexture>::etxAlignLeft
+		, 00.00f, 1.0f
+		, 0, 0, 0, alpha*0.15f
+	);
+	CResources::verdana18s.printUTF8Box(
+		"MG MODE: "
+		MGMODE
+		"\nAlt MG By El_isra"
+		, m_x+8, m_y+240
+		, 402, 164
+		, CIGUIFrameFont<CGUITexture>::etxAlignLeft
+		, 00.00f, 1.0f
+		, 255, 30, 30, alpha
+	);
+#endif
 }
 
 void CGUIMcaAbout::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
