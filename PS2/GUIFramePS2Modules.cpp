@@ -74,6 +74,7 @@ bool CGUIFramePS2Modules::resetFlags()
 
 void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 {
+	int id, ret;
 	m_use_xmodules = xmodules;
 	m_modules_padman = false;
 	m_modules_sio2man = false;
@@ -106,10 +107,14 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 			SifInitRpc(0);
 			FlushCache(0);
 			FlushCache(2);
-			SifLoadModule("rom0:XSIO2MAN", 0, NULL);
-			SifLoadModule("rom0:XMCMAN", 0, NULL);
-			SifLoadModule("rom0:XMCSERV", 0, NULL);
-			SifLoadModule("rom0:XPADMAN", 0, NULL);
+			id = SifLoadStartModule("rom0:XSIO2MAN", 0, NULL, &ret);
+			IRX_REPORT("rom0:XSIO2MAN", id, ret);
+			id = SifLoadStartModule("rom0:XMCMAN", 0, NULL, &ret);
+			IRX_REPORT("rom0:XMCMAN", id, ret);
+			id = SifLoadStartModule("rom0:XMCSERV", 0, NULL, &ret);
+			IRX_REPORT("rom0:XMCSERV", id, ret);
+			id = SifLoadStartModule("rom0:XPADMAN", 0, NULL, &ret);
+			IRX_REPORT("rom0:XPADMAN", id, ret);
 		}
 		while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
 		while(!SifIopSync());
@@ -141,22 +146,23 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 
 	sbv_patch_enable_lmb();
 	sbv_patch_disable_prefix_check();
-	
-	int ret, id;
 	id = SifExecModuleBuffer(iomanx_irx, size_iomanx_irx, 0, NULL, &ret);
 	IRX_REPORT("iomanX", id, ret);
 }
 
 bool CGUIFramePS2Modules::loadSio2Man()
 {
+	int id, ret;
 	if (!m_modules_sio2man)
 	{
 		if (m_use_xmodules)
 		{
-			SifLoadModule("rom0:XSIO2MAN", 0, NULL);
+			id = SifLoadStartModule("rom0:XSIO2MAN", 0,  NULL, &ret);
+			IRX_REPORT("rom0:XSIO2MAN", id, ret);
 		} else
 		{
-			SifLoadModule("rom0:SIO2MAN", 0, NULL);
+			id = SifLoadStartModule("rom0:SIO2MAN", 0,  NULL, &ret);
+			IRX_REPORT("rom0:SIO2MAN", id, ret);
 		}
 		m_modules_sio2man = true;
 	}
@@ -164,15 +170,18 @@ bool CGUIFramePS2Modules::loadSio2Man()
 }
 bool CGUIFramePS2Modules::loadPadModules()
 {
+	int id, ret;
 	if (!m_modules_padman)
 	{
 		loadSio2Man();
 		if (m_use_xmodules)
 		{
-			SifLoadModule("rom0:XPADMAN", 0, NULL);
+			id = SifLoadStartModule("rom0:XPADMAN", 0,  NULL, &ret);
+			IRX_REPORT("rom0:XPADMAN", id, ret);
 		} else
 		{
-			SifLoadModule("rom0:PADMAN", 0, NULL);
+			id = SifLoadStartModule("rom0:PADMAN", 0,  NULL, &ret);
+			IRX_REPORT("rom0:PADMAN", id, ret);
 		}
 		m_modules_padman = true;
 	}
@@ -181,15 +190,18 @@ bool CGUIFramePS2Modules::loadPadModules()
 
 bool CGUIFramePS2Modules::loadMcModules()
 {
+	int ret, id;
 	if (!m_modules_mcman)
 	{
 		loadSio2Man();
 		if (m_use_xmodules)
 		{
-			SifLoadModule("rom0:XMCMAN", 0, NULL);
+			id = SifLoadStartModule("rom0:XMCMAN", 0, NULL, &ret);
+			IRX_REPORT("rom0:XMCMAN", id, ret);
 		} else
 		{
-			SifLoadModule("rom0:MCMAN", 0, NULL);
+			id = SifLoadStartModule("rom0:MCMAN", 0, NULL, &ret);
+			IRX_REPORT("rom0:MCMAN", id, ret);
 		}
 		m_modules_mcman = true;
 	}
@@ -198,10 +210,12 @@ bool CGUIFramePS2Modules::loadMcModules()
 		loadSio2Man();
 		if (m_use_xmodules)
 		{
-			SifLoadModule("rom0:XMCSERV", 0, NULL);
+			id = SifLoadStartModule("rom0:XMCSERV", 0, NULL, &ret);
+			IRX_REPORT("rom0:XMCSERV", id, ret);
 		} else
 		{
-			SifLoadModule("rom0:MCSERV", 0, NULL);
+			id = SifLoadStartModule("rom0:MCSERV", 0, NULL, &ret);
+			IRX_REPORT("rom0:MCSERV", id, ret);
 		}
 		m_modules_mcserv = true;
 	}
