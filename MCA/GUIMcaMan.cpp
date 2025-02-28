@@ -33,8 +33,9 @@ void CGUIMcaMan::initMca()
 	if (init_done) return;
 
 	CGUIFramePS2Modules::loadMcModules();
-	int ret;
-	SifExecModuleBuffer(mca_irx, size_mca_irx, 0, NULL, &ret);
+	int ret, id;
+	id = SifExecModuleBuffer(mca_irx, size_mca_irx, 0, NULL, &ret);
+	IRX_REPORT("mca", id, ret);
 	//SifLoadModule("host:mca.irx", 0, NULL);
 
 	while((ret = SifBindRpc(&mca_cd0, MCANNIHMAGIC, 0)))

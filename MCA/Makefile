@@ -20,7 +20,7 @@ EE_OBJS =	res/resources.o ../PS2/GUIFramePS2Modules.o GUIMcaMan.o GUIMcaLang.o \
 			GUIMcaProgressBar.o GUIMcaGetPath.o GUIMcaVkbd.o \
 			GUIMcaDisplayMessage.o GUIMcaAbout.o GUIMcaCardInfo.o \
 			GUIMcaTip.o GUIMcaMainWnd.o \
-			PS2/PS2Application.o ../PS2/cdvd_rpc.o PS2/main.o
+			PS2/PS2Application.o ../PS2/cdvd_rpc.o ../PS2/new_iop_modules.o PS2/main.o
 
 EE_INCS =	-I../PS2/Include -I../GUIFramework/Include -I./GUIFramework/Include -I./PS2/Include \
 			-I./ -I../ -I$(PS2SDK)/ee/include -I$(PS2SDK)/common/include \
@@ -33,6 +33,11 @@ EE_CFLAGS = -G0 -O2 -D__LINUX__ -fno-builtin-printf -ffunction-sections -fdata-s
 EE_CXXFLAGS = $(EE_CFLAGS)
 
 EE_LDFLAGS += -L$(PS2DEV)/gsKit/lib -L$(PS2SDK)/ports/lib
+
+ifeq ($(EXFAT),1)
+  $(info -- EXFAT Support)
+  EE_CFLAGS += -DEXFAT
+endif
 
 all: 
 	mkdir -p ../bin/

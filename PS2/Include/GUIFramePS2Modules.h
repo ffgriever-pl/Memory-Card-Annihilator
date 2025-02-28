@@ -3,6 +3,9 @@
 
 #include "GUIFramePS2Includes.h"
 
+// for IRX success load: (id > 0 && ret != 1)
+#define IRX_REPORT(irx, id, ret) printf("%s: id:%d ret:%d\n", irx, id, ret)
+
 class CGUIFramePS2Modules
 {
 private:
