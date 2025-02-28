@@ -67,7 +67,7 @@ void CGUIMcaAbout::drawMessage(float alpha)
 
 	CResources::verdana18s.printUTF8Box(
 		CResources::mainLang.getText("LNG_INFO_THX_TXT")
-		, m_x+8 +2, m_y+60+10 +2
+		, m_x+8 +2, m_y+45+10 +2
 		, 402, 164
 		, CIGUIFrameFont<CGUITexture>::etxAlignJustify
 		, 00.00f, 1.0f
@@ -75,7 +75,7 @@ void CGUIMcaAbout::drawMessage(float alpha)
 	);
 	CResources::verdana18s.printUTF8Box(
 		CResources::mainLang.getText("LNG_INFO_THX_TXT")
-		, m_x+8, m_y+60+10
+		, m_x+8, m_y+45+10
 		, 402, 164
 		, CIGUIFrameFont<CGUITexture>::etxAlignJustify
 		, 00.00f, 1.0f
