@@ -56,6 +56,22 @@ run:
 	echo "Running..."
 	ps2client execee host:$(EE_BIN)
 
+
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal
 
+DIR_GUARD = @mkdir -p $(@D)
+%.o: $(EE_SRC_DIR)%.c
+	@printf "\033[1m CC  - $@\033[0m\n"
+	$(DIR_GUARD)
+	$(EE_CC) $(EE_CFLAGS) $(EE_INCS) -c $< -o $@
+
+%.o: $(EE_ASM_DIR)%.s
+	@printf "\033[1m ASM - $@\033[0m\n"
+	$(DIR_GUARD)
+	$(EE_AS) $(EE_ASFLAGS) $< -o $@
+
+%.o: $(EE_SRC_DIR)%.cpp
+	@printf "\033[1m CXX - $@\033[0m\n"
+	$(DIR_GUARD)
+	$(EE_CXX) $(EE_CXXFLAGS) $(EE_INCS) -c $< -o $@
