@@ -34,7 +34,7 @@ jobs:
 
     - name: Pack
       run: |
-        zip -r MemoryCardAnihilator.zip ./mca_legacy/* ./mca_exfat/* ./mca_Arcade/* ./mca_Prototype/* ./mca_Developer/* README.MD
+        zip -r MemoryCardAnihilator.zip ./mca_legacy/* ./mca_exfat/* ./mca_Arcade/* ./mca_Prototype/* ./mca_Developer/* README.MD LICENSE
 
     - name: Upload variants artifact ELF
       uses: actions/upload-artifact@v4
