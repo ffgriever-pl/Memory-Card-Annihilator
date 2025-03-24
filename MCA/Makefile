@@ -2,9 +2,12 @@
 #  ____|   |    ____|   |        | |____|
 # |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
 .SILENT:
-
-EE_BIN = ../bin/mca2warn_$(MGMODE).elf
-EE_BIN_COMPR = ../bin/mca2warn-pack_$(MGMODE).elf
+EE_BIN_DIR = ../bin
+ifdef MGMODE
+MGMODEN=_$(MGMODE)
+endif
+EE_BIN = $(EE_BIN_DIR)/mca$(MGMODEN).elf
+EE_BIN_COMPR = $(EE_BIN_DIR)/mca-packed$(MGMODEN).elf
 
 #El_isra: define 'MGMODE' to either ARCADE, DEVELOPER or PROTOTYPE
 
@@ -42,7 +45,7 @@ ifeq ($(EXFAT),1)
 endif
 
 all: 
-	mkdir -p ../bin/
+	mkdir -p $(EE_BIN_DIR)/
 	echo "Compiling..."
 	$(MAKE) $(EE_BIN)
 	echo "Stripping..."
@@ -50,14 +53,17 @@ all:
 	echo "Compressing..."
 	ps2-packer $(EE_BIN) $(EE_BIN_COMPR) | grep "File compressed"
 
+packlang:
+	cp lng/*.lng $(EE_BIN_DIR)/
+
 ifdef MGMODE
 $(info -- Building for $(MGMODE) MemoryCards)
 EE_CFLAGS += -DMGMODE=\"$(MGMODE)\"
 EE_LIBS += -liopreboot
 EE_OBJS += ../PS2/ioprp_$(MGMODE).o
 
-../PS2/ioprp_$(MGMODE).c:
-	bin2c IOPRP_$(MGMODE).IMG ../PS2/ioprp_$(MGMODE).c ioprp
+../PS2/ioprp_$(MGMODE).c: ../PS2/IOPRP_$(MGMODE).IMG
+	bin2c $< $@ ioprp
 endif
 
 clean:

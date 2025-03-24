@@ -37,7 +37,7 @@ CGUIFramePS2Modules::~CGUIFramePS2Modules(void)
 void CGUIFramePS2Modules::iopReset(bool xmodules)
 {
 #ifdef MGMODE
-	while(!SioIopRebootBuffer(ioprp, size_ioprp));
+	while(!SifIopRebootBuffer(ioprp, size_ioprp));
 #else
 	while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
 #endif
@@ -108,7 +108,7 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 		if (xmodules)
 		{
 			#ifdef MGMODE
-				while(!SioIopRebootBuffer(ioprp, size_ioprp));
+				while(!SifIopRebootBuffer(ioprp, size_ioprp));
 			#else
 				while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
 			#endif
@@ -131,7 +131,7 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 			IRX_REPORT("rom0:XPADMAN", id, ret);
 		}
 		#ifdef MGMODE
-			while(!SioIopRebootBuffer(ioprp, size_ioprp));
+			while(!SifIopRebootBuffer(ioprp, size_ioprp));
 		#else
 			while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
 		#endif
