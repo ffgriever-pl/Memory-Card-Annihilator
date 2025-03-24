@@ -19,6 +19,11 @@ IMPORT_BIN2C(usbd);
 #include "cdvd_irx.h"
 #include "fakehost_irx.h"
 
+#ifdef MGMODE
+extern unsigned char ioprp[];
+extern unsigned int size_ioprp;
+#include <iopcontrol_special.h>
+#endif
 
 CGUIFramePS2Modules::CGUIFramePS2Modules(void)
 {
@@ -31,8 +36,13 @@ CGUIFramePS2Modules::~CGUIFramePS2Modules(void)
 
 void CGUIFramePS2Modules::iopReset(bool xmodules)
 {
+#ifdef MGMODE
+	while(!SioIopRebootBuffer(ioprp, size_ioprp));
+#else
 	while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
+#endif
 	while(!SifIopSync());
+
 	fioExit();
 	SifExitIopHeap();
 	SifLoadFileExit();
@@ -97,8 +107,12 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 	{
 		if (xmodules)
 		{
-			while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
-			while(!SifIopSync());
+			#ifdef MGMODE
+				while(!SioIopRebootBuffer(ioprp, size_ioprp));
+			#else
+				while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
+			#endif
+				while(!SifIopSync());
 			fioExit();
 			SifExitIopHeap();
 			SifLoadFileExit();
@@ -116,8 +130,12 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 			id = SifLoadStartModule("rom0:XPADMAN", 0, NULL, &ret);
 			IRX_REPORT("rom0:XPADMAN", id, ret);
 		}
-		while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
-		while(!SifIopSync());
+		#ifdef MGMODE
+			while(!SioIopRebootBuffer(ioprp, size_ioprp));
+		#else
+			while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
+		#endif
+			while(!SifIopSync());
 	}
 	fioExit();
 	SifExitIopHeap();

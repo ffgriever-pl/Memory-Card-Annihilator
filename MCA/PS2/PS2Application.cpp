@@ -39,7 +39,11 @@ int CPS2Application::main(int argc, char *argv[])
 	for (int i = 1; i < argc; i++)
 	{
 		std::string curarg = argv[i];
+	/// El_isra: if mechaemu is enabled, ignore iop reboot disable as it will break the feature
+	/// We need to replace secrman for that feature to work
+#ifndef MGMODE
 		if (curarg == "-noiopreset") CResources::iopreset = false;
+#endif
 	}
 	
 	setBootPath(argv[0]);
