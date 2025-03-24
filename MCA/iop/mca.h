@@ -6,7 +6,7 @@
 #include "psxcdr_rpc.h"
 #include <sys/stat.h>
 #include <sys/fcntl.h>
-#include <iomanx.h>
+#include <iomanX.h>
 
 typedef
 struct t_memcardsOps

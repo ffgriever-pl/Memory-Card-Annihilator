@@ -3,60 +3,60 @@
 
 int (*pMcGetIoSema)() = NULL;
 
-void *SysAlloc(u_long size)
+void* SysAlloc(u_long size)
 {
- int oldstate;
- register void *p;
- 
- CpuSuspendIntr(&oldstate);
- p = AllocSysMemory(SMEM_Low, size, NULL);
- CpuResumeIntr(oldstate);
+	int oldstate;
+	register void* p;
 
- return p;
+	CpuSuspendIntr(&oldstate);
+	p = AllocSysMemory(SMEM_Low, size, NULL);
+	CpuResumeIntr(oldstate);
+
+	return p;
 }
 
-int SysFree(void *area)
+int SysFree(void* area)
 {
- int oldstate;
- register int r;
+	int oldstate;
+	register int r;
 
- CpuSuspendIntr(&oldstate);
- r = FreeSysMemory(area);
- CpuResumeIntr(oldstate);
+	CpuSuspendIntr(&oldstate);
+	r = FreeSysMemory(area);
+	CpuResumeIntr(oldstate);
 
- return r;
+	return r;
 }
 
 /* locking MCMAN's internal mutex when possible */
 void LockMcman()
 {
- if (pMcGetIoSema != NULL) WaitSema(pMcGetIoSema());
+	if (pMcGetIoSema != NULL) WaitSema(pMcGetIoSema());
 }
 
 /* freeing MCMAN's internal mutex when possible */
 void FreeMcman()
 {
- if (pMcGetIoSema != NULL) SignalSema(pMcGetIoSema());
+	if (pMcGetIoSema != NULL) SignalSema(pMcGetIoSema());
 }
-void *GetLibraryEntry(char *libname, int version, int entryno)
+void* GetLibraryEntry(char* libname, int version, int entryno)
 {
- LibInfo lib;
- register void **exp;
- register int i;
+	LibInfo lib;
+	register void** exp;
+	register int i;
 
- if (libname == NULL) return NULL;
+	if (libname == NULL) return NULL;
 
- memset(&lib, 0, sizeof(LibInfo));
- lib.version = version & 0xFFFF;
- 
- for (i = 0; (i < 8) && (libname[i]); i ++) lib.name[i] = libname[i];
+	memset(&lib, 0, sizeof(LibInfo));
+	lib.version = version & 0xFFFF;
 
- exp = (void **)QueryLibraryEntryTable(&lib);
- if (exp == NULL) return NULL;
+	for (i = 0; (i < 8) && (libname[i]); i++) lib.name[i] = libname[i];
 
- for (i = 0; exp[i]; i ++) {;}
+	exp = (void**)QueryLibraryEntryTable(&lib);
+	if (exp == NULL) return NULL;
 
- return (entryno < i) ? exp[entryno] : NULL;
+	for (i = 0; exp[i]; i++) { ; }
+
+	return (entryno < i) ? exp[entryno] : NULL;
 }
 void initLibEntries()
 {
@@ -92,40 +92,40 @@ void initLibEntries()
 }
 u_char cmcbuffer[32];
 
-const u_char xortable[256]= { /* Table for the ECC calculation */
-     0x00, 0x87, 0x96, 0x11, 0xA5, 0x22, 0x33, 0xB4,
-     0xB4, 0x33, 0x22, 0xA5, 0x11, 0x96, 0x87, 0x00,
-     0xC3, 0x44, 0x55, 0xD2, 0x66, 0xE1, 0xF0, 0x77,
-     0x77, 0xF0, 0xE1, 0x66, 0xD2, 0x55, 0x44, 0xC3,
-     0xD2, 0x55, 0x44, 0xC3, 0x77, 0xF0, 0xE1, 0x66,
-     0x66, 0xE1, 0xF0, 0x77, 0xC3, 0x44, 0x55, 0xD2,
-     0x11, 0x96, 0x87, 0x00, 0xB4, 0x33, 0x22, 0xA5,
-     0xA5, 0x22, 0x33, 0xB4, 0x00, 0x87, 0x96, 0x11,
-     0xE1, 0x66, 0x77, 0xF0, 0x44, 0xC3, 0xD2, 0x55,
-     0x55, 0xD2, 0xC3, 0x44, 0xF0, 0x77, 0x66, 0xE1,
-     0x22, 0xA5, 0xB4, 0x33, 0x87, 0x00, 0x11, 0x96,
-     0x96, 0x11, 0x00, 0x87, 0x33, 0xB4, 0xA5, 0x22,
-     0x33, 0xB4, 0xA5, 0x22, 0x96, 0x11, 0x00, 0x87,
-     0x87, 0x00, 0x11, 0x96, 0x22, 0xA5, 0xB4, 0x33,
-     0xF0, 0x77, 0x66, 0xE1, 0x55, 0xD2, 0xC3, 0x44,
-     0x44, 0xC3, 0xD2, 0x55, 0xE1, 0x66, 0x77, 0xF0,
-     0xF0, 0x77, 0x66, 0xE1, 0x55, 0xD2, 0xC3, 0x44,
-     0x44, 0xC3, 0xD2, 0x55, 0xE1, 0x66, 0x77, 0xF0,
-     0x33, 0xB4, 0xA5, 0x22, 0x96, 0x11, 0x00, 0x87,
-     0x87, 0x00, 0x11, 0x96, 0x22, 0xA5, 0xB4, 0x33,
-     0x22, 0xA5, 0xB4, 0x33, 0x87, 0x00, 0x11, 0x96,
-     0x96, 0x11, 0x00, 0x87, 0x33, 0xB4, 0xA5, 0x22,
-     0xE1, 0x66, 0x77, 0xF0, 0x44, 0xC3, 0xD2, 0x55,
-     0x55, 0xD2, 0xC3, 0x44, 0xF0, 0x77, 0x66, 0xE1,
-     0x11, 0x96, 0x87, 0x00, 0xB4, 0x33, 0x22, 0xA5,
-     0xA5, 0x22, 0x33, 0xB4, 0x00, 0x87, 0x96, 0x11,
-     0xD2, 0x55, 0x44, 0xC3, 0x77, 0xF0, 0xE1, 0x66,
-     0x66, 0xE1, 0xF0, 0x77, 0xC3, 0x44, 0x55, 0xD2,
-     0xC3, 0x44, 0x55, 0xD2, 0x66, 0xE1, 0xF0, 0x77,
-     0x77, 0xF0, 0xE1, 0x66, 0xD2, 0x55, 0x44, 0xC3,
-     0x00, 0x87, 0x96, 0x11, 0xA5, 0x22, 0x33, 0xB4,
-     0xB4, 0x33, 0x22, 0xA5, 0x11, 0x96, 0x87, 0x00,
-     };
+const u_char xortable[256] = { /* Table for the ECC calculation */
+	 0x00, 0x87, 0x96, 0x11, 0xA5, 0x22, 0x33, 0xB4,
+	 0xB4, 0x33, 0x22, 0xA5, 0x11, 0x96, 0x87, 0x00,
+	 0xC3, 0x44, 0x55, 0xD2, 0x66, 0xE1, 0xF0, 0x77,
+	 0x77, 0xF0, 0xE1, 0x66, 0xD2, 0x55, 0x44, 0xC3,
+	 0xD2, 0x55, 0x44, 0xC3, 0x77, 0xF0, 0xE1, 0x66,
+	 0x66, 0xE1, 0xF0, 0x77, 0xC3, 0x44, 0x55, 0xD2,
+	 0x11, 0x96, 0x87, 0x00, 0xB4, 0x33, 0x22, 0xA5,
+	 0xA5, 0x22, 0x33, 0xB4, 0x00, 0x87, 0x96, 0x11,
+	 0xE1, 0x66, 0x77, 0xF0, 0x44, 0xC3, 0xD2, 0x55,
+	 0x55, 0xD2, 0xC3, 0x44, 0xF0, 0x77, 0x66, 0xE1,
+	 0x22, 0xA5, 0xB4, 0x33, 0x87, 0x00, 0x11, 0x96,
+	 0x96, 0x11, 0x00, 0x87, 0x33, 0xB4, 0xA5, 0x22,
+	 0x33, 0xB4, 0xA5, 0x22, 0x96, 0x11, 0x00, 0x87,
+	 0x87, 0x00, 0x11, 0x96, 0x22, 0xA5, 0xB4, 0x33,
+	 0xF0, 0x77, 0x66, 0xE1, 0x55, 0xD2, 0xC3, 0x44,
+	 0x44, 0xC3, 0xD2, 0x55, 0xE1, 0x66, 0x77, 0xF0,
+	 0xF0, 0x77, 0x66, 0xE1, 0x55, 0xD2, 0xC3, 0x44,
+	 0x44, 0xC3, 0xD2, 0x55, 0xE1, 0x66, 0x77, 0xF0,
+	 0x33, 0xB4, 0xA5, 0x22, 0x96, 0x11, 0x00, 0x87,
+	 0x87, 0x00, 0x11, 0x96, 0x22, 0xA5, 0xB4, 0x33,
+	 0x22, 0xA5, 0xB4, 0x33, 0x87, 0x00, 0x11, 0x96,
+	 0x96, 0x11, 0x00, 0x87, 0x33, 0xB4, 0xA5, 0x22,
+	 0xE1, 0x66, 0x77, 0xF0, 0x44, 0xC3, 0xD2, 0x55,
+	 0x55, 0xD2, 0xC3, 0x44, 0xF0, 0x77, 0x66, 0xE1,
+	 0x11, 0x96, 0x87, 0x00, 0xB4, 0x33, 0x22, 0xA5,
+	 0xA5, 0x22, 0x33, 0xB4, 0x00, 0x87, 0x96, 0x11,
+	 0xD2, 0x55, 0x44, 0xC3, 0x77, 0xF0, 0xE1, 0x66,
+	 0x66, 0xE1, 0xF0, 0x77, 0xC3, 0x44, 0x55, 0xD2,
+	 0xC3, 0x44, 0x55, 0xD2, 0x66, 0xE1, 0xF0, 0x77,
+	 0x77, 0xF0, 0xE1, 0x66, 0xD2, 0x55, 0x44, 0xC3,
+	 0x00, 0x87, 0x96, 0x11, 0xA5, 0x22, 0x33, 0xB4,
+	 0xB4, 0x33, 0x22, 0xA5, 0x11, 0x96, 0x87, 0x00,
+};
 
 #define HDDCTL_STATUS			0x00004807
 int checkHddReady()
@@ -184,132 +184,34 @@ void fmtWritePage(int port, int slot, int page, void *buf, u32 pages_per_block, 
 	if (retval < 0) printf("WritePage %d failed with %d\n", page, retval);
 	//realWrite;
 }
-void CalculateECC(u_char *buf, u_char *chk)
+void CalculateECC(u_char* buf, u_char* chk)
 {
- register u_char *ptr;
- register int i, c1, c2, b, c3;
+	register u_char* ptr;
+	register int i, c1, c2, b, c3;
 
- ptr = buf;
- i = 0;
- c1 = c2 = c3 = 0;
+	ptr = buf;
+	i = 0;
+	c1 = c2 = c3 = 0;
 
- /* calculating ECC for a 0x80-bytes buffer */
- do
- {
-  b = xortable[*ptr ++];
-  c1 ^= b;  
-  if (b & 0x80)
-  {
-   c2 ^= ~i;
-   c3 ^= i;
-  }
- } while (++ i < 0x80);
-
- /* storing ECC */
- ptr = (u_char*)chk;
- ptr[0] = ~c1 & 0x77;
- ptr[1] = ~c2 & 0x7F;
- ptr[2] = ~c3 & 0x7F;
-}
-#if 0
-void writeMcPs2(d_iopMcaCommand *iopCommand)
-{
-	u8* pageData = NULL;
-	u32 i, k, retval;
-	getCardSpecs();
-	u32 type; //0 - none, 1 - psx, 2 - ps2, 3 - pda
-	u16 pageSize;
-	u16 pagesPerBlock;
-	u32 totalPages;
-	u8  flags;
-	u32 slot = iopCommand->slot;
-	u8 erasebyte;
-	int fd, fdmci;
-
-	while (semaphoreCopy) {DelayThread(10011);}
-
-	semaphoreCopy = 1;
-		type = mce_memcards[slot].type;
-		pageSize = mce_memcards[slot].pageSize;
-		pagesPerBlock = mce_memcards[slot].pagesPerBlock;
-		totalPages = mce_memcards[slot].totalPages;
-		flags = mce_memcards[slot].flags;
-	//semaphoreCopy = 0;
-
-	fd = open(iopCommand->filePath, O_WRONLY | O_CREAT | O_TRUNC, 0);
-	fdmci = open(iopCommand->filePathMci, O_WRONLY | O_CREAT | O_TRUNC, 0);
-
-// user defined size
-	erasebyte = (flags & 0x10) ? 0x0 : 0xFF;
-	if (iopCommand->special) totalPages = iopCommand->special;
-
-	if (type == 0 || type != iopCommand->type || pMcReadPage == NULL || fd <= 0 || fdmci <= 0)
+	/* calculating ECC for a 0x80-bytes buffer */
+	do
 	{
-		if (fd) close(fd);
-		if (fdmci) close(fdmci);
-
-		while (semaphoreProgress) {DelayThread(1000);}
-
-		semaphoreProgress = 1;
-			progressBarData.error = 1;
-			progressBarData.finished = 1;
-		semaphoreProgress = 0;
-
-	} else
-	{
-		mciFile.magic[0] = 'M';
-		mciFile.magic[1] = 'C';
-		mciFile.magic[2] = 'I';
-		mciFile.magic[3] = '2';
-		mciFile.flags = flags;
-		mciFile.pagesPerBlock = pagesPerBlock;
-		mciFile.pagesSize = pageSize;
-		mciFile.totalPages = totalPages;
-		write(fdmci, &mciFile, sizeof(mciFile));
-		close(fdmci);
-
-		pageData = SysAlloc(pageSize);
-		for (i = 0; i < totalPages; i++)
+		b = xortable[*ptr++];
+		c1 ^= b;
+		if (b & 0x80)
 		{
-			k = 0;
-			while ((retval = pMcReadPage(slot, 0, i, pageData) != sceMcResSucceed) && (k++ < 4)){;}
-			if (retval != sceMcResSucceed)
-			{
-				memset(pageData, erasebyte, pageSize);
-				printf("IOP: problem reading page %d\n", (int)i);
-			}
-			retval = write(fd, pageData, pageSize);
-			if (retval < pageSize)
-			{
-				close(fd);
-				SysFree(pageData);
-				while (semaphoreProgress) {DelayThread(1000);}
-				semaphoreProgress = 1;
-					progressBarData.promil = (i*1000)/totalPages;
-					progressBarData.error = 1;
-					progressBarData.finished = 1;
-				semaphoreProgress = 0;
-
-				semaphoreCopy = 0;
-				return;
-			}
-			while (semaphoreProgress) {DelayThread(1000);}
-			semaphoreProgress = 1;
-				progressBarData.promil = (i*1000)/totalPages;
-			semaphoreProgress = 0;
+			c2 ^= ~i;
+			c3 ^= i;
 		}
-		close(fd);
-		SysFree(pageData);
-		while (semaphoreProgress) {DelayThread(1000);}
-		semaphoreProgress = 1;
-			progressBarData.promil = 1000;
-			progressBarData.error = 0;
-			progressBarData.finished = 1;
-		semaphoreProgress = 0;
-	}
-	semaphoreCopy = 0;
+	} while (++i < 0x80);
+
+	/* storing ECC */
+	ptr = (u_char*)chk;
+	ptr[0] = ~c1 & 0x77;
+	ptr[1] = ~c2 & 0x7F;
+	ptr[2] = ~c3 & 0x7F;
 }
-#else
+
 void writeMcPs2(d_iopMcaCommand *iopCommand)
 {
 	u8* pageData = NULL;
@@ -432,11 +334,11 @@ void writeMcPs2(d_iopMcaCommand *iopCommand)
 	}
 	semaphoreCopy = 0;
 }
-#endif
+
 void readMcPs2(d_iopMcaCommand *iopCommand)
 {
 	u8* pageData = NULL;
-	u32 i, k, retval;
+	u32 i, retval;
 	getCardSpecs();
 	u32 type; //0 - none, 1 - psx, 2 - ps2, 3 - pda
 	u16 pageSize;
@@ -550,7 +452,6 @@ void readMcPsx(d_iopMcaCommand *iopCommand)
 
 // user defined size
 	erasebyte = 0;
-	//if (iopCommand->special) totalPages = iopCommand->special;
 
 	if (((type == 0 || type != iopCommand->type) && iopCommand->force == 0) || pMcWritePagePsx == NULL || fd <= 0)
 	{
@@ -783,8 +684,6 @@ void unformatPSX(d_iopMcaCommand *iopCommand)
 		flags = (iopCommand->force == 1 ? 0 : mce_memcards[slot].flags);
 	//semaphoreCopy = 0;
 
-	//if (iopCommand->special) totalPages = iopCommand->special;
-
 	if (((type == 0 || type != iopCommand->type) && iopCommand->force == 0) || pMcWritePagePsx == NULL)
 	{
 		while (semaphoreProgress) {DelayThread(1000);}
@@ -841,8 +740,6 @@ void formatPSX(d_iopMcaCommand *iopCommand)
 		totalPages = (iopCommand->force == 1 ? 1024 : mce_memcards[slot].totalPages);
 		flags = (iopCommand->force == 1 ? 0 : mce_memcards[slot].flags);
 	//semaphoreCopy = 0;
-
-	//if (iopCommand->special) totalPages = iopCommand->special;
 
 	if (((type == 0 || type != iopCommand->type) && iopCommand->force == 0) || pMcWritePagePsx == NULL)
 	{
@@ -1194,16 +1091,7 @@ void formatPS2(d_iopMcaCommand *iopCommand)
 
 				}
 				fmtWritePageS(slot, podslot, write_page, mcbuffer, pagesPerBlock, pageSize);
-/*////////////////////
-					while (semaphoreProgress) {DelayThread(1000);}
-					semaphoreProgress = 1;
-						progressBarData.promil = 1000;
-						progressBarData.error = 0;
-						progressBarData.finished = 1;
-					semaphoreProgress = 0;
-					semaphoreCopy = 0;
-					return;
-//////////////////*/
+
 			//update progress
 				writtenCluster++;
 				while (semaphoreProgress) {DelayThread(1000);}
