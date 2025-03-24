@@ -4,6 +4,12 @@
 #include "GUIFramePS2Includes.h"
 #include "IGUIFrameRenderer.h"
 
+#define GS_SETREG_SCISSOR(scax0, scax1, scay0, scay1) \
+  ((u64)(scax0)        | ((u64)(scax1) << 16) | \
+  ((u64)(scay0) << 32) | ((u64)(scay1) << 48))
+extern "C" {
+	void gsKit_set_scissor(GSGLOBAL *gsGlobal, u64 ScissorBounds);
+}
 #include "GUIFrameTexturePS2.h"
 
 class CGUIFrameRendererPS2 :

@@ -1,0 +1,71 @@
+name: Compile MCA
+
+on:
+  workflow_dispatch:
+    inputs:
+      make_args:
+        description: pass extra make argumments to control features not explicitly handled by CI
+  push:
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ps2dev/ps2dev:v1.0
+    steps:
+
+    - name: Install dependencies
+      run: |
+        apk add make git zip
+
+    - uses: actions/checkout@v4
+    - run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        git fetch --prune --unshallow
+
+    - name: Compile
+      run: |
+        cd MCA
+        make clean all ${{ github.event.inputs.make_args }}
+
+    - name: Upload variants artifact ELF
+      uses: actions/upload-artifact@v4
+      with:
+        name: "MCA"
+        path: |
+            mca*.elf
+
+####################################################### 
+  release:
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+
+    - uses: actions/checkout@v4
+    - run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        git fetch --prune --unshallow
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: MCA/
+        pattern: "mca-*"
+        merge-multiple: true
+
+    - name: list
+      run: |
+        ls -R
+
+    - name: Create release
+      if: github.ref == 'refs/heads/master'
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        title: "Latest automated build"
+        prerelease: false
+        files: |
+               MCA/*.elf

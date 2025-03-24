@@ -23,7 +23,7 @@
 #include <sys/fcntl.h>
 #include <math.h>
 #include <libcdvd.h>
-#include <cdvd_rpc.h>
+#include "cdvd_rpc.h"
 #include <cstdio>
 #include <stdio.h>
 #include <dirent.h>

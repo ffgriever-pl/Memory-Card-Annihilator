@@ -1,4 +1,4 @@
-#include "Include\GUIFrameRendererPS2.h"
+#include "Include/GUIFrameRendererPS2.h"
 
 
 CGUIFrameRendererPS2::CGUIFrameRendererPS2(void)
@@ -180,6 +180,8 @@ void CGUIFrameRendererPS2::setTestAlpha(bool enable)
 		gsKit_set_test(m_gsGlobal, GS_ATEST_OFF);
 	}
 }
+
+//void gsKit_set_scissor(GSGLOBAL *gsGlobal, int x1, int y1, int x2, int y2);
 void CGUIFrameRendererPS2::setScissor(bool enable, int x1, int y1, int x2, int y2)
 {
 	if (!m_bInitDone) return;
@@ -208,12 +210,12 @@ void CGUIFrameRendererPS2::setScissor(bool enable, int x1, int y1, int x2, int y
 		if (cy1 > m_gsGlobal->Height) cy1 = m_gsGlobal->Height;
 		if (cy2 > m_gsGlobal->Height) cy2 = m_gsGlobal->Height;
 
-		gsKit_set_scissor(m_gsGlobal, cx1, cx2, cy1, cy2);
+		gsKit_set_scissor(m_gsGlobal, GS_SETREG_SCISSOR(cx1, cx2, cy1, cy2));
 	} else
 	{
 		int ymove = (int)(m_ymove+0.5f);
 		if (ymove < 0) ymove = 0;
-		gsKit_set_scissor(m_gsGlobal, 0, m_gsGlobal->Width, ymove, m_gsGlobal->Height-ymove);
+		gsKit_set_scissor(m_gsGlobal, GS_SETREG_SCISSOR(0, m_gsGlobal->Width, ymove, m_gsGlobal->Height-ymove));
 	}
 }
 void CGUIFrameRendererPS2::swapBuffers()
@@ -221,13 +223,13 @@ void CGUIFrameRendererPS2::swapBuffers()
 	if (!m_bInitDone) return;
 	gsKit_sync_flip(m_gsGlobal);
 	gsKit_queue_exec(m_gsGlobal);
-	//gsKit_set_scissor(m_gsGlobal, 0, m_gsGlobal->Width, 0, m_gsGlobal->Height);
+	//gsKit_set_scissor(m_gsGlobal, GS_SETREG_SCISSOR(0, m_gsGlobal->Width, 0, m_gsGlobal->Height));
 	gsKit_clear(m_gsGlobal, GS_SETREG_RGBAQ(0x00,0x00,0x00,0x80,0x00));
 }
 
 void CGUIFrameRendererPS2::clearFrontBuffer()
 {
-	gsKit_set_scissor(m_gsGlobal, 0, m_gsGlobal->Width, 0, m_gsGlobal->Height);
+	gsKit_set_scissor(m_gsGlobal, GS_SETREG_SCISSOR(0, m_gsGlobal->Width, 0, m_gsGlobal->Height));
 	gsKit_clear(m_gsGlobal, GS_SETREG_RGBAQ(0x00,0x00,0x00,0x80,0x00));
 	setScissor(false);
 }
@@ -770,4 +772,24 @@ void CGUIFrameRendererPS2::restoreFrameTex(CIGUIFrameTexture *tex)
 	gsKit_texture_send_inline(m_gsGlobal, tmpTex->Mem, tmpTex->Width, tmpTex->Height, tmpTex->Vram, tmpTex->PSM, tmpTex->TBW, GS_CLUT_NONE);
 	*/
 	setAlpha(lastAlpha);
+}
+
+extern "C" {
+#include <gsInline.h>
+#define GS_SCISSOR_RESET 0x00 /// Resets SCISSOR values to the entire display bounds
+	void gsKit_set_scissor(GSGLOBAL *gsGlobal, u64 ScissorBounds) {
+	    u64 *p_data;
+		u64 *p_store;
+
+		if (ScissorBounds == GS_SCISSOR_RESET)
+			ScissorBounds = GS_SETREG_SCISSOR(0, gsGlobal->Width - 1, 0, gsGlobal->Height - 1);
+
+		p_data = p_store = (u64*)gsKit_heap_alloc(gsGlobal, 1, 16, GIF_AD);
+
+		*p_data++ = GIF_TAG_AD(1);
+		*p_data++ = GIF_AD;
+
+		*p_data++ = ScissorBounds;
+		*p_data++ = GS_SCISSOR_1+gsGlobal->PrimContext;
+	}
 }

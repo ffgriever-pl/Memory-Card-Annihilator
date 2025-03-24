@@ -1,4 +1,4 @@
-#include "Include\GUIFrameInputPS2.h"
+#include "Include/GUIFrameInputPS2.h"
 
 
 CGUIFrameInputPS2::CGUIFrameInputPS2(void)
@@ -11,7 +11,8 @@ bool CGUIFrameInputPS2::initInput()
 	if (!m_pad_init_done)
 	{
 		CGUIFramePS2Modules::loadPadModules();
-		padReset();
+		/// FIXME: What am I?
+		//padReset();
 		padInit(0);
 
 		int ret;

@@ -3,8 +3,8 @@
 # |     ___|   |____ ___|    ____| |    \    PS2DEV Open Source Project.
 .SILENT:
 
-EE_BIN = mca2warn.elf
-EE_BIN_COMPR = mca2warn-pack.elf
+EE_BIN = ../bin/mca2warn.elf
+EE_BIN_COMPR = ../bin/mca2warn-pack.elf
 
 EE_OBJS =	res/resources.o ../PS2/GUIFramePS2Modules.o GUIMcaMan.o GUIMcaLang.o \
 			../GUIFramework/IGUIFrameTimer.o ../GUIFramework/IGUIFrameRenderer.o \
@@ -20,19 +20,22 @@ EE_OBJS =	res/resources.o ../PS2/GUIFramePS2Modules.o GUIMcaMan.o GUIMcaLang.o \
 			GUIMcaProgressBar.o GUIMcaGetPath.o GUIMcaVkbd.o \
 			GUIMcaDisplayMessage.o GUIMcaAbout.o GUIMcaCardInfo.o \
 			GUIMcaTip.o GUIMcaMainWnd.o \
-			PS2/PS2Application.o PS2/main.o
+			PS2/PS2Application.o ../PS2/cdvd_rpc.o PS2/main.o
 
 EE_INCS =	-I../PS2/Include -I../GUIFramework/Include -I./GUIFramework/Include -I./PS2/Include \
-			-I./ -I../ -I/usr/local/ps2dev/ps2sdk/ee/include -I/usr/local/ps2dev/ps2sdk/common/include \
-			-I/usr/local/ps2dev/gsKit/include
+			-I./ -I../ -I$(PS2SDK)/ee/include -I$(PS2SDK)/common/include \
+			-I$(PS2DEV)/gsKit/include -I$(PS2SDK)/ports/include
 EE_LIBS =	-Wl,--gc-sections \
 			-T../PS2/linkfile \
-			-L./ -L/usr/local/ps2dev/ps2sdk/ee/lib -L/usr/local/ps2dev/gsKit/lib \
-			-lstdc++ -lgskit -ldmakit -lpatches -lmf -lcdvd -lcdvdfs -lhdd -lfileXio -lpoweroff -lg -lpadx -lkernel
+			-L./ -L$(PS2SDK)/ee/lib -L$(PS2DEV)/gsKit/lib \
+			-lstdc++ -lgskit -ldmakit -lpatches -lmf -lcdvd -lhdd -lfileXio -lpoweroff -lg -lpadx -lkernel#  -lcdvdfs integrated directly, borrowed from wle ISR
 EE_CFLAGS = -G0 -O2 -D__LINUX__ -fno-builtin-printf -ffunction-sections -fdata-sections -Wall -Wno-deprecated
 EE_CXXFLAGS = $(EE_CFLAGS)
 
+EE_LDFLAGS += -L$(PS2DEV)/gsKit/lib -L$(PS2SDK)/ports/lib
+
 all: 
+	mkdir -p ../bin/
 	echo "Compiling..."
 	$(MAKE) $(EE_BIN)
 	echo "Stripping..."

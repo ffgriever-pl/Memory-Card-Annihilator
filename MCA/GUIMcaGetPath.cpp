@@ -6,6 +6,17 @@
 #include "GUIMcaVkbd.h"
 #include "GUIMcaMan.h"
 
+#include <libcdvd-common.h>
+#define cdStatus sceCdStatus
+#define SCECdvdDriveStates SCECdvdDriveState
+#define CDVD_STAT_STOP     SCECdStatStop
+#define CDVD_STAT_OPEN     SCECdStatShellOpen
+#define CDVD_STAT_SPIN     SCECdStatSpin
+#define CDVD_STAT_READ     SCECdStatRead
+#define CDVD_STAT_PAUSE    SCECdStatPause
+#define CDVD_STAT_SEEK     SCECdStatSeek
+#define CDVD_STAT_ERROR    SCECdStatEmg
+
 #define LIST_POSITION (11)
 CGUIMcaGetPath::CGUIMcaGetPath(float x, float y, const char *defaultname)
 	: m_hover_files(NULL)
@@ -118,7 +129,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 					currmassfound = true;
 				} else if ( (*k).name == "cdfs:")
 				{
-					int type = CDVD_GetDiskType();
+					int type = sceCdGetDiskType();
 
 					switch (type)
 					{
@@ -181,7 +192,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 			}
 			if (!currcdromfound && !m_save)
 			{
-				int type = CDVD_GetDiskType();
+				int type = sceCdGetDiskType();
 
 				switch (type)
 				{
@@ -910,7 +921,7 @@ void CGUIMcaGetPath::doSubLevel(CIGUIFrameTexture *prevBuffTex, float alpha)
 			bool valid = false;
 			while(doloop)
 			{
-				type = CDVD_GetDiskType();
+				type = sceCdGetDiskType();
 				sio_printf("Disc type: %d\n", type);
 				switch (type)
 				{
