@@ -3,4 +3,5 @@
 *.ELF
 *.irx
 *.IRX
+.vscode
 .vs
