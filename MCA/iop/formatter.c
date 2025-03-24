@@ -211,105 +211,7 @@ void CalculateECC(u_char *buf, u_char *chk)
  ptr[1] = ~c2 & 0x7F;
  ptr[2] = ~c3 & 0x7F;
 }
-#if 0
-void writeMcPs2(d_iopMcaCommand *iopCommand)
-{
-	u8* pageData = NULL;
-	u32 i, k, retval;
-	getCardSpecs();
-	u32 type; //0 - none, 1 - psx, 2 - ps2, 3 - pda
-	u16 pageSize;
-	u16 pagesPerBlock;
-	u32 totalPages;
-	u8  flags;
-	u32 slot = iopCommand->slot;
-	u8 erasebyte;
-	int fd, fdmci;
 
-	while (semaphoreCopy) {DelayThread(10011);}
-
-	semaphoreCopy = 1;
-		type = mce_memcards[slot].type;
-		pageSize = mce_memcards[slot].pageSize;
-		pagesPerBlock = mce_memcards[slot].pagesPerBlock;
-		totalPages = mce_memcards[slot].totalPages;
-		flags = mce_memcards[slot].flags;
-	//semaphoreCopy = 0;
-
-	fd = open(iopCommand->filePath, O_WRONLY | O_CREAT | O_TRUNC, 0);
-	fdmci = open(iopCommand->filePathMci, O_WRONLY | O_CREAT | O_TRUNC, 0);
-
-// user defined size
-	erasebyte = (flags & 0x10) ? 0x0 : 0xFF;
-	if (iopCommand->special) totalPages = iopCommand->special;
-
-	if (type == 0 || type != iopCommand->type || pMcReadPage == NULL || fd <= 0 || fdmci <= 0)
-	{
-		if (fd) close(fd);
-		if (fdmci) close(fdmci);
-
-		while (semaphoreProgress) {DelayThread(1000);}
-
-		semaphoreProgress = 1;
-			progressBarData.error = 1;
-			progressBarData.finished = 1;
-		semaphoreProgress = 0;
-
-	} else
-	{
-		mciFile.magic[0] = 'M';
-		mciFile.magic[1] = 'C';
-		mciFile.magic[2] = 'I';
-		mciFile.magic[3] = '2';
-		mciFile.flags = flags;
-		mciFile.pagesPerBlock = pagesPerBlock;
-		mciFile.pagesSize = pageSize;
-		mciFile.totalPages = totalPages;
-		write(fdmci, &mciFile, sizeof(mciFile));
-		close(fdmci);
-
-		pageData = SysAlloc(pageSize);
-		for (i = 0; i < totalPages; i++)
-		{
-			k = 0;
-			while ((retval = pMcReadPage(slot, 0, i, pageData) != sceMcResSucceed) && (k++ < 4)){;}
-			if (retval != sceMcResSucceed)
-			{
-				memset(pageData, erasebyte, pageSize);
-				printf("IOP: problem reading page %d\n", (int)i);
-			}
-			retval = write(fd, pageData, pageSize);
-			if (retval < pageSize)
-			{
-				close(fd);
-				SysFree(pageData);
-				while (semaphoreProgress) {DelayThread(1000);}
-				semaphoreProgress = 1;
-					progressBarData.promil = (i*1000)/totalPages;
-					progressBarData.error = 1;
-					progressBarData.finished = 1;
-				semaphoreProgress = 0;
-
-				semaphoreCopy = 0;
-				return;
-			}
-			while (semaphoreProgress) {DelayThread(1000);}
-			semaphoreProgress = 1;
-				progressBarData.promil = (i*1000)/totalPages;
-			semaphoreProgress = 0;
-		}
-		close(fd);
-		SysFree(pageData);
-		while (semaphoreProgress) {DelayThread(1000);}
-		semaphoreProgress = 1;
-			progressBarData.promil = 1000;
-			progressBarData.error = 0;
-			progressBarData.finished = 1;
-		semaphoreProgress = 0;
-	}
-	semaphoreCopy = 0;
-}
-#else
 void writeMcPs2(d_iopMcaCommand *iopCommand)
 {
 	u8* pageData = NULL;
@@ -432,7 +334,7 @@ void writeMcPs2(d_iopMcaCommand *iopCommand)
 	}
 	semaphoreCopy = 0;
 }
-#endif
+
 void readMcPs2(d_iopMcaCommand *iopCommand)
 {
 	u8* pageData = NULL;
@@ -550,7 +452,6 @@ void readMcPsx(d_iopMcaCommand *iopCommand)
 
 // user defined size
 	erasebyte = 0;
-	//if (iopCommand->special) totalPages = iopCommand->special;
 
 	if (((type == 0 || type != iopCommand->type) && iopCommand->force == 0) || pMcWritePagePsx == NULL || fd <= 0)
 	{
@@ -783,8 +684,6 @@ void unformatPSX(d_iopMcaCommand *iopCommand)
 		flags = (iopCommand->force == 1 ? 0 : mce_memcards[slot].flags);
 	//semaphoreCopy = 0;
 
-	//if (iopCommand->special) totalPages = iopCommand->special;
-
 	if (((type == 0 || type != iopCommand->type) && iopCommand->force == 0) || pMcWritePagePsx == NULL)
 	{
 		while (semaphoreProgress) {DelayThread(1000);}
@@ -841,8 +740,6 @@ void formatPSX(d_iopMcaCommand *iopCommand)
 		totalPages = (iopCommand->force == 1 ? 1024 : mce_memcards[slot].totalPages);
 		flags = (iopCommand->force == 1 ? 0 : mce_memcards[slot].flags);
 	//semaphoreCopy = 0;
-
-	//if (iopCommand->special) totalPages = iopCommand->special;
 
 	if (((type == 0 || type != iopCommand->type) && iopCommand->force == 0) || pMcWritePagePsx == NULL)
 	{
@@ -1194,16 +1091,7 @@ void formatPS2(d_iopMcaCommand *iopCommand)
 
 				}
 				fmtWritePageS(slot, podslot, write_page, mcbuffer, pagesPerBlock, pageSize);
-/*////////////////////
-					while (semaphoreProgress) {DelayThread(1000);}
-					semaphoreProgress = 1;
-						progressBarData.promil = 1000;
-						progressBarData.error = 0;
-						progressBarData.finished = 1;
-					semaphoreProgress = 0;
-					semaphoreCopy = 0;
-					return;
-//////////////////*/
+
 			//update progress
 				writtenCluster++;
 				while (semaphoreProgress) {DelayThread(1000);}
