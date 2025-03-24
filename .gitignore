@@ -5,6 +5,7 @@
 *.IRX
 .vscode
 .vs
+mca_irx.h
 bin/*.lng
 /mca_Prototype
 /mca_legacy
