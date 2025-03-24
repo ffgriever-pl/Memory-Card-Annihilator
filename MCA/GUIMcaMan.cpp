@@ -1,5 +1,5 @@
 #include "GUIMcaMan.h"
-#include "res/mca_irx.h"
+#include "iop/mca_irx.h"
 #include "GUIFramePS2Modules.h"
 #include <string>
 

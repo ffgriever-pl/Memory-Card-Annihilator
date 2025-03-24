@@ -39,12 +39,14 @@ EE_CXXFLAGS = $(EE_CFLAGS)
 
 EE_LDFLAGS += -L$(PS2DEV)/gsKit/lib -L$(PS2SDK)/ports/lib
 
+IOP_DIRS = iop
+
 ifeq ($(EXFAT),1)
   $(info -- EXFAT Support)
   EE_CFLAGS += -DEXFAT
 endif
 
-all: 
+all: $(IOP_DIRS)
 	mkdir -p $(EE_BIN_DIR)/
 	echo "Compiling..."
 	$(MAKE) $(EE_BIN)
@@ -69,6 +71,9 @@ endif
 clean:
 	echo "Cleaning..."
 	rm -f $(EE_BIN) $(EE_OBJS) $(EE_BIN_COMPR)
+	@for dir in $(IOP_DIRS); do \
+		$(MAKE) -C $$dir clean; \
+	done
 
 run:
 	echo "Running..."
@@ -78,6 +83,9 @@ allkeys:
 	$(MAKE) clean all MGMODE=DEVELOPER
 	$(MAKE) clean all MGMODE=ARCADE
 	$(MAKE) clean all MGMODE=PROTOTYPE
+
+$(IOP_DIRS):
+	$(MAKE) -C $@
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal
@@ -97,3 +105,6 @@ DIR_GUARD = @mkdir -p $(@D)
 	@printf "\033[1m CXX - $@\033[0m\n"
 	$(DIR_GUARD)
 	$(EE_CXX) $(EE_CXXFLAGS) $(EE_INCS) -c $< -o $@
+
+
+.PHONY: all $(IOP_DIRS)
