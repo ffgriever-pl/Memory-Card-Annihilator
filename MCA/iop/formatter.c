@@ -436,7 +436,7 @@ void writeMcPs2(d_iopMcaCommand *iopCommand)
 void readMcPs2(d_iopMcaCommand *iopCommand)
 {
 	u8* pageData = NULL;
-	u32 i, k, retval;
+	u32 i, retval;
 	getCardSpecs();
 	u32 type; //0 - none, 1 - psx, 2 - ps2, 3 - pda
 	u16 pageSize;
