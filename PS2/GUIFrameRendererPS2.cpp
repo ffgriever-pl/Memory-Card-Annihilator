@@ -429,6 +429,10 @@ void CGUIFrameRendererPS2::drawQuadGT(CIGUIFrameTexture *texture, const float x1
 	);
 }
 
+#define CENTER_XY2 0.0625f
+#define CENTER_UV1 0.5f
+#define CENTER_UV2 0.375f
+
 void CGUIFrameRendererPS2::drawSpriteT(CIGUIFrameTexture *texture, const float x, const float y, const float w, const float h, const float u1, const float v1, const float u2, const float v2, const u8 r, const u8 g, const u8 b, float alpha)
 {
 	if (!m_bInitDone) return;
@@ -437,9 +441,9 @@ void CGUIFrameRendererPS2::drawSpriteT(CIGUIFrameTexture *texture, const float x
 		m_gsGlobal,
 		((CGUIFrameTexturePS2*)texture)->getTexPointer(),
 		((float)x*m_xscale)+m_xmove, ((float)y*m_yscale)+m_ymove,
-		u1, v1,
-		((float)x*m_xscale)+m_xmove+((float)w*m_xscale)-1, ((float)y*m_yscale)+m_ymove+((float)h*m_yscale)-1,
-		u2, v2,
+		u1+CENTER_UV1, v1+CENTER_UV1,
+		((float)x*m_xscale)+m_xmove+((float)w*m_xscale)-1.0f+CENTER_XY2, ((float)y*m_yscale)+m_ymove+((float)h*m_yscale)-1.0f+CENTER_XY2,
+		u2-CENTER_UV2, v2-CENTER_UV2,
 		0,
 		GS_SETREG_RGBAQ(r,g,b,(u32)(((float)0x80*alpha)+0.5f),0x00)
 	);
@@ -453,13 +457,13 @@ void CGUIFrameRendererPS2::drawSpriteGT(CIGUIFrameTexture *texture, const float 
 		m_gsGlobal,
 		((CGUIFrameTexturePS2*)texture)->getTexPointer(),
 		((float)x*m_xscale)+m_xmove, ((float)y*m_yscale)+m_ymove,
-		u1 +0.5f, v1 +0.5f,
-		((float)x*m_xscale)+m_xmove+((float)w*m_xscale) -1.0f+0.0625f, ((float)y*m_yscale)+m_ymove,
-		u2 -0.375f, v1 +0.5f,
-		((float)x*m_xscale)+m_xmove, ((float)y*m_yscale)+m_ymove+((float)h*m_yscale) -1.0f+0.0625f,
-		u1 +0.5f, v2 -0.375f,
-		((float)x*m_xscale)+m_xmove+((float)w*m_xscale) -1.0f+0.0625f, ((float)y*m_yscale)+m_ymove+((float)h*m_yscale) -1.0f+0.0625f,
-		u2 -0.375f, v2 -0.375f,
+		u1 +CENTER_UV1, v1 +CENTER_UV1,
+		((float)x*m_xscale)+m_xmove+((float)w*m_xscale) -1.0f+CENTER_XY2, ((float)y*m_yscale)+m_ymove,
+		u2 -CENTER_UV2, v1 +CENTER_UV1,
+		((float)x*m_xscale)+m_xmove, ((float)y*m_yscale)+m_ymove+((float)h*m_yscale) -1.0f+CENTER_XY2,
+		u1 +CENTER_UV1, v2 -CENTER_UV2,
+		((float)x*m_xscale)+m_xmove+((float)w*m_xscale) -1.0f+CENTER_XY2, ((float)y*m_yscale)+m_ymove+((float)h*m_yscale) -1.0f+CENTER_XY2,
+		u2 -CENTER_UV2, v2 -CENTER_UV2,
 		0,
 		GS_SETREG_RGBAQ(r1,g1,b1,(u32)(((float)0x80*alpha1)+0.5f),0x00),
 		GS_SETREG_RGBAQ(r2,g2,b2,(u32)(((float)0x80*alpha2)+0.5f),0x00),

@@ -20,7 +20,7 @@ EE_OBJS =	res/resources.o ../PS2/GUIFramePS2Modules.o GUIMcaMan.o GUIMcaLang.o \
 			GUIMcaProgressBar.o GUIMcaGetPath.o GUIMcaVkbd.o \
 			GUIMcaDisplayMessage.o GUIMcaAbout.o GUIMcaCardInfo.o \
 			GUIMcaTip.o GUIMcaMainWnd.o \
-			PS2/PS2Application.o ../PS2/cdvd_rpc.o PS2/main.o
+			PS2/PS2Application.o ../PS2/cdvd_rpc.o ../PS2/new_iop_modules.o PS2/main.o
 
 EE_INCS =	-I../PS2/Include -I../GUIFramework/Include -I./GUIFramework/Include -I./PS2/Include \
 			-I./ -I../ -I$(PS2SDK)/ee/include -I$(PS2SDK)/common/include \
@@ -33,6 +33,11 @@ EE_CFLAGS = -G0 -O2 -D__LINUX__ -fno-builtin-printf -ffunction-sections -fdata-s
 EE_CXXFLAGS = $(EE_CFLAGS)
 
 EE_LDFLAGS += -L$(PS2DEV)/gsKit/lib -L$(PS2SDK)/ports/lib
+
+ifeq ($(EXFAT),1)
+  $(info -- EXFAT Support)
+  EE_CFLAGS += -DEXFAT
+endif
 
 all: 
 	mkdir -p ../bin/
@@ -51,6 +56,22 @@ run:
 	echo "Running..."
 	ps2client execee host:$(EE_BIN)
 
+
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal
 
+DIR_GUARD = @mkdir -p $(@D)
+%.o: $(EE_SRC_DIR)%.c
+	@printf "\033[1m CC  - $@\033[0m\n"
+	$(DIR_GUARD)
+	$(EE_CC) $(EE_CFLAGS) $(EE_INCS) -c $< -o $@
+
+%.o: $(EE_ASM_DIR)%.s
+	@printf "\033[1m ASM - $@\033[0m\n"
+	$(DIR_GUARD)
+	$(EE_AS) $(EE_ASFLAGS) $< -o $@
+
+%.o: $(EE_SRC_DIR)%.cpp
+	@printf "\033[1m CXX - $@\033[0m\n"
+	$(DIR_GUARD)
+	$(EE_CXX) $(EE_CXXFLAGS) $(EE_INCS) -c $< -o $@

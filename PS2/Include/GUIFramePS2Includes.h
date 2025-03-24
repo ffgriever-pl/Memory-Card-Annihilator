@@ -29,7 +29,9 @@
 #include <dirent.h>
 
 //#define sio_printf printf
+#ifdef NO_PRINTF
 #define sio_printf(...)
 #define printf(...)
+#endif
 
 #endif //_GUIFRAMEPS2INCLUDES_H_
