@@ -5,3 +5,12 @@
 *.IRX
 .vscode
 .vs
+bin/*.lng
+/mca_Prototype
+/mca_legacy
+/mca_exfat
+/mca_Arcade
+/mca_Developer
+PS2/ioprp_ARCADE.c
+PS2/ioprp_DEVELOPER.c
+PS2/ioprp_PROTOTYPE.c
