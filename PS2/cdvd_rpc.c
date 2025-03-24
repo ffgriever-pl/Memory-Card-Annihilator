@@ -4,7 +4,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "include/cdvd_rpc.h"
+#include "Include/cdvd_rpc.h"
 
 int k_sceSifDmaStat(unsigned int id);
 static unsigned sbuff[0x1300] __attribute__((aligned(64)));
