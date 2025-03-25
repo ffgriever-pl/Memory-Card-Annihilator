@@ -1,5 +1,10 @@
 name: Compile MCA
 
+# Ensure only one workflow run can manage the "latest" release at a time to prevent race conditions. Let version releases run concurrently.
+concurrency: 
+  group: ${{ github.ref == 'refs/heads/master' && 'latest-release' || format('version-release-{0}', github.ref) }}
+  cancel-in-progress: ${{ github.ref == 'refs/heads/master' }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -7,7 +12,7 @@ on:
         description: pass extra make argumments to control features not explicitly handled by CI
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+*'  # Match version tags like v2.1.0 or v1.0.0-beta
+      - 'v[0-9]+.[0-9]+.[0-9]+*'  # Match version tags like v2.1.0 or v2.1.1-beta
     branches:
       - '**'
   repository_dispatch:
@@ -28,6 +33,11 @@ jobs:
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
         git fetch --prune --unshallow
 
+    - name: Set build timestamp
+      if: github.ref == 'refs/heads/master'
+      run: |
+        echo "BUILD_TIMESTAMP=$(date -u '+%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+
     - name: Compile
       run: |
         make clean all packlang -C MCA EE_BIN_DIR=../mca_legacy
@@ -36,35 +46,92 @@ jobs:
         make clean all packlang -C MCA EE_BIN_DIR=../mca_Prototype EXFAT=1 MGMODE=PROTOTYPE
         make clean all packlang -C MCA EE_BIN_DIR=../mca_Developer EXFAT=1 MGMODE=DEVELOPER
 
-    - name: Pack
+    - name: Pack versioned
+      if: startsWith(github.ref, 'refs/tags/v')
       run: |
-        zip -r MemoryCardAnihilator.zip ./mca_legacy/* ./mca_exfat/* ./mca_Arcade/* ./mca_Prototype/* ./mca_Developer/* README.MD LICENSE
+        zip -r "MemoryCardAnihilator_${{ github.ref_name }}.zip" ./mca_legacy/* ./mca_exfat/* ./mca_Arcade/* ./mca_Prototype/* ./mca_Developer/* README.MD LICENSE
 
-    - name: Upload variants artifact ELF
+    - name: Pack latest
+      if: github.ref == 'refs/heads/master'
+      run: |
+        zip -r "MemoryCardAnihilator_${{ env.BUILD_TIMESTAMP }}.zip" ./mca_legacy/* ./mca_exfat/* ./mca_Arcade/* ./mca_Prototype/* ./mca_Developer/* README.MD LICENSE
+
+    - name: Upload variants artifact ELF (versioned)
+      if: startsWith(github.ref, 'refs/tags/v')
       uses: actions/upload-artifact@v4
       with:
         name: "MCA"
-        path: |
-            MemoryCardAnihilator.zip
+        path: "MemoryCardAnihilator_${{ github.ref_name }}.zip"
 
-    - name: Create release for version tags
-      if: startsWith(github.ref, 'refs/tags/v')
-      uses: marvinpinto/action-automatic-releases@latest
+    - name: Upload variants artifact ELF (latest)
+      if: github.ref == 'refs/heads/master'
+      uses: actions/upload-artifact@v4
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "${{ github.ref_name }}"
-        title: "Release ${{ github.ref_name }}"
-        prerelease: false
-        files: |
-               MemoryCardAnihilator.zip
+        name: "MCA"
+        path: "MemoryCardAnihilator_${{ env.BUILD_TIMESTAMP }}.zip"
+
+    - name: Delete previous latest release
+      if: github.ref == 'refs/heads/master'
+      uses: actions/github-script@v7
+      with:
+        retries: 3
+        script: |
+          async function deleteLatestRelease() {
+            try {
+              // Find the release with tag "latest"
+              const release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag: 'latest'
+              });
+              
+              // Delete the release if found
+              if (release && release.data) {
+                await github.rest.repos.deleteRelease({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: release.data.id
+                });
+              }
+              
+              // Delete the tag
+              try {
+                await github.rest.git.deleteRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: 'tags/latest'
+                });
+              } catch (e) {
+                // Tag might not exist, that's ok
+                console.log("Tag doesn''t exist");
+              }
+            } catch (e) {
+              if (e.status === 404) {
+                console.log('Release or tag not found - this is ok for the first run');
+              } else {
+                throw e; // Re-throw other errors to trigger retry
+              }
+            }
+          }
+          
+          // Execute with exponential backoff (built in the GitHub Script action)
+          await deleteLatestRelease();
 
     - name: Create latest release
       if: github.ref == 'refs/heads/master'
-      uses: marvinpinto/action-automatic-releases@latest
+      uses: softprops/action-gh-release@v1
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        title: "Latest automated build"
-        prerelease: false
-        files: |
-               MemoryCardAnihilator.zip
+        files: "MemoryCardAnihilator_${{ env.BUILD_TIMESTAMP }}.zip"
+        name: "Latest automated build (${{ env.BUILD_TIMESTAMP }} UTC)"
+        tag_name: latest
+        prerelease: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create release for version tags
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "MemoryCardAnihilator_${{ github.ref_name }}.zip"
+        name: "Release ${{ github.ref_name }}"
+        generate_release_notes: true
+        token: ${{ secrets.GITHUB_TOKEN }}
