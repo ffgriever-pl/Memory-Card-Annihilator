@@ -6,6 +6,10 @@ on:
       make_args:
         description: pass extra make argumments to control features not explicitly handled by CI
   push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'  # Match version tags like v2.1.0 or v1.0.0-beta
+    branches:
+      - '**'
   repository_dispatch:
     types: [run_build]
 
@@ -43,7 +47,18 @@ jobs:
         path: |
             MemoryCardAnihilator.zip
 
-    - name: Create release
+    - name: Create release for version tags
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "${{ github.ref_name }}"
+        title: "Release ${{ github.ref_name }}"
+        prerelease: false
+        files: |
+               MemoryCardAnihilator.zip
+
+    - name: Create latest release
       if: github.ref == 'refs/heads/master'
       uses: marvinpinto/action-automatic-releases@latest
       with:
