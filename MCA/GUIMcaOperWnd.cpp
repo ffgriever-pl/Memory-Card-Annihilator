@@ -9,6 +9,7 @@
 #include "GUIMcaDisplayMessage.h"
 #include "GUIMcaAbout.h"
 #include "GUIMcaCardInfo.h"
+#include "Version.h"
 
 const char *CGUIMcaOperWnd::m_menu_options[] = {
 	"LNG_OPER_FORMAT",
@@ -460,6 +461,18 @@ void CGUIMcaOperWnd::drawStatic(float alpha)
 		, 0, 0
 		, m_mca_logo.getWidth(), m_mca_logo.getHeight()
 		, 128, 128, 128, alpha
+	);
+	CResources::urwmed20.printUTF8Box(
+		VERSION_FULL
+		, 62, 136
+		, 500, 30
+		, CIGUIFrameFont<CGUITexture>::etxAlignRight
+		, 0, 1.0f
+		, 40, 40, 40, alpha
+		, 40, 40, 40, alpha
+		, 0, 0, 0, alpha
+		, 0, 0, 0, alpha
+		, true
 	);
 	if (m_psx_mode)
 	{
