@@ -11,6 +11,9 @@ EE_BIN_COMPR = $(EE_BIN_DIR)/mca-packed$(MGMODEN).elf
 
 #El_isra: define 'MGMODE' to either ARCADE, DEVELOPER or PROTOTYPE
 
+# 'HOMEBREW' or 'XOSD'
+MCMAN_TYPE ?= HOMEBREW
+
 EE_OBJS =	res/resources.o ../PS2/GUIFramePS2Modules.o GUIMcaMan.o GUIMcaLang.o \
 			../GUIFramework/IGUIFrameTimer.o ../GUIFramework/IGUIFrameRenderer.o \
 			../GUIFramework/IGUIFrameTexture.o ../GUIFramework/IGUIFrameFont.o \
@@ -40,6 +43,15 @@ EE_CXXFLAGS = $(EE_CFLAGS)
 EE_LDFLAGS += -L$(PS2DEV)/gsKit/lib -L$(PS2SDK)/ports/lib
 
 IOP_DIRS = iop
+IRXTAG = $(notdir $(addsuffix _irx, $(basename $<)))
+
+ifeq ($(MCMAN_TYPE), HOMEBREW)
+  EE_CXXFLAGS += -DUSE_HOMEBREW_MODULES
+  EE_OBJS += $(addprefix ../PS2/, mcman.o sio2man.o padman.o mcserv.o)
+else ifeq ($(MCMAN_TYPE), XOSD)
+else
+  $(error invalid MCMAN type chosen '$(MCMAN_TYPE)')
+endif
 
 ifeq ($(EXFAT),1)
   $(info -- EXFAT Support)
@@ -89,6 +101,10 @@ $(IOP_DIRS):
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal
+
+vpath %.irx $(PS2SDK)/iop/irx/
+../PS2/%.c: %.irx
+	bin2c $< $@ $(IRXTAG)
 
 DIR_GUARD = @mkdir -p $(@D)
 %.o: $(EE_SRC_DIR)%.c
