@@ -85,7 +85,6 @@ int CPS2Application::main(int argc, char *argv[])
 		printf("Couldn't load main small font. Exiting...\n");
 		return -1;
 	}
-
 	if (!CResources::verdana22.loadFontBuffer(CResources::verdana22_bfnk, CResources::size_verdana22_bfnk, &ps2renderer))
 	{
 		printf("Couldn't load main font. Exiting...\n");
@@ -94,6 +93,11 @@ int CPS2Application::main(int argc, char *argv[])
 	if (!CResources::centurygoth38p.loadFontBuffer(CResources::centurygoth38p_bfnk, CResources::size_centurygoth38p_bfnk, &ps2renderer))
 	{
 		printf("Couldn't load main font. Exiting...\n");
+		return -1;
+	}
+	if (!CResources::urwmed20.loadFontBuffer(CResources::urwmed20_bfnk, CResources::size_urwmed20_bfnk, &ps2renderer))
+	{
+		printf("Couldn't load version font. Exiting...\n");
 		return -1;
 	}
 

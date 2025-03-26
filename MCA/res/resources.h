@@ -25,12 +25,15 @@ public:
 	static unsigned char verdana38p_bfnk[];*/
 	static unsigned int size_centurygoth38p_bfnk;
 	static unsigned char centurygoth38p_bfnk[];
+	static unsigned int size_urwmed20_bfnk;
+	static unsigned char urwmed20_bfnk[];
 
 	static CIGUIFrameFont<CGUITexture> verdana18s;
 	static CIGUIFrameFont<CGUIFrameTexturePS2> verdana22;
 	/*static CIGUIFrameFont<CGUIFrameTexturePS2> verdana38;
 	static CIGUIFrameFont<CGUIFrameTexturePS2> verdana38p;*/
 	static CIGUIFrameFont<CGUIFrameTexturePS2> centurygoth38p;
+	static CIGUIFrameFont<CGUIFrameTexturePS2> urwmed20;
 	
 	//universal
 	static unsigned int size_bgimg_tm2;

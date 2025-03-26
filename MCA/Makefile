@@ -80,6 +80,11 @@ EE_OBJS += ../PS2/ioprp_$(MGMODE).o
 	bin2c $< $@ ioprp
 endif
 
+ifdef VERSION
+#quotes just in case there are spaces there
+EE_CFLAGS += -DVERSION="\"$(VERSION)\""
+endif
+
 clean:
 	echo "Cleaning..."
 	rm -f $(EE_BIN) $(EE_OBJS) $(EE_BIN_COMPR)

@@ -5,6 +5,7 @@
 //#include "verdana38_bfnk.h"
 //#include "verdana38p_bfnk.h"
 #include "centurygoth38p_bfnk.h"
+#include "urwmed20_bfnk.h"
 
 #include "bgimg_tm2.h"
 #include "bgimg_ntsc_tm2.h"
@@ -76,3 +77,4 @@ CIGUIFrameFont<CGUITexture> CResources::verdana22;
 //CIGUIFrameFont<CGUITexture> CResources::verdana38;
 //CIGUIFrameFont<CGUITexture> CResources::verdana38p;
 CIGUIFrameFont<CGUITexture> CResources::centurygoth38p;
+CIGUIFrameFont<CGUITexture> CResources::urwmed20;

@@ -37,14 +37,20 @@ jobs:
       if: "!startsWith(github.ref, 'refs/tags/v')"
       run: |
         echo "BUILD_TIMESTAMP=$(date -u '+%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+        echo "VERSION=$(date -u '+%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+
+    - name: Set version for tagged builds
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
 
     - name: Compile
       run: |
-        make clean all packlang -C MCA EE_BIN_DIR=../mca_legacy MCMAN_TYPE=XOSD
-        make clean all packlang -C MCA EE_BIN_DIR=../mca_new EXFAT=1
-        make clean all packlang -C MCA EE_BIN_DIR=../mca_Arcade EXFAT=1 MGMODE=ARCADE
-        make clean all packlang -C MCA EE_BIN_DIR=../mca_Prototype EXFAT=1 MGMODE=PROTOTYPE
-        make clean all packlang -C MCA EE_BIN_DIR=../mca_Developer EXFAT=1 MGMODE=DEVELOPER
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_legacy VERSION=${{ env.VERSION }} MCMAN_TYPE=XOSD
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_new VERSION=${{ env.VERSION }} EXFAT=1
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_Arcade VERSION=${{ env.VERSION }} EXFAT=1 MGMODE=ARCADE
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_Prototype VERSION=${{ env.VERSION }} EXFAT=1 MGMODE=PROTOTYPE
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_Developer VERSION=${{ env.VERSION }} EXFAT=1 MGMODE=DEVELOPER
 
     - name: Pack versioned
       if: startsWith(github.ref, 'refs/tags/v')
