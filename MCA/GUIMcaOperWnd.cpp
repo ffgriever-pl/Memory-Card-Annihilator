@@ -30,7 +30,7 @@ bool CGUIMcaOperWnd::checkMessages()
 	CGUIMcaMan::updateMca();
 
 	//if (CGUIMcaMan::mce_memcards[m_oper_slot].type == CGUIMcaMan::enctNone || m_input_state_new & CIGUIFrameInput::enInMenu)
-	if ( (m_psx_mode && (CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPsx && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPda)) || (!m_psx_mode && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPs2) )
+	if ((m_psx_mode && (CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPsx && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPda)) || (!m_psx_mode && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPs2))
 	{
 		//display warrning
 		CGUIMcaWarrningNoCard myWarn(110, 106, m_oper_slot);
@@ -46,21 +46,22 @@ bool CGUIMcaOperWnd::checkMessages()
 		{
 			m_menu_item = 0;
 			//m_hover_menu.setDest(70, 248 +26*m_menu_item);
-			m_hover_menu.setDest(70, 248 +26*m_menu_item, true);
+			m_hover_menu.setDest(70, 248 + 26 * m_menu_item, true);
 		}
 		//m_hover_menu.setVisibility(true);
-		m_hover_menu.setDest(70, 248 +26*m_menu_item);
-	} else if (m_input_state_new & CIGUIFrameInput::enInUp)
+		m_hover_menu.setDest(70, 248 + 26 * m_menu_item);
+	}
+	else if (m_input_state_new & CIGUIFrameInput::enInUp)
 	{
 		m_menu_item--;
 		if (m_menu_item < 0)
 		{
 			m_menu_item = 4;
 			//m_hover_menu.setDest(70, 248 +26*m_menu_item);
-			m_hover_menu.setDest(70, 248 +26*m_menu_item, true);
+			m_hover_menu.setDest(70, 248 + 26 * m_menu_item, true);
 		}
 		//m_hover_menu.setVisibility(true);
-		m_hover_menu.setDest(70, 248 +26*m_menu_item);
+		m_hover_menu.setDest(70, 248 + 26 * m_menu_item);
 	}
 
 	if (m_menu_item == 0)
@@ -96,7 +97,8 @@ bool CGUIMcaOperWnd::checkMessages()
 		myCardInfo.displayInfo(m_renderer, m_input, m_timer, true, m_oper_slot, m_psx_mode);
 		windowCalled = true;
 		return windowCalled;
-	} else if (m_input_state_new & CIGUIFrameInput::enInMenu)
+	}
+	else if (m_input_state_new & CIGUIFrameInput::enInMenu)
 	{
 		CGUIMcaAbout myAbout(110, 106);
 		myAbout.display(m_renderer, m_input, m_timer, true);
@@ -110,181 +112,112 @@ bool CGUIMcaOperWnd::checkMessages()
 		{
 			case 0://format
 				//m_menu_item_format
+			{
+				int cardSize = 1;
+				int totalpages = 1;
+				bool skip = false;
+				if (!m_psx_mode)
 				{
-					int cardSize = 1;
-					int totalpages = 1;
-					bool skip = false;
-					if (!m_psx_mode)
-					{
-						int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024/1024;
-						CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
-						cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
-						
-						if (cardSize != -1 && cardSize > defaultsize)
-						{
-              int resYesNo;
-              CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_SIZE_MISMATCH"), CGUIMcaGetYesNo::enresNo);
-              if ( (resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo )
-              skip = true;
-            }
-					}
-					if (cardSize != -1)
+					int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages * CGUIMcaMan::mce_memcards[m_oper_slot].pageSize / 1024 / 1024;
+					CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
+					cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
+
+					if (cardSize != -1 && cardSize > defaultsize)
 					{
 						int resYesNo;
-            if (!skip)
-            {
-              CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_FORMAT_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
-              if ( (resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresYes )
-              {
-                //here call format progress
-                if (!m_psx_mode)
-                {
-                  totalpages = (cardSize*1024*1024)/CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
-                }
-                CGUIMcaOperProgress formatProgress(110, 106);
-                formatProgress.doFormat(m_renderer, m_input, m_timer, m_oper_slot, m_menu_item_format == 0 ? true : false, m_psx_mode, totalpages);
-                m_exit_now = true;
-              }
-            }
+						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_SIZE_MISMATCH"), CGUIMcaGetYesNo::enresNo);
+						if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
+							skip = true;
 					}
-					windowCalled = true;
-					return windowCalled;
 				}
-				break;
-			case 1: //unformat
-				//m_menu_item_format
+				if (cardSize != -1)
 				{
-					int cardSize = 1;
-					int totalpages = 1;
-					bool skip = false;
-					if (!m_psx_mode)
+					int resYesNo;
+					if (!skip)
 					{
-						int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024/1024;
-						CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
-						cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
-						
-						if (cardSize != -1 && cardSize > defaultsize)
+						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_FORMAT_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
+						if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresYes)
 						{
-              int resYesNo;
-              CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_SIZE_MISMATCH"), CGUIMcaGetYesNo::enresNo);
-              if ( (resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo )
-              skip = true;
-            }
-					}
-					if (cardSize != -1)
-					{
-						int resYesNo;
-						if (!skip)
-            {
-              CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_UNFORMAT_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
-              if ( (resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresYes )
-              {
-                //here call format progress
-                if (!m_psx_mode)
-                {
-                  totalpages = (cardSize*1024*1024)/CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
-                }
-                CGUIMcaOperProgress unformatProgress(110, 106);
-                unformatProgress.doUnformat(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, totalpages);
-                m_exit_now = true;
-              }
-            }
-					}
-					windowCalled = true;
-					return windowCalled;
-				}
-				break;
-			case 2: //create image
-				{
-					int cardSize = 1;
-					int totalpages = 1;
-					if (!m_psx_mode)
-					{
-						int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024/1024;
-						CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
-						cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
-					}
-					if (cardSize != -1)
-					{
-						std::ostringstream operslot;
-						operslot << m_oper_slot;
-						
-						std::string defname = "memorycard";
-						defname += operslot.str();
-						if (m_psx_mode)
-							defname += ".mcr";
-						else
-							defname += ".bin";
-						CGUIMcaGetPath getPath(67,106,defname.c_str());
-						if (m_psx_mode)
-						{
-							getPath.addMaskEntry(".mcr");
-							getPath.addMaskEntry(".gme");
-							getPath.addMaskEntry(".mem");
-							getPath.addMaskEntry(".psx");
-							getPath.addMaskEntry(".vmp");
-						} else
-						{
-							getPath.addMaskEntry(".vmc");
-							getPath.addMaskEntry(".bin");
-						}
-						getPath.enableMask(true);
-						std::string result;
-						getPath.doGetName(m_renderer, m_input, m_timer, result, true,  m_psx_mode ? true : false);
-						
-						//here call create image progress
-						if (!result.empty())
-						{
-						//check if exists
-							std::string chkpath = result;
-							if (chkpath.substr(0, 5) == "hdd0:")
-							{
-								u32 pos = chkpath.find('/');
-								if (pos != std::string::npos)
-								{
-									//fileXioUmount("pfs0:");
-									//sio_printf("Mounting '%s' as pfs0\n", chkpath.substr(0, pos).c_str());
-									//fileXioMount("pfs0:", chkpath.substr(0, pos).c_str(), FIO_MT_RDWR);
-									std::string pfsPath = "pfs0:";
-									pfsPath += chkpath.substr(pos, chkpath.length()-pos);
-									chkpath = pfsPath;
-									sio_printf("Mounted path: '%s'\n", chkpath.c_str());
-								}
-							}
-							int chkfd = fioOpen(chkpath.c_str(), O_RDONLY | O_BINARY);
-							if (chkfd > 0)
-							{
-								fioClose(chkfd);
-								int resYesNo;
-								CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_OVERWRITE"), CGUIMcaGetYesNo::enresNo);
-								if ( (resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo )
-								{
-									windowCalled = true;
-									return windowCalled;
-								}
-							}
-						//end check exists
+							//here call format progress
 							if (!m_psx_mode)
 							{
-								totalpages = (cardSize*1024*1024)/CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
+								totalpages = (cardSize * 1024 * 1024) / CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
 							}
-							CGUIMcaOperProgress createProgress(110, 106);
-							createProgress.doCreateImage(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, totalpages, result.c_str(), false);
-							if (result.substr(0, 5) == "hdd0:") fileXioUmount("pfs0:");
+							CGUIMcaOperProgress formatProgress(110, 106);
+							formatProgress.doFormat(m_renderer, m_input, m_timer, m_oper_slot, m_menu_item_format == 0 ? true : false, m_psx_mode, totalpages);
 							m_exit_now = true;
 						}
 					}
-					windowCalled = true;
-					return windowCalled;
 				}
-				break;
-			case 3://restore image
+				windowCalled = true;
+				return windowCalled;
+			}
+			break;
+			case 1: //unformat
 				//m_menu_item_format
+			{
+				int cardSize = 1;
+				int totalpages = 1;
+				bool skip = false;
+				if (!m_psx_mode)
 				{
+					int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages * CGUIMcaMan::mce_memcards[m_oper_slot].pageSize / 1024 / 1024;
+					CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
+					cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
+
+					if (cardSize != -1 && cardSize > defaultsize)
+					{
+						int resYesNo;
+						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_SIZE_MISMATCH"), CGUIMcaGetYesNo::enresNo);
+						if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
+							skip = true;
+					}
+				}
+				if (cardSize != -1)
+				{
+					int resYesNo;
+					if (!skip)
+					{
+						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_UNFORMAT_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
+						if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresYes)
+						{
+							//here call format progress
+							if (!m_psx_mode)
+							{
+								totalpages = (cardSize * 1024 * 1024) / CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
+							}
+							CGUIMcaOperProgress unformatProgress(110, 106);
+							unformatProgress.doUnformat(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, totalpages);
+							m_exit_now = true;
+						}
+					}
+				}
+				windowCalled = true;
+				return windowCalled;
+			}
+			break;
+			case 2: //create image
+			{
+				int cardSize = 1;
+				int totalpages = 1;
+				if (!m_psx_mode)
+				{
+					int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages * CGUIMcaMan::mce_memcards[m_oper_slot].pageSize / 1024 / 1024;
+					CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
+					cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
+				}
+				if (cardSize != -1)
+				{
+					std::ostringstream operslot;
+					operslot << m_oper_slot;
+
 					std::string defname = "memorycard";
-					defname += m_oper_slot;
-					defname += ".bin";
-					CGUIMcaGetPath getPath(67,106,defname.c_str());
+					defname += operslot.str();
+					if (m_psx_mode)
+						defname += ".mcr";
+					else
+						defname += ".bin";
+					CGUIMcaGetPath getPath(67, 106, defname.c_str());
 					if (m_psx_mode)
 					{
 						getPath.addMaskEntry(".mcr");
@@ -292,61 +225,132 @@ bool CGUIMcaOperWnd::checkMessages()
 						getPath.addMaskEntry(".mem");
 						getPath.addMaskEntry(".psx");
 						getPath.addMaskEntry(".vmp");
-					} else
+					}
+					else
 					{
 						getPath.addMaskEntry(".vmc");
 						getPath.addMaskEntry(".bin");
 					}
 					getPath.enableMask(true);
 					std::string result;
-					getPath.doGetName(m_renderer, m_input, m_timer, result, false,  true);
-						
+					getPath.doGetName(m_renderer, m_input, m_timer, result, true, m_psx_mode ? true : false);
+
 					//here call create image progress
 					if (!result.empty())
 					{
-						int resYesNo;
-						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_RESTORE_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
-						if ( (resYesNo = getYesNo.display(m_renderer, m_input, m_timer, false)) == CGUIMcaGetYesNo::enresYes )
+						//check if exists
+						std::string chkpath = result;
+						if (chkpath.substr(0, 5) == "hdd0:")
 						{
-							//here call restore progress
-							CGUIMcaOperProgress restoreProgress(110, 106);
-							restoreProgress.doRestoreImage(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, result.c_str(), false);
-							if (result.substr(0, 5) == "hdd0:") fileXioUmount("pfs0:");
-							m_exit_now = true;
+							u32 pos = chkpath.find('/');
+							if (pos != std::string::npos)
+							{
+								//fileXioUmount("pfs0:");
+								//sio_printf("Mounting '%s' as pfs0\n", chkpath.substr(0, pos).c_str());
+								//fileXioMount("pfs0:", chkpath.substr(0, pos).c_str(), FIO_MT_RDWR);
+								std::string pfsPath = "pfs0:";
+								pfsPath += chkpath.substr(pos, chkpath.length() - pos);
+								chkpath = pfsPath;
+								sio_printf("Mounted path: '%s'\n", chkpath.c_str());
+							}
 						}
+						int chkfd = fioOpen(chkpath.c_str(), O_RDONLY | O_BINARY);
+						if (chkfd > 0)
+						{
+							fioClose(chkfd);
+							int resYesNo;
+							CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_OVERWRITE"), CGUIMcaGetYesNo::enresNo);
+							if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
+							{
+								windowCalled = true;
+								return windowCalled;
+							}
+						}
+						//end check exists
+						if (!m_psx_mode)
+						{
+							totalpages = (cardSize * 1024 * 1024) / CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
+						}
+						CGUIMcaOperProgress createProgress(110, 106);
+						createProgress.doCreateImage(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, totalpages, result.c_str(), false);
+						if (result.substr(0, 5) == "hdd0:") fileXioUmount("pfs0:");
+						m_exit_now = true;
 					}
-					windowCalled = true;
-					return windowCalled;
 				}
-				break;
-			case 4://card info
+				windowCalled = true;
+				return windowCalled;
+			}
+			break;
+			case 3://restore image
+				//m_menu_item_format
+			{
+				std::string defname = "memorycard";
+				defname += m_oper_slot;
+				defname += ".bin";
+				CGUIMcaGetPath getPath(67, 106, defname.c_str());
+				if (m_psx_mode)
 				{
-					/*std::string content = CResources::mainLang.getText("LNG_INFO_ALL");
-					CResources::mainLang.replace(&content, "{SLOTNUM}", m_oper_slot+1);
-					CResources::mainLang.replace(&content, "{MCTYPE}", m_psx_mode ? CResources::mainLang.getText("LNG_INFO_MC_PSX") : CResources::mainLang.getText("LNG_INFO_MC_PS2"));
-					CResources::mainLang.replace(&content, "{PAGESIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].pageSize);
-					CResources::mainLang.replace(&content, "{PAGESINBLOCK}", CGUIMcaMan::mce_memcards[m_oper_slot].pagesPerBlock);
-					CResources::mainLang.replace(&content, "{PAGESTOTAL}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages);
-					if (m_psx_mode)
-					{
-						CResources::mainLang.replace(&content, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024);
-						CResources::mainLang.replace(&content, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_KB"));
-					} else
-					{
-						CResources::mainLang.replace(&content, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024/1024);
-						CResources::mainLang.replace(&content, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_MB"));
-					}
-
-					CGUIMcaDisplayMessage myMessage(110, 106
-						, content.c_str()
-						, CResources::mainLang.getText("LNG_INFO_CAPTION")
-						, CGUIMcaDisplayMessage::enIcNone, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
-					myMessage.display(m_renderer, m_input, m_timer, true);*/
-					CGUIMcaCardInfo myCardInfo(138, 166);
-					myCardInfo.displayInfo(m_renderer, m_input, m_timer, true, m_oper_slot, m_psx_mode);
-					windowCalled = true;
-					return windowCalled;
+					getPath.addMaskEntry(".mcr");
+					getPath.addMaskEntry(".gme");
+					getPath.addMaskEntry(".mem");
+					getPath.addMaskEntry(".psx");
+					getPath.addMaskEntry(".vmp");
 				}
+				else
+				{
+					getPath.addMaskEntry(".vmc");
+					getPath.addMaskEntry(".bin");
+				}
+				getPath.enableMask(true);
+				std::string result;
+				getPath.doGetName(m_renderer, m_input, m_timer, result, false, true);
+
+				//here call create image progress
+				if (!result.empty())
+				{
+					int resYesNo;
+					CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_RESTORE_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
+					if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, false)) == CGUIMcaGetYesNo::enresYes)
+					{
+						//here call restore progress
+						CGUIMcaOperProgress restoreProgress(110, 106);
+						restoreProgress.doRestoreImage(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, result.c_str(), false);
+						if (result.substr(0, 5) == "hdd0:") fileXioUmount("pfs0:");
+						m_exit_now = true;
+					}
+				}
+				windowCalled = true;
+				return windowCalled;
+			}
+			break;
+			case 4://card info
+			{
+				/*std::string content = CResources::mainLang.getText("LNG_INFO_ALL");
+				CResources::mainLang.replace(&content, "{SLOTNUM}", m_oper_slot+1);
+				CResources::mainLang.replace(&content, "{MCTYPE}", m_psx_mode ? CResources::mainLang.getText("LNG_INFO_MC_PSX") : CResources::mainLang.getText("LNG_INFO_MC_PS2"));
+				CResources::mainLang.replace(&content, "{PAGESIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].pageSize);
+				CResources::mainLang.replace(&content, "{PAGESINBLOCK}", CGUIMcaMan::mce_memcards[m_oper_slot].pagesPerBlock);
+				CResources::mainLang.replace(&content, "{PAGESTOTAL}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages);
+				if (m_psx_mode)
+				{
+					CResources::mainLang.replace(&content, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024);
+					CResources::mainLang.replace(&content, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_KB"));
+				} else
+				{
+					CResources::mainLang.replace(&content, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024/1024);
+					CResources::mainLang.replace(&content, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_MB"));
+				}
+
+				CGUIMcaDisplayMessage myMessage(110, 106
+					, content.c_str()
+					, CResources::mainLang.getText("LNG_INFO_CAPTION")
+					, CGUIMcaDisplayMessage::enIcNone, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+				myMessage.display(m_renderer, m_input, m_timer, true);*/
+				CGUIMcaCardInfo myCardInfo(138, 166);
+				myCardInfo.displayInfo(m_renderer, m_input, m_timer, true, m_oper_slot, m_psx_mode);
+				windowCalled = true;
+				return windowCalled;
+			}
 		}
 	}
 	return windowCalled;
