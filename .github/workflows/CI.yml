@@ -34,7 +34,7 @@ jobs:
         git fetch --prune --unshallow
 
     - name: Set build timestamp
-      if: github.ref == 'refs/heads/master'
+      if: "!startsWith(github.ref, 'refs/tags/v')"
       run: |
         echo "BUILD_TIMESTAMP=$(date -u '+%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
 
@@ -51,8 +51,8 @@ jobs:
       run: |
         zip -r "MemoryCardAnihilator_${{ github.ref_name }}.zip" ./mca_legacy/* ./mca_exfat/* ./mca_Arcade/* ./mca_Prototype/* ./mca_Developer/* README.MD LICENSE
 
-    - name: Pack latest
-      if: github.ref == 'refs/heads/master'
+    - name: Pack latest/branch
+      if: "!startsWith(github.ref, 'refs/tags/v')"
       run: |
         zip -r "MemoryCardAnihilator_${{ env.BUILD_TIMESTAMP }}.zip" ./mca_legacy/* ./mca_exfat/* ./mca_Arcade/* ./mca_Prototype/* ./mca_Developer/* README.MD LICENSE
 
@@ -63,8 +63,8 @@ jobs:
         name: "MCA"
         path: "MemoryCardAnihilator_${{ github.ref_name }}.zip"
 
-    - name: Upload variants artifact ELF (latest)
-      if: github.ref == 'refs/heads/master'
+    - name: Upload variants artifact ELF (non-versioned)
+      if: "!startsWith(github.ref, 'refs/tags/v')"
       uses: actions/upload-artifact@v4
       with:
         name: "MCA"
@@ -103,7 +103,7 @@ jobs:
                 });
               } catch (e) {
                 // Tag might not exist, that's ok
-                console.log("Tag doesn''t exist");
+                console.log("Tag doesn't exist");
               }
             } catch (e) {
               if (e.status === 404) {
