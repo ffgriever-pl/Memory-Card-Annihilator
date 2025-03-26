@@ -1,5 +1,11 @@
 #include "Include/GUIFramePS2Modules.h"
 #define IMPORT_BIN2C(_irx) extern unsigned char _irx[]; extern unsigned int size_##_irx
+#ifdef USE_HOMEBREW_MODULES
+IMPORT_BIN2C(sio2man_irx);
+IMPORT_BIN2C(mcman_irx);
+IMPORT_BIN2C(mcserv_irx);
+IMPORT_BIN2C(padman_irx);
+#endif
 #ifdef EXFAT
 IMPORT_BIN2C(bdm);
 IMPORT_BIN2C(bdmfs_fatfs);
@@ -121,6 +127,16 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 			SifInitRpc(0);
 			FlushCache(0);
 			FlushCache(2);
+#ifdef USE_HOMEBREW_MODULES
+			id = SifExecModuleBuffer(sio2man_irx, size_sio2man_irx, 0, NULL, &ret);
+			IRX_REPORT("sio2man", id, ret);
+			id = SifExecModuleBuffer(mcman_irx, size_mcman_irx, 0, NULL, &ret);
+			IRX_REPORT("mcman", id, ret);
+			id = SifExecModuleBuffer(mcserv_irx, size_mcserv_irx, 0, NULL, &ret);
+			IRX_REPORT("mcserv", id, ret);
+			id = SifExecModuleBuffer(padman_irx, size_padman_irx, 0, NULL, &ret);
+			IRX_REPORT("padman", id, ret);
+#else
 			id = SifLoadStartModule("rom0:XSIO2MAN", 0, NULL, &ret);
 			IRX_REPORT("rom0:XSIO2MAN", id, ret);
 			id = SifLoadStartModule("rom0:XMCMAN", 0, NULL, &ret);
@@ -129,6 +145,7 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 			IRX_REPORT("rom0:XMCSERV", id, ret);
 			id = SifLoadStartModule("rom0:XPADMAN", 0, NULL, &ret);
 			IRX_REPORT("rom0:XPADMAN", id, ret);
+#endif
 		}
 		#ifdef MGMODE
 			while(!SifIopRebootBuffer(ioprp, size_ioprp));
@@ -171,6 +188,13 @@ void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 bool CGUIFramePS2Modules::loadSio2Man()
 {
 	int id, ret;
+#ifdef USE_HOMEBREW_MODULES
+	if (!m_modules_sio2man) {
+		id = SifExecModuleBuffer(sio2man_irx, size_sio2man_irx, 0, NULL, &ret);
+		IRX_REPORT("sio2man", id, ret);
+		m_modules_sio2man = true;
+	}
+#else
 	if (!m_modules_sio2man)
 	{
 		if (m_use_xmodules)
@@ -184,11 +208,16 @@ bool CGUIFramePS2Modules::loadSio2Man()
 		}
 		m_modules_sio2man = true;
 	}
+#endif
 	return true;
 }
 bool CGUIFramePS2Modules::loadPadModules()
 {
 	int id, ret;
+#ifdef USE_HOMEBREW_MODULES
+	id = SifExecModuleBuffer(padman_irx, size_padman_irx, 0, NULL, &ret);
+	IRX_REPORT("padman", id, ret);
+#else
 	if (!m_modules_padman)
 	{
 		loadSio2Man();
@@ -203,12 +232,29 @@ bool CGUIFramePS2Modules::loadPadModules()
 		}
 		m_modules_padman = true;
 	}
+#endif
 	return true;
 }
 
 bool CGUIFramePS2Modules::loadMcModules()
 {
 	int ret, id;
+#ifdef USE_HOMEBREW_MODULES
+	if (!m_modules_mcman)
+	{
+		loadSio2Man();
+		id = SifExecModuleBuffer(mcman_irx, size_mcman_irx, 0, NULL, &ret);
+		IRX_REPORT("mcman", id, ret);
+		m_modules_mcman = true;
+	}
+	if (!m_modules_mcserv)
+	{
+		loadSio2Man();
+		id = SifExecModuleBuffer(mcserv_irx, size_mcserv_irx, 0, NULL, &ret);
+		IRX_REPORT("mcserv", id, ret);
+		m_modules_mcserv = true;
+	}
+#else
 	if (!m_modules_mcman)
 	{
 		loadSio2Man();
@@ -237,6 +283,7 @@ bool CGUIFramePS2Modules::loadMcModules()
 		}
 		m_modules_mcserv = true;
 	}
+#endif
 	return true;
 }
 

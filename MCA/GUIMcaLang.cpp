@@ -167,7 +167,7 @@ const CGUIMcaLang::langmapRaw CGUIMcaLang::m_default_lang_raw[] = {
    CGUIMcaLang::langmapRaw("LNG_INFO_PAGESTOTAL", "Total pages:"),
    CGUIMcaLang::langmapRaw("LNG_INFO_THX_TXT", "\nSony for the console that has entertained us during long evenings, that has kept us awake during countless nights and which made our girlfriends to break up with us ;).\n\nPiotrB for taking a shot of his PS1 memory card and everyone else that has been involved in the PS1 MC photo session."),
    CGUIMcaLang::langmapRaw("LNG_INFO_THX_CAP", "We'd like to thank:"),
-   CGUIMcaLang::langmapRaw("LNG_TIP_VKBD_MASK", "START - create new file\nL2/R2 - enable/disable file maskń"),
+   CGUIMcaLang::langmapRaw("LNG_TIP_VKBD_MASK", "START - create new file\nL2/R2 - enable/disable file mask"),
    CGUIMcaLang::langmapRaw("LNG_TIP_MASK_ENABLED", "File mask enabled"),
    CGUIMcaLang::langmapRaw("LNG_TIP_MASK_DISABLED", "File mask disabled"),
    CGUIMcaLang::langmapRaw("LNG_VKBD_WARN_WRONG_NAME", "The specified filename contains invalid characters. Change the filename to continue.\n\n\nPress any button to continue."),
