@@ -37,7 +37,7 @@ jobs:
       if: "!startsWith(github.ref, 'refs/tags/v')"
       run: |
         echo "BUILD_TIMESTAMP=$(date -u '+%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
-        echo "VERSION=$(date -u '+%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+        echo "VERSION=ref:$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
     - name: Set version for tagged builds
       if: startsWith(github.ref, 'refs/tags/v')
