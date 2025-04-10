@@ -80,10 +80,12 @@ EE_OBJS += ../PS2/ioprp_$(MGMODE).o
 	bin2c $< $@ ioprp
 endif
 
-ifdef VERSION
+ifndef VERSION
+VERSION := $(shell (hash=$$(git rev-parse --short HEAD 2>/dev/null) && echo "ref:$$hash" || date "+%Y-%m-%d_%H-%M-%S"))
+endif
+
 #quotes just in case there are spaces there
 EE_CFLAGS += -DVERSION="\"$(VERSION)\""
-endif
 
 clean:
 	echo "Cleaning..."
