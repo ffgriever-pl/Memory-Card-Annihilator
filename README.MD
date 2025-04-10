@@ -30,15 +30,15 @@ Inside the release package you will find several folders, here's what each one o
 
 ## Translators and proofreaders
 
-Brazilian Portuguese: Venão
-English: ffgriever
-French: Gnom, unversdelait
-German: H4ndy, TnA
-Italian: xeeynamo
-Polish: ffgriever
-Spanish: El_Patas, HWNJ
-Turkish: Grey_Wolf, Rockman98
-Russian: dimm0505, alex_wallace
+- Brazilian Portuguese: Venão
+- English: ffgriever
+- French: Gnom, unversdelait
+- German: H4ndy, TnA
+- Italian: xeeynamo
+- Polish: ffgriever
+- Spanish: El_Patas, HWNJ
+- Turkish: Grey_Wolf, Rockman98
+- Russian: dimm0505, alex_wallace
 
 An alternative Brazilian Portuguese translation was made by:
-Germanno, DanielSantos and gledson999
+- Germanno, DanielSantos and gledson999
