@@ -1,0 +1,30 @@
+name: Compile MCA (Forked PRs)
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+    runs-on: ubuntu-latest
+    container: ps2dev/ps2dev:v1.0
+    steps:
+
+    - name: Install dependencies
+      run: |
+        apk add make git zip
+
+    - uses: actions/checkout@v4
+    - run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        git fetch --prune --unshallow
+
+    - name: Compile
+      run: |
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_legacy MCMAN_TYPE=XOSD
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_new EXFAT=1
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_Arcade EXFAT=1 MGMODE=ARCADE
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_Prototype EXFAT=1 MGMODE=PROTOTYPE
+        make clean all packlang -C MCA EE_BIN_DIR=../mca_Developer EXFAT=1 MGMODE=DEVELOPER
