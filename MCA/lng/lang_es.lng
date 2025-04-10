@@ -2,7 +2,7 @@
 LNG_OPER_PS2_MEMORY_CARD="Memory Card de PS2"
 LNG_OPER_PSX_MEMORY_CARD="Memory Card de PS1"
 LNG_OPER_FORMAT="Formatear"
-LNG_OPER_UNFORMAT="Sin formato (estado de fábrica)"
+LNG_OPER_UNFORMAT="Deformatear"
 LNG_OPER_MAKE_IMAGE="Crear imagen MC"
 LNG_OPER_RESTORE_IMAGE="Restaurar imagen MC"
 LNG_OPER_INFO="Información MC"
