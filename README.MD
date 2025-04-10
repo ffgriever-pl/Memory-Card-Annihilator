@@ -27,3 +27,18 @@ Inside the release package you will find several folders, here's what each one o
 - `mca_Arcade`: Supports exFAT USB and reads arcade memory cards instead of normal ones.
 - `mca_Prototype`: Supports exFAT USB and reads prototype memory cards instead of normal ones.
 - `mca_Developer`: Supports exFAT USB and reads developer memory cards (and TDB StartUp Cards) instead of normal ones.
+
+## Translators and proofreaders
+
+Brazilian Portuguese: Venão
+English: ffgriever
+French: Gnom, unversdelait
+German: H4ndy, TnA
+Italian: xeeynamo
+Polish: ffgriever
+Spanish: El_Patas, HWNJ
+Turkish: Grey_Wolf, Rockman98
+Russian: dimm0505, alex_wallace
+
+An alternative Brazilian Portuguese translation was made by:
+Germanno, DanielSantos and gledson999
