@@ -15,6 +15,9 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+*'  # Match version tags like v2.1.0 or v2.1.1-beta
     branches:
       - '**'
+  pull_request:
+    branches:
+      - master
   repository_dispatch:
     types: [run_build]
 
