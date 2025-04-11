@@ -23,6 +23,9 @@ on:
 
 jobs:
   build:
+    if: |
+      github.event_name != 'pull_request' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository)
     runs-on: ubuntu-latest
     container: ps2dev/ps2dev:v1.0
     steps:
