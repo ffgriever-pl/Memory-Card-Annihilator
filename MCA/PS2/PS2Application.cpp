@@ -69,7 +69,7 @@ int CPS2Application::main(int argc, char *argv[])
 		};
 		if (systemLanguage >= 1 && systemLanguage <= 8)
 		{
-			std::string langfile = CResources::boot_path + languageFilesNames[systemLanguage];
+			std::string langfile = CResources::boot_path + languageFiles[systemLanguage];
 			loadLanguage(langfile);
 		}
 	}
