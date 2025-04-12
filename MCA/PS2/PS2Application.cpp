@@ -49,7 +49,7 @@ int CPS2Application::main(int argc, char *argv[])
 	
 	setBootPath(argv[0]);
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
-	initLanguage()
+	initLanguage();
 
 	ResetEE(0xffffffff);
 	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset, true);
