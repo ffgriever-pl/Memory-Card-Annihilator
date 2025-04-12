@@ -114,10 +114,10 @@ int CPS2Application::main(int argc, char *argv[])
 
 void CPS2Application::initLanguage()
 {
-	int systemLanguage = configGetLanguage();
 	std::string langfile = CResources::boot_path + "lang.lng";
 	if (!loadLanguage(langfile))
 	{
+		int systemLanguage = configGetLanguage();
 		static const char* languageFiles[] = {
 			"lang.lng",   // Japanese has no support in the font
 			"lang_en.lng",
