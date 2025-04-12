@@ -51,7 +51,8 @@ int CPS2Application::main(int argc, char *argv[])
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
 	int systemLanguage = configGetLanguage();
 	std::string langfile = CResources::boot_path + "lang.lng";
-	if (!loadLanguage(langfile)){
+	if (!loadLanguage(langfile))
+	{
 		std::vector<std::string> languageFilesNames;
         languageFilesNames.push_back("lang.lng");   // Japanese has no support in the font
         languageFilesNames.push_back("lang_en.lng");
@@ -65,7 +66,8 @@ int CPS2Application::main(int argc, char *argv[])
         languageFilesNames.push_back("lang.lng");   // Korean has no support in the font
         languageFilesNames.push_back("lang.lng");   // Chinese has no support in the font
         languageFilesNames.push_back("lang.lng");   // Chinese has no support in the font
-		if (systemLanguage >= 1 && systemLanguage <= 8) {
+		if (systemLanguage >= 1 && systemLanguage <= 8)
+		{
 			std::string langfile = CResources::boot_path + languageFilesNames[systemLanguage];
 			loadLanguage(langfile);
 		}
