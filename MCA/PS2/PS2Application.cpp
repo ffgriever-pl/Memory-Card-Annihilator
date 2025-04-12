@@ -49,30 +49,7 @@ int CPS2Application::main(int argc, char *argv[])
 	
 	setBootPath(argv[0]);
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
-	int systemLanguage = configGetLanguage();
-	std::string langfile = CResources::boot_path + "lang.lng";
-	if (!loadLanguage(langfile))
-	{
-		static const char* languageFiles[] = {
-			"lang.lng",   // Japanese has no support in the font
-			"lang_en.lng",
-			"lang_fr.lng",
-			"lang_es.lng",
-			"lang_de.lng",
-			"lang_it.lng",
-			"lang_du.lng",
-			"lang_pt.lng",
-			"lang_ru.lng", // Requires XEB+ 2024 onwards to be detected, else, it will default to 1 (English)
-			"lang.lng",   // Korean has no support in the font
-			"lang.lng"    // Chinese has no support in the font
-			"lang.lng"    // Chinese has no support in the font
-		};
-		if (systemLanguage >= 1 && systemLanguage <= 8)
-		{
-			std::string langfile = CResources::boot_path + languageFiles[systemLanguage];
-			loadLanguage(langfile);
-		}
-	}
+	initLanguage()
 
 	ResetEE(0xffffffff);
 	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset, true);
@@ -133,6 +110,35 @@ int CPS2Application::main(int argc, char *argv[])
 	ps2renderer.deinitRenderer();
 	ps2Timer.deinitTimer();
 	return 0;
+}
+
+void CPS2Application::initLanguage()
+{
+	int systemLanguage = configGetLanguage();
+	std::string langfile = CResources::boot_path + "lang.lng";
+	if (!loadLanguage(langfile))
+	{
+		static const char* languageFiles[] = {
+			"lang.lng",   // Japanese has no support in the font
+			"lang_en.lng",
+			"lang_fr.lng",
+			"lang_es.lng",
+			"lang_de.lng",
+			"lang_it.lng",
+			"lang_du.lng",
+			"lang_pt.lng",
+			"lang_ru.lng", // Requires XEB+ 2024 onwards to be detected, else, it will default to 1 (English)
+			"lang.lng",   // Korean has no support in the font
+			"lang.lng"	// Chinese has no support in the font
+			"lang.lng"	// Chinese has no support in the font
+		};
+		if (systemLanguage >= 1 && systemLanguage <= 8)
+		{
+			std::string langfile = CResources::boot_path + languageFilesNames[systemLanguage];
+			loadLanguage(langfile);
+		}
+	}
+	return false;
 }
 
 bool CPS2Application::loadLanguage(const std::string& langfile)
