@@ -64,7 +64,7 @@ int CPS2Application::main(int argc, char *argv[])
 			"lang.lng",	// Korean has no support in the font
 			"lang.lng", // Chinese has no support in the font
 			"lang.lng" // Chinese has no support in the font
-		}
+		};
 		if (systemLanguage >= 1 && systemLanguage <= 8) {
 			std::string langfile = CResources::boot_path + languageFilesNames[systemLanguage];
 			loadLanguage(langfile);
