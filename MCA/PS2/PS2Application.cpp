@@ -49,6 +49,7 @@ int CPS2Application::main(int argc, char *argv[])
 	
 	setBootPath(argv[0]);
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
+	int systemLanguage = configGetLanguage();
 	std::string langfile = CResources::boot_path + "lang.lng";
 	if (!loadLanguage(langfile)){
 		std::vector<std::string> languageFilesNames;
