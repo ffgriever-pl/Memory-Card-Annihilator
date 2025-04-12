@@ -65,6 +65,7 @@ int CPS2Application::main(int argc, char *argv[])
             "lang_ru.lng", // Requires XEB+ 2024 onwards to be detected, else, it will default to 1 (English)
             "lang.lng",   // Korean has no support in the font
             "lang.lng"    // Chinese has no support in the font
+			"lang.lng"    // Chinese has no support in the font
         };
 		if (systemLanguage >= 1 && systemLanguage <= 8)
 		{
