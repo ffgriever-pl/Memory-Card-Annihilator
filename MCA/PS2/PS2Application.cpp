@@ -7,6 +7,7 @@
 #include "../res/resources.h"
 #include "../GUIMcaMainWnd.h"
 #include "../GUIMcaMan.h"
+#include <osd_config.h>
 
 CPS2Application::CPS2Application(void)
 {
@@ -48,9 +49,49 @@ int CPS2Application::main(int argc, char *argv[])
 	
 	setBootPath(argv[0]);
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
-
-	std::string langfile = CResources::boot_path + "lang.lng";
-	loadLanguage(langfile);
+	
+	std::string testfilepath = CResources::boot_path + "lang.lng";
+	int fdn;
+	int systemLanguage = configGetLanguage();
+	fdn = open(testfilepath.c_str(), O_RDONLY);
+	if (fdn < 0){
+		if (systemLanguage == 1) {
+			std::string langfile = CResources::boot_path + "lang_en.lng";
+			loadLanguage(langfile);
+		}
+		else if (systemLanguage == 2) {
+			std::string langfile = CResources::boot_path + "lang_fr.lng";
+			loadLanguage(langfile);
+		}
+		else if (systemLanguage == 3) {
+			std::string langfile = CResources::boot_path + "lang_es.lng";
+			loadLanguage(langfile);
+		}
+		else if (systemLanguage == 4) {
+			std::string langfile = CResources::boot_path + "lang_de.lng";
+			loadLanguage(langfile);
+		}
+		else if (systemLanguage == 5) {
+			std::string langfile = CResources::boot_path + "lang_it.lng";
+			loadLanguage(langfile);
+		}
+		else if (systemLanguage == 6) {
+			std::string langfile = CResources::boot_path + "lang_du.lng";
+			loadLanguage(langfile);
+		}
+		else if (systemLanguage == 7) {
+			std::string langfile = CResources::boot_path + "lang_pt.lng";
+			loadLanguage(langfile);
+		}
+		else if (systemLanguage == 8) {
+			std::string langfile = CResources::boot_path + "lang_ru.lng";
+			loadLanguage(langfile);
+		}
+	} else {
+		std::string langfile = CResources::boot_path + "lang.lng";
+		loadLanguage(langfile);
+	}
+	close(fdn);
 
 	ResetEE(0xffffffff);
 	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset, true);
