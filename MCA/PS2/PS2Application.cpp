@@ -138,7 +138,6 @@ void CPS2Application::initLanguage()
 			loadLanguage(langfile);
 		}
 	}
-	return false;
 }
 
 bool CPS2Application::loadLanguage(const std::string& langfile)
