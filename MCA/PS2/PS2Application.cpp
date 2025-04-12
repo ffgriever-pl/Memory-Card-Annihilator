@@ -68,10 +68,6 @@ int CPS2Application::main(int argc, char *argv[])
 		if (systemLanguage >= 1 && systemLanguage <= 8) {
 			std::string langfile = CResources::boot_path + languageFilesNames[systemLanguage];
 			loadLanguage(langfile);
-		} else {
-			// Handle unsupported language case (optional)
-			std::string langfile = CResources::boot_path + languageFilesNames[0]; // Defaults to lang_ru.lng
-			loadLanguage(langfile);
 		}
 	}
 
