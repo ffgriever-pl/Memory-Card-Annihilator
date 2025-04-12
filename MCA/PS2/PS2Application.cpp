@@ -53,19 +53,19 @@ int CPS2Application::main(int argc, char *argv[])
 	std::string langfile = CResources::boot_path + "lang.lng";
 	if (!loadLanguage(langfile))
 	{
-		std::vector<std::string> languageFilesNames;
-        languageFilesNames.push_back("lang.lng");   // Japanese has no support in the font
-        languageFilesNames.push_back("lang_en.lng");
-        languageFilesNames.push_back("lang_fr.lng");
-        languageFilesNames.push_back("lang_es.lng");
-        languageFilesNames.push_back("lang_de.lng");
-        languageFilesNames.push_back("lang_it.lng");
-        languageFilesNames.push_back("lang_du.lng");
-        languageFilesNames.push_back("lang_pt.lng");
-        languageFilesNames.push_back("lang_ru.lng"); // Requires XEB+ 2024 onwards to be detected, else, it will default to 1 (English)
-        languageFilesNames.push_back("lang.lng");   // Korean has no support in the font
-        languageFilesNames.push_back("lang.lng");   // Chinese has no support in the font
-        languageFilesNames.push_back("lang.lng");   // Chinese has no support in the font
+		static const char* languageFiles[] = {
+            "lang.lng",   // Japanese has no support in the font
+            "lang_en.lng",
+            "lang_fr.lng",
+            "lang_es.lng",
+            "lang_de.lng",
+            "lang_it.lng",
+            "lang_du.lng",
+            "lang_pt.lng",
+            "lang_ru.lng", // Requires XEB+ 2024 onwards to be detected, else, it will default to 1 (English)
+            "lang.lng",   // Korean has no support in the font
+            "lang.lng"    // Chinese has no support in the font
+        };
 		if (systemLanguage >= 1 && systemLanguage <= 8)
 		{
 			std::string langfile = CResources::boot_path + languageFilesNames[systemLanguage];
