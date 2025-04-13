@@ -114,25 +114,25 @@ int CPS2Application::main(int argc, char *argv[])
 
 void CPS2Application::initLanguage()
 {
-	std::string langfile = CResources::boot_path + "lang.lng";
-	if (!loadLanguage(langfile))
+	
+	static const char* languageFiles[] = {
+		"lang.lng",	// Japanese does not have a valid font yet
+		"lang_en.lng",
+		"lang_fr.lng",
+		"lang_es.lng",
+		"lang_de.lng",
+		"lang_it.lng",
+		"lang_du.lng",
+		"lang_pt.lng",
+		"lang_ru.lng", // Russian and further languages require XEB+ 2024 or newer in order to be detected. Else, they will default to English.
+		// Korean, Traditional and Simplified Chinese do not have a valid font yet
+	};
+	
+	std::string defaultLangFile = CResources::boot_path + "lang.lng";
+	if (!loadLanguage(defaultLangFile))
 	{
 		int systemLanguage = configGetLanguage();
-		static const char* languageFiles[] = {
-			"lang.lng",   // Japanese has no support in the font
-			"lang_en.lng",
-			"lang_fr.lng",
-			"lang_es.lng",
-			"lang_de.lng",
-			"lang_it.lng",
-			"lang_du.lng",
-			"lang_pt.lng",
-			"lang_ru.lng", // Requires XEB+ 2024 onwards to be detected, else, it will default to 1 (English)
-			"lang.lng",   // Korean has no support in the font
-			"lang.lng",	// Chinese has no support in the font
-			"lang.lng"	// Chinese has no support in the font
-		};
-		if (systemLanguage >= 1 && systemLanguage <= 8)
+		if (systemLanguage >= 0 && systemLanguage < sizeof(languageFiles) / sizeof(languageFiles[0]))
 		{
 			std::string langfile = CResources::boot_path + languageFiles[systemLanguage];
 			loadLanguage(langfile);
