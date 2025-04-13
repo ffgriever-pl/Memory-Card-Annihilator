@@ -129,7 +129,7 @@ void CPS2Application::initLanguage()
 			"lang_pt.lng",
 			"lang_ru.lng", // Requires XEB+ 2024 onwards to be detected, else, it will default to 1 (English)
 			"lang.lng",   // Korean has no support in the font
-			"lang.lng"	// Chinese has no support in the font
+			"lang.lng",	// Chinese has no support in the font
 			"lang.lng"	// Chinese has no support in the font
 		};
 		if (systemLanguage >= 1 && systemLanguage <= 8)
