@@ -1,7 +1,9 @@
+#include <string>
+
 #include "GUIMcaVkbd.h"
 #include "res/resources.h"
 #include "GUIMcaDisplayMessage.h"
-#include <string>
+#include "helpers.h"
 
 CGUIMcaVkbd::CGUIMcaVkbd(float x, float y)
 {
@@ -424,5 +426,5 @@ const CGUIMcaVkbd::keymapRaw CGUIMcaVkbd::m_keymap_raw[] = {
 //space
 	CGUIMcaVkbd::keymapRaw(CGUIMcaVkbd::t_key(101, 158, 190, 30, ' ', ' ', ' ', ' ')),
 };
-const int CGUIMcaVkbd::m_numof_entries = sizeof(CGUIMcaVkbd::m_keymap_raw) / sizeof CGUIMcaVkbd::m_keymap_raw[0];
+const int CGUIMcaVkbd::m_numof_entries = countof(CGUIMcaVkbd::m_keymap_raw);
 const std::vector<CGUIMcaVkbd::t_key> CGUIMcaVkbd::m_keys(CGUIMcaVkbd::m_keymap_raw, CGUIMcaVkbd::m_keymap_raw + CGUIMcaVkbd::m_numof_entries);

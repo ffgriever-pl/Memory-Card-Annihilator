@@ -1,7 +1,8 @@
-#include "GUIMcaLang.h"
 #include <sstream>
 #include <vector>
 
+#include "GUIMcaLang.h"
+#include "helpers.h"
 
 CGUIMcaLang::CGUIMcaLang(void)
 {
@@ -176,5 +177,5 @@ const CGUIMcaLang::langmapRaw CGUIMcaLang::m_default_lang_raw[] = {
    CGUIMcaLang::langmapRaw("LNG_EXIT_FAILED", "\n\nThe selected file couldn't be opened."),
    CGUIMcaLang::langmapRaw("LNG_OPER_QUESTION_SIZE_MISMATCH", "You've selected a size bigger than default. This could damage the memory card!\n\nDo you want to continue?"),
 };
-const int CGUIMcaLang::m_numof_entries = sizeof(CGUIMcaLang::m_default_lang_raw) / sizeof CGUIMcaLang::m_default_lang_raw[0];
+const int CGUIMcaLang::m_numof_entries = countof(CGUIMcaLang::m_default_lang_raw);
 const std::map<const std::string, const std::string> CGUIMcaLang::m_default_lang(CGUIMcaLang::m_default_lang_raw, CGUIMcaLang::m_default_lang_raw + CGUIMcaLang::m_numof_entries);

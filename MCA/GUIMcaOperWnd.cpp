@@ -9,6 +9,7 @@
 #include "GUIMcaDisplayMessage.h"
 #include "GUIMcaAbout.h"
 #include "GUIMcaCardInfo.h"
+#include "helpers.h"
 #include "Version.h"
 
 const char *CGUIMcaOperWnd::m_menu_options[] = {
@@ -418,7 +419,7 @@ void CGUIMcaOperWnd::drawMenu(float alpha)
 {
 	m_hover_menu.drawHover(m_renderer, m_ticks, alpha);
 
-	for (u32 i = 0; i < sizeof(m_menu_options)/sizeof(m_menu_options[0]); i++)
+	for (u32 i = 0; i < countof(m_menu_options); i++)
 	{
 		CResources::verdana22.printUTF8(
 			CResources::mainLang.getText(m_menu_options[i])

@@ -8,6 +8,7 @@
 #include "../res/resources.h"
 #include "../GUIMcaMainWnd.h"
 #include "../GUIMcaMan.h"
+#include "../helpers.h"
 
 CPS2Application::CPS2Application(void)
 {
@@ -132,7 +133,7 @@ void CPS2Application::initLanguage()
 	if (!loadLanguage(defaultLangFile))
 	{
 		int systemLanguage = configGetLanguage();
-		if (systemLanguage >= 0 && systemLanguage < static_cast<int>(sizeof(languageFiles) / sizeof(languageFiles[0])))
+		if (systemLanguage >= 0 && systemLanguage < static_cast<int>(countof(languageFiles)))
 		{
 			std::string langfile = CResources::boot_path + languageFiles[systemLanguage];
 			loadLanguage(langfile);
