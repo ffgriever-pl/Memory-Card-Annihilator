@@ -1,3 +1,4 @@
+#include <osd_config.h>
 #include "PS2Application.h"
 #include "../Include/GUIFrameTimerPS2.h"
 #include "../Include/GUIFrameRendererPS2.h"
@@ -48,9 +49,7 @@ int CPS2Application::main(int argc, char *argv[])
 	
 	setBootPath(argv[0]);
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
-
-	std::string langfile = CResources::boot_path + "lang.lng";
-	loadLanguage(langfile);
+	initLanguage();
 
 	ResetEE(0xffffffff);
 	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset, true);
@@ -111,6 +110,34 @@ int CPS2Application::main(int argc, char *argv[])
 	ps2renderer.deinitRenderer();
 	ps2Timer.deinitTimer();
 	return 0;
+}
+
+void CPS2Application::initLanguage()
+{
+	
+	static const char* languageFiles[] = {
+		"lang.lng",	// Japanese does not have a valid font yet
+		"lang_en.lng",
+		"lang_fr.lng",
+		"lang_es.lng",
+		"lang_de.lng",
+		"lang_it.lng",
+		"lang_du.lng",
+		"lang_pt.lng",
+		"lang_ru.lng", // Russian and further languages require XEB+ 2024 or newer in order to be detected. Else, they will default to English.
+		// Korean, Traditional and Simplified Chinese do not have a valid font yet
+	};
+	
+	std::string defaultLangFile = CResources::boot_path + "lang.lng";
+	if (!loadLanguage(defaultLangFile))
+	{
+		int systemLanguage = configGetLanguage();
+		if (systemLanguage >= 0 && systemLanguage < sizeof(languageFiles) / sizeof(languageFiles[0]))
+		{
+			std::string langfile = CResources::boot_path + languageFiles[systemLanguage];
+			loadLanguage(langfile);
+		}
+	}
 }
 
 bool CPS2Application::loadLanguage(const std::string& langfile)
