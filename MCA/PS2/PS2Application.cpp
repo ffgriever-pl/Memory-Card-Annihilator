@@ -135,8 +135,8 @@ void CPS2Application::initLanguage()
 		int systemLanguage = configGetLanguage();
 		if (systemLanguage >= 0 && systemLanguage < static_cast<int>(countof(languageFiles)))
 		{
-			std::string langfile = CResources::boot_path + languageFiles[systemLanguage];
-			loadLanguage(langfile);
+			std::string systemLanguageFile = CResources::boot_path + languageFiles[systemLanguage];
+			loadLanguage(systemLanguageFile);
 		}
 	}
 }
