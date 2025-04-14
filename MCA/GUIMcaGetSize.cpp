@@ -54,19 +54,19 @@ bool CGUIMcaGetSize::checkMessages()
 		if (new_mbytes > 7) new_mbytes = 3;
 
 		m_card_mbytes = 1 << new_mbytes;
-	} else if (m_input_state_new & CIGUIFrameInput::enInTabBck)
+	} else if (m_input_state_new & CIGUIFrameInput::enInL1)
 	{
 		m_card_mbytes--;
 		if (m_card_mbytes < 1) m_card_mbytes = 128;
-	} else if (m_input_state_new & CIGUIFrameInput::enInTabFwd)
+	} else if (m_input_state_new & CIGUIFrameInput::enInR1)
 	{
 		m_card_mbytes++;
 		if (m_card_mbytes > 128) m_card_mbytes = 1;
-	} else if (m_input_state_new & CIGUIFrameInput::enInCancel)
+	} else if (m_input_state_new & CIGUIFrameInput::enInTriangle)
 	{
 		m_return = true;
 		m_card_mbytes_ret = -1;
-	} else if (m_input_state_new & CIGUIFrameInput::enInOk)
+	} else if (m_input_state_new & CIGUIFrameInput::enInCross)
 	{
 		m_return = true;
 		m_card_mbytes_ret = m_card_mbytes;

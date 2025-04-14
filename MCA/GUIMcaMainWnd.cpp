@@ -34,13 +34,13 @@ bool CGUIMcaMainWnd::checkMessages()
 	}
 
 	if (
-		m_input_state_all & CIGUIFrameInput::enInSwitch //select
-		//m_input_state_all & CIGUIFrameInput::enInMenu //start
-		//&& m_input_state_all & CIGUIFrameInput::enInSwitch //select
-		//&& m_input_state_all & CIGUIFrameInput::enInTabBck //l1
-		//&& m_input_state_all & CIGUIFrameInput::enInTabFwd //r1
-		//&& m_input_state_all & CIGUIFrameInput::enInTab2Bck //l2
-		//&& m_input_state_all & CIGUIFrameInput::enInTab2Fwd //r2
+		m_input_state_all & CIGUIFrameInput::enInSelect //select
+		//m_input_state_all & CIGUIFrameInput::enInStart //start
+		//&& m_input_state_all & CIGUIFrameInput::enInSelect //select
+		//&& m_input_state_all & CIGUIFrameInput::enInL1 //l1
+		//&& m_input_state_all & CIGUIFrameInput::enInR1 //r1
+		//&& m_input_state_all & CIGUIFrameInput::enInL2 //l2
+		//&& m_input_state_all & CIGUIFrameInput::enInR2 //r2
 		)
 	{
 		CGUIMcaGetPath getPath(67,106,"mc0:/BOOT/BOOT.ELF");
@@ -202,7 +202,7 @@ bool CGUIMcaMainWnd::checkMessages()
 		}
 	}
 
-	if (m_input_state_new & CIGUIFrameInput::enInOk)
+	if (m_input_state_new & CIGUIFrameInput::enInCross)
 	{
 		if (m_slot_chosen != -1)
 		{
@@ -220,7 +220,7 @@ bool CGUIMcaMainWnd::checkMessages()
 				windowCalled = true;
 			}
 		}
-	} else if (m_input_state_new & CIGUIFrameInput::enInMenu)
+	} else if (m_input_state_new & CIGUIFrameInput::enInStart)
 	{
 		CGUIMcaAbout myAbout(110, 106);
 		myAbout.display(m_renderer, m_input, m_timer, true);
@@ -480,7 +480,7 @@ int CGUIMcaMainWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 		oldTick = currTick;
 		currTick = timer->getTicks();
 
-		/*if (m_input_state_new & CIGUIFrameInput::enInSwitch)
+		/*if (m_input_state_new & CIGUIFrameInput::enInSelect)
 		{
 			u64 head[] = {
 				0x00010004324d4954, 0x0000000000000000,
@@ -497,7 +497,7 @@ int CGUIMcaMainWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 			delete test;
 		}*/
 
-	} while (/*(m_input_state_new & CIGUIFrameInput::enInCancel) == 0*/1);
+	} while (/*(m_input_state_new & CIGUIFrameInput::enInTriangle) == 0*/1);
 	fadeInOut(prevBuffTex, timer, 25000, true);
 
 	//delete prevBuffTex;

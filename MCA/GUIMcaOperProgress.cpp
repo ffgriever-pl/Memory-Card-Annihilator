@@ -57,11 +57,11 @@ bool CGUIMcaOperProgress::checkMessages()
 
 	if (!m_locked)
 	{
-		if (m_input_state_new & CIGUIFrameInput::enInCancel)
+		if (m_input_state_new & CIGUIFrameInput::enInTriangle)
 		{
 			m_return = true;
 			//m_result = ;
-		} else if (m_input_state_new & CIGUIFrameInput::enInOk)
+		} else if (m_input_state_new & CIGUIFrameInput::enInCross)
 		{
 			m_return = true;
 		}

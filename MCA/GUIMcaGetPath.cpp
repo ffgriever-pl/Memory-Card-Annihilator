@@ -275,7 +275,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 
 		if (numentr)
 		{
-			if (m_input_state_new & CIGUIFrameInput::enInTab2Bck || m_input_state_new & CIGUIFrameInput::enInTab2Fwd)
+			if (m_input_state_new & CIGUIFrameInput::enInL2 || m_input_state_new & CIGUIFrameInput::enInR2)
 			{
 				if (m_mask.size() > 0)
 				{
@@ -336,7 +336,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 					m_listBegin = m_listChosen;
 				}
 				pos_changed = true;
-			} else if (m_input_state_new & CIGUIFrameInput::enInTabFwd)
+			} else if (m_input_state_new & CIGUIFrameInput::enInR1)
 			{
 				m_listChosen += LIST_POSITION;
 				if (m_listChosen >= numentr)
@@ -347,7 +347,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 				if (m_listBegin < 0) m_listBegin = 0;
 				pos_changed = true;
 				pos_instant = true;
-			} else if (m_input_state_new & CIGUIFrameInput::enInTabBck)
+			} else if (m_input_state_new & CIGUIFrameInput::enInL1)
 			{
 				m_listChosen -= LIST_POSITION;
 				if (m_listChosen < 0)
@@ -357,7 +357,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 				m_listBegin = m_listChosen;
 				pos_changed = true;
 				pos_instant = true;
-			} else if (m_input_state_new & CIGUIFrameInput::enInOk)
+			} else if (m_input_state_new & CIGUIFrameInput::enInCross)
 			{
 				std::list<t_fileentry>::const_iterator i;
 				std::string currstring;
@@ -413,7 +413,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 				}
 				//sio_printf("LIST: Pos %d, Cap \"%s\", it is %s\n", m_listChosen, (*i).name.c_str(), (*i).directory ? "dir" : "file");
 			}
-			if (m_save && m_input_state_new & CIGUIFrameInput::enInMenu && m_all_path.size() > 0 && !(m_all_path.size() == 1 && m_all_path.front() == "hdd0:") )
+			if (m_save && m_input_state_new & CIGUIFrameInput::enInStart && m_all_path.size() > 0 && !(m_all_path.size() == 1 && m_all_path.front() == "hdd0:") )
 			{
 				CGUIMcaVkbd myKbd(74, 170);
 				std::string kbdret;
@@ -441,7 +441,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 		}
 	}
 
-	if (m_input_state_new & CIGUIFrameInput::enInCancel)
+	if (m_input_state_new & CIGUIFrameInput::enInTriangle)
 	{
 		m_exit_one = true;
 	}
