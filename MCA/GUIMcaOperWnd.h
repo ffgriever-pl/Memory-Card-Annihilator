@@ -21,7 +21,6 @@ private:
 	CIGUIFrameTimer *m_timer;
 	bool m_exit_now;
 
-	//CGUITexture m_bgimage;
 	CGUITexture m_mca_logo;
 	CGUITexture m_mc_bg;
 
@@ -38,7 +37,6 @@ private:
 	void drawBackground(float alpha = 1.0f);
 	void drawStatic(float alpha = 1.0f);
 	void drawMenu(float alpha = 1.0f);
-	void drawHover(float x, float y, float w, float h, float alpha = 1.0f);
 public:
 	CGUIMcaOperWnd(void);
 	~CGUIMcaOperWnd(void);

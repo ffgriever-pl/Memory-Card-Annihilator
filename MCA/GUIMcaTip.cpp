@@ -28,7 +28,6 @@ void CGUIMcaTip::addTip(std::string message, u8 r, u8 g, u8 b, float a, u32 time
 void CGUIMcaTip::drawTip(CIGUIFrameRenderer *renderer, u32 new_input, u32 ticks, float alpha)
 {
 	if (!m_visible || m_queue.size() == 0) return;
-	//float addcol = (float)ticks/(float)m_cspd;
 	float fadealpha = 0;
 
 	t_entry &currentry = m_queue.front();

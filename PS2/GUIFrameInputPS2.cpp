@@ -113,7 +113,6 @@ u32 CGUIFrameInputPS2::updateInternal()
 				m_buttons[0].rjoy_h = 128;
 				m_buttons[0].rjoy_v = 128;
 			}
-			//sio_printf("Pad mode = %d\n", m_buttons[0].mode);
 
 			if (m_buttons[0].ljoy_h <= 95) xadd = -(95-m_buttons[0].ljoy_h);
 			else if (m_buttons[0].ljoy_h >= 160) xadd = m_buttons[0].ljoy_h -160;
@@ -125,7 +124,6 @@ u32 CGUIFrameInputPS2::updateInternal()
 
 			m_pad_detected = true;
 			return returndata;
-			//if (paddata & PAD_SELECT && paddata & PAD_START) screenshot();
 		}
 	}
 	return 0;

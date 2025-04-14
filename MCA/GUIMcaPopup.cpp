@@ -52,7 +52,7 @@ void CGUIMcaPopup::drawSuccess(float alpha)
 		, 128, 128, 128, alpha
 	);
 }
-//dopisac jedno, w ktorym wszystkie ikonky beda (ok, error, exclam)
+
 void CGUIMcaPopup::drawWindow(float alpha)
 {
 	m_renderer->drawSpriteT(

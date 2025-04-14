@@ -30,10 +30,8 @@ bool CGUIMcaOperWnd::checkMessages()
 	bool windowCalled = false;
 	CGUIMcaMan::updateMca();
 
-	//if (CGUIMcaMan::mce_memcards[m_oper_slot].type == CGUIMcaMan::enctNone || m_input_state_new & CIGUIFrameInput::enInStart)
 	if ((m_psx_mode && (CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPsx && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPda)) || (!m_psx_mode && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPs2))
 	{
-		//display warrning
 		CGUIMcaWarrningNoCard myWarn(110, 106, m_oper_slot);
 		myWarn.display(m_renderer, m_input, m_timer, true);
 		m_exit_now = true;
@@ -46,10 +44,8 @@ bool CGUIMcaOperWnd::checkMessages()
 		if (m_menu_item > 4)
 		{
 			m_menu_item = 0;
-			//m_hover_menu.setDest(70, 248 +26*m_menu_item);
 			m_hover_menu.setDest(70, 248 + 26 * m_menu_item, true);
 		}
-		//m_hover_menu.setVisibility(true);
 		m_hover_menu.setDest(70, 248 + 26 * m_menu_item);
 	}
 	else if (m_input_state_new & CIGUIFrameInput::enInUp)
@@ -58,10 +54,8 @@ bool CGUIMcaOperWnd::checkMessages()
 		if (m_menu_item < 0)
 		{
 			m_menu_item = 4;
-			//m_hover_menu.setDest(70, 248 +26*m_menu_item);
 			m_hover_menu.setDest(70, 248 + 26 * m_menu_item, true);
 		}
-		//m_hover_menu.setVisibility(true);
 		m_hover_menu.setDest(70, 248 + 26 * m_menu_item);
 	}
 
@@ -73,27 +67,6 @@ bool CGUIMcaOperWnd::checkMessages()
 
 	if (m_input_state_new & CIGUIFrameInput::enInSelect)
 	{
-		/*std::string content = CResources::mainLang.getText("LNG_INFO_ALL");
-		CResources::mainLang.replace(&content, "{SLOTNUM}", m_oper_slot+1);
-		CResources::mainLang.replace(&content, "{MCTYPE}", m_psx_mode ? CResources::mainLang.getText("LNG_INFO_MC_PSX") : CResources::mainLang.getText("LNG_INFO_MC_PS2"));
-		CResources::mainLang.replace(&content, "{PAGESIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].pageSize);
-		CResources::mainLang.replace(&content, "{PAGESINBLOCK}", CGUIMcaMan::mce_memcards[m_oper_slot].pagesPerBlock);
-		CResources::mainLang.replace(&content, "{PAGESTOTAL}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages);
-		if (m_psx_mode)
-		{
-			CResources::mainLang.replace(&content, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024);
-			CResources::mainLang.replace(&content, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_KB"));
-		} else
-		{
-			CResources::mainLang.replace(&content, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024/1024);
-			CResources::mainLang.replace(&content, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_MB"));
-		}
-
-		CGUIMcaDisplayMessage myMessage(110, 106
-			, content.c_str()
-			, CResources::mainLang.getText("LNG_INFO_CAPTION")
-			, CGUIMcaDisplayMessage::enIcNone, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
-		myMessage.display(m_renderer, m_input, m_timer, true);*/
 		CGUIMcaCardInfo myCardInfo(138, 166);
 		myCardInfo.displayInfo(m_renderer, m_input, m_timer, true, m_oper_slot, m_psx_mode);
 		windowCalled = true;
@@ -112,7 +85,6 @@ bool CGUIMcaOperWnd::checkMessages()
 		switch (m_menu_item)
 		{
 			case 0://format
-				//m_menu_item_format
 			{
 				int cardSize = 1;
 				int totalpages = 1;
@@ -155,7 +127,6 @@ bool CGUIMcaOperWnd::checkMessages()
 			}
 			break;
 			case 1: //unformat
-				//m_menu_item_format
 			{
 				int cardSize = 1;
 				int totalpages = 1;
@@ -246,9 +217,6 @@ bool CGUIMcaOperWnd::checkMessages()
 							u32 pos = chkpath.find('/');
 							if (pos != std::string::npos)
 							{
-								//fileXioUmount("pfs0:");
-								//sio_printf("Mounting '%s' as pfs0\n", chkpath.substr(0, pos).c_str());
-								//fileXioMount("pfs0:", chkpath.substr(0, pos).c_str(), FIO_MT_RDWR);
 								std::string pfsPath = "pfs0:";
 								pfsPath += chkpath.substr(pos, chkpath.length() - pos);
 								chkpath = pfsPath;
@@ -283,7 +251,6 @@ bool CGUIMcaOperWnd::checkMessages()
 			}
 			break;
 			case 3://restore image
-				//m_menu_item_format
 			{
 				std::string defname = "memorycard";
 				defname += m_oper_slot;
@@ -326,27 +293,6 @@ bool CGUIMcaOperWnd::checkMessages()
 			break;
 			case 4://card info
 			{
-				/*std::string content = CResources::mainLang.getText("LNG_INFO_ALL");
-				CResources::mainLang.replace(&content, "{SLOTNUM}", m_oper_slot+1);
-				CResources::mainLang.replace(&content, "{MCTYPE}", m_psx_mode ? CResources::mainLang.getText("LNG_INFO_MC_PSX") : CResources::mainLang.getText("LNG_INFO_MC_PS2"));
-				CResources::mainLang.replace(&content, "{PAGESIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].pageSize);
-				CResources::mainLang.replace(&content, "{PAGESINBLOCK}", CGUIMcaMan::mce_memcards[m_oper_slot].pagesPerBlock);
-				CResources::mainLang.replace(&content, "{PAGESTOTAL}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages);
-				if (m_psx_mode)
-				{
-					CResources::mainLang.replace(&content, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024);
-					CResources::mainLang.replace(&content, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_KB"));
-				} else
-				{
-					CResources::mainLang.replace(&content, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024/1024);
-					CResources::mainLang.replace(&content, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_MB"));
-				}
-
-				CGUIMcaDisplayMessage myMessage(110, 106
-					, content.c_str()
-					, CResources::mainLang.getText("LNG_INFO_CAPTION")
-					, CGUIMcaDisplayMessage::enIcNone, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
-				myMessage.display(m_renderer, m_input, m_timer, true);*/
 				CGUIMcaCardInfo myCardInfo(138, 166);
 				myCardInfo.displayInfo(m_renderer, m_input, m_timer, true, m_oper_slot, m_psx_mode);
 				windowCalled = true;
@@ -564,11 +510,6 @@ int CGUIMcaOperWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 		}
 
 		drawAll();
-
-		/*static char msg[30];
-		if (m_ticks == 0) m_ticks = 1;
-		sprintf(msg, "FPS %0.1f", 100000.0f/(float)(m_ticks));
-		CResources::verdana22.printUTF8(msg, 10, 26, 0, 0, 128, 128, 0, 1);*/
 
 		m_renderer->swapBuffers();
 

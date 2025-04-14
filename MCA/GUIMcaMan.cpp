@@ -14,8 +14,6 @@ CGUIMcaMan::~CGUIMcaMan(void)
 }
 
 CGUIMcaMan::memcardsOps CGUIMcaMan::mce_memcards[2] __attribute__((aligned (64))) = {
-	//{2,512,16,16384,0x2b},
-	//{1,0,0,0,0}
 	{0,0,0,0,0},
 	{0,0,0,0,0}
 };
@@ -36,7 +34,6 @@ void CGUIMcaMan::initMca()
 	int ret, id;
 	id = SifExecModuleBuffer(mca_irx, size_mca_irx, 0, NULL, &ret);
 	IRX_REPORT("mca", id, ret);
-	//SifLoadModule("host:mca.irx", 0, NULL);
 
 	while((ret = SifBindRpc(&mca_cd0, MCANNIHMAGIC, 0)))
 		nopdelay();
@@ -58,22 +55,9 @@ void CGUIMcaMan::updateMca()
 
 void CGUIMcaMan::getProgress()
 {
-#ifdef MCA_BIND
 	if (!init_done || init_failed) return;
 	SifCallRpc(&mca_cd0, MCA_GET_PROGRESS, MCA_WAIT, &progressBarData, sizeof(progressBarData), &progressBarData, sizeof(progressBarData), 0, 0);
 	_InvalidDCache(&progressBarData, &progressBarData + sizeof(progressBarData));
-#else
-	if (progressBarData.finished == 0)
-	{
-		progressBarData.promil+=10;
-		if (progressBarData.promil >= 1000)
-		{
-			progressBarData.promil = 1000;
-			progressBarData.finished = 1;
-			progressBarData.error = 0;
-		}
-	}
-#endif
 }
 
 void CGUIMcaMan::doFormat(int slot, bool psx, bool fast, int totalpages)
@@ -82,7 +66,6 @@ void CGUIMcaMan::doFormat(int slot, bool psx, bool fast, int totalpages)
 	progressBarData.finished = 0;
 	progressBarData.promil = 0;
 
-#ifdef MCA_BIND
 	if (!init_done || init_failed)
 	{
 		progressBarData.error = 1;
@@ -99,7 +82,6 @@ void CGUIMcaMan::doFormat(int slot, bool psx, bool fast, int totalpages)
 	SifWriteBackDCache(&iopMcaCommand, sizeof(iopMcaCommand));
 	if (psx) SifCallRpc(&mca_cd0, MCA_FORMAT_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 	else SifCallRpc(&mca_cd0, MCA_FORMAT_PS2, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
-#endif
 }
 
 void CGUIMcaMan::doUnformat(int slot, bool psx, int totalpages)
@@ -108,7 +90,6 @@ void CGUIMcaMan::doUnformat(int slot, bool psx, int totalpages)
 	progressBarData.finished = 0;
 	progressBarData.promil = 0;
 	
-#ifdef MCA_BIND
 	if (!init_done || init_failed)
 	{
 		progressBarData.error = 1;
@@ -125,7 +106,6 @@ void CGUIMcaMan::doUnformat(int slot, bool psx, int totalpages)
 	SifWriteBackDCache(&iopMcaCommand, sizeof(iopMcaCommand));
 	if (psx) SifCallRpc(&mca_cd0, MCA_UNFORMAT_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 	else SifCallRpc(&mca_cd0, MCA_UNFORMAT_PS2, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
-#endif
 }
 
 void CGUIMcaMan::doCreateImage(int slot, bool psx, int totalpages, const char* path)
@@ -134,7 +114,6 @@ void CGUIMcaMan::doCreateImage(int slot, bool psx, int totalpages, const char* p
 	progressBarData.finished = 0;
 	progressBarData.promil = 0;
 	
-#ifdef MCA_BIND
 	if (!init_done || init_failed)
 	{
 		progressBarData.error = 1;
@@ -189,7 +168,6 @@ void CGUIMcaMan::doCreateImage(int slot, bool psx, int totalpages, const char* p
 	SifWriteBackDCache(&iopMcaCommand, sizeof(iopMcaCommand));
 	if (psx) SifCallRpc(&mca_cd0, MCA_WRITE_IMAGE_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 	else SifCallRpc(&mca_cd0, MCA_WRITE_IMAGE_PS2, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
-#endif
 }
 
 void CGUIMcaMan::doRestoreImage(int slot, bool psx, const char* path)
@@ -198,7 +176,6 @@ void CGUIMcaMan::doRestoreImage(int slot, bool psx, const char* path)
 	progressBarData.finished = 0;
 	progressBarData.promil = 0;
 	
-#ifdef MCA_BIND
 	if (!init_done || init_failed)
 	{
 		progressBarData.error = 1;
@@ -226,28 +203,8 @@ void CGUIMcaMan::doRestoreImage(int slot, bool psx, const char* path)
 		filePath = pfsPath;
 	}
 	strncpy(iopMcaCommand.filePath, filePath.c_str(), 255);
-	/*if (!psx)
-	{
-		std::string mciPath;
-		int posslash = filePath.rfind('/');
-		int posdot = filePath.rfind('.');
-		if (posdot == std::string::npos)
-		{
-			mciPath = filePath + ".mci";
-		} else if (posslash == std::string::npos)
-		{
-			mciPath = filePath.substr(0, posdot) + ".mci";
-		} else if (posdot < posslash)
-		{
-			mciPath = filePath + ".mci";
-		} else
-		{
-			mciPath = filePath.substr(0, posdot) + ".mci";
-		}
-		strncpy(iopMcaCommand.filePathMci, mciPath.c_str(), 255);
-	}*/
+
 	SifWriteBackDCache(&iopMcaCommand, sizeof(iopMcaCommand));
 	if (psx) SifCallRpc(&mca_cd0, MCA_READ_IMAGE_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 	else SifCallRpc(&mca_cd0, MCA_READ_IMAGE_PS2, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
-#endif
 }

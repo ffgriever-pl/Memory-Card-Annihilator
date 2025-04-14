@@ -19,7 +19,6 @@ u32 CGUIFrameTimerPS2::getTicks() //1 second is 100000 ticks!
 	if (!m_bInitDone) initTimer();
 
 	u32 count = *T0_COUNT;
-	//printf("Count = %d, Interrupts = %d, all = %d\n", count, timer_interrupt_ticks, (u32)((((float)count+(65535.0f*(float)timer_interrupt_ticks)))*(256000.0f/147456.0f)/10.0f));
 	return (u32)((((float)count+(65535.0f*(float)timer_interrupt_ticks)))*(256000.0f/147456.0f)/10.0f) ;
 }
 
@@ -28,7 +27,6 @@ u64 CGUIFrameTimerPS2::getTicksRaw() //1 second is 100000 ticks!
 	if (!m_bInitDone) initTimer();
 
 	u64 count = *T0_COUNT;
-	//printf("Count = %d, Interrupts = %d, all = %d\n", count, timer_interrupt_ticks, (u32)((((float)count+(65535.0f*(float)timer_interrupt_ticks)))*(256000.0f/147456.0f)/10.0f));
 	return count+(65535ULL*timer_interrupt_ticks);
 }
 

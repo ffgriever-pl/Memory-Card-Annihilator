@@ -25,7 +25,6 @@
 #include <libcdvd.h>
 #include "cdvd_rpc.h"
 #include <cstdio>
-#include <stdio.h>
 #include <dirent.h>
 
 //#define sio_printf printf

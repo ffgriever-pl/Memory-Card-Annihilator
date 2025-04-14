@@ -144,13 +144,9 @@ int CGUIMcaAbout::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, 
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
-		//u32 tck, ntck;
-		//tck = timer->getTicks();
 		prevBuffTex = renderer->getFrameTex(1);
 		prevBuffTex->blur(0);
 		prevBuffTex->blur(0);
-		//ntck = timer->getTicks();
-		//sio_printf("ticks: %d\n", ntck-tck);
 	} else
 	{
 		prevBuffTex = renderer->getFrameTex();

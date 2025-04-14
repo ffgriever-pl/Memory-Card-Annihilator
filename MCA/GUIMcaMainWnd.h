@@ -70,7 +70,6 @@ private:
 	void drawSlots(float alpha = 1.0f);
 	void drawMcIcons(float alpha = 1.0f);
 	void drawChoseSlot(float alpha = 1.0f);
-	void drawHover(float x, float y, float w, float h, float alpha = 1.0f);
 public:
 	CGUIMcaMainWnd(void);
 	~CGUIMcaMainWnd(void);

@@ -6,13 +6,9 @@ CGUIFrameTexturePS2::CGUIFrameTexturePS2(void)
 	, m_texbuf8(NULL)
 	, m_loadedVram(false)
 {
-	//m_Texture.Filter = GS_FILTER_NEAREST;
 	m_Texture.Filter = GS_FILTER_LINEAR;
-	//printf("Texture: this = %08x, list loc = %08x\n", this, &m_tex_list);
 	m_tex_list.push_back(this);
 	m_loadedVram = false;
-	//printf("Texture po: this = %08x, list loc = %08x\n", this, &m_tex_list);
-	//setRadius(TX_GAUSSIAN_RADIUS);
 }
 
 
@@ -172,7 +168,6 @@ bool CGUIFrameTexturePS2::loadTextureBufferTim2(u8 *res_data)
 	m_width = m_Texture.Width;
 	m_height = m_Texture.Height;
 	m_Texture.Mem = (u32*)&res_data[tempTim2Head->headerLen+0x10];
-	//printf("W: %d, H: %d, CL: 0x%08x, MEM: 0x%08x\n", texture->Width, texture->Height, (tempTim2Head->headerLen + 0x10 + (tempTim2Head->width*tempTim2Head->height / (tempTim2Head->bpp == 5 ? 1 : 2))),tempTim2Head->headerLen+0x10);
 	return true;
 }
 
@@ -187,11 +182,7 @@ void CGUIFrameTexturePS2::blur(int size)
 	switch (m_bpp)
 	{
 		case 24:
-			//setRadius(TX_GAUSSIAN_RADIUS);
-			//blur24st((u8*)m_Texture.Mem, 0, 0, m_Texture.Width, m_Texture.Height, m_Texture.Width, m_Texture.Height);
-			//fastblur24((u8*)m_Texture.Mem, 2, m_Texture.Width, m_Texture.Height);
 			fastblur24((u8*)m_Texture.Mem, 1, m_Texture.Width, m_Texture.Height);
-			//fastblur24((u8*)m_Texture.Mem, 1, m_Texture.Width, m_Texture.Height);
 			m_loadedVram = false;
 			break;
 		default:
@@ -391,208 +382,9 @@ void CGUIFrameTexturePS2::blur24st(u8 *pix, int x, int y,int w,int h, int imw, i
 	}
 }
 
-#if 0
-void CGUIFrameTexturePS2::fastblur24(u8 *pix,int radius, int w, int h)
-{
-
-	if (radius<1)
-	{
-		return;
-	}
-	int wm=w-1;
-	int hm=h-1;
-
-	int wh=w*h;
-	u8 *r=new u8[wh];
-	u8 *g=new u8[wh];
-	u8 *b=new u8[wh];
-
-	int div=radius+radius+1;
-
-	int rsum,gsum,bsum,x,y,i,p1,p2,yp,yi,yi3,yw,ip3,ip13,ip23;
-	int *vmin = new int[txmax(w,h)];
-	int *vmax = new int[txmax(w,h)];
-	int *dv=new int[256*div];
-
-	for (i=0;i<256*div;i++)
-	{
-		dv[i]=(i/div); 
-	}
-  
-	yw=yi=0;
- 
-	for (y=0;y<h;y++)
-	{
-		rsum=gsum=bsum=0;
-
-		for(i=-radius;i<=radius;i++)
-		{
-			ip3 = (yi+txmin(wm,txmax(i,0)))*3;
-			rsum+=pix[ip3 +0];
-			gsum+=pix[ip3 +1];
-			bsum+=pix[ip3 +2];
-		}
-		for (x=0;x<w;x++)
-		{
-			r[yi]=dv[rsum];
-			g[yi]=dv[gsum];
-			b[yi]=dv[bsum];
-
-			if(y==0)
-			{
-				vmin[x]=txmin(x+radius+1,wm);
-				vmax[x]=txmax(x-radius,0);
-			} 
-			p1=yw+vmin[x];
-			p2=yw+vmax[x];
-			ip13=p1*3;
-			ip23=p2*3;
-
-			rsum+=pix[ip13+0]-pix[ip23+0];
-			gsum+=pix[ip13+1]-pix[ip23+1];
-			bsum+=pix[ip13+2]-pix[ip23+2];
-			yi++;
-		}
-		yw+=w;
-	}
-  
-	for (x=0;x<w;x++)
-	{
-		rsum=gsum=bsum=0;
-		yp=-radius*w;
-		for(i=-radius;i<=radius;i++)
-		{
-			yi=txmax(0,yp)+x;
-			rsum+=r[yi];
-			gsum+=g[yi];
-			bsum+=b[yi];
-			yp+=w;
-		}
-		yi=x;
-		for (y=0;y<h;y++)
-		{
-			yi3=yi*3;
-			pix[yi3+0]=dv[rsum];
-			pix[yi3+1]=dv[gsum];
-			pix[yi3+2]=dv[bsum];
-			if(x==0)
-			{
-				vmin[y]=txmin(y+radius+1,hm)*w;
-				vmax[y]=txmax(y-radius,0)*w;
-			} 
-			p1=x+vmin[y];
-			p2=x+vmax[y];
-
-			rsum+=r[p1]-r[p2];
-			gsum+=g[p1]-g[p2];
-			bsum+=b[p1]-b[p2];
-
-			yi+=w;
-		}
-	}
-	delete [] vmin; delete [] vmax; delete [] dv;
-	delete [] r; delete [] g; delete [] b;
-}
-#else
 u8 CGUIFrameTexturePS2::dv[256*3];
 bool CGUIFrameTexturePS2::done = false;
-/*void CGUIFrameTexturePS2::fastblur24(u8 *pix,int radius, int w, int h)
-{//radius fixed to 1
-	int wm=w-1;
-	int hm=h-1;
 
-	int wh=w*h;
-	u8 *r=new u8[wh];
-	u8 *g=new u8[wh];
-	u8 *b=new u8[wh];
-
-	int rsum,gsum,bsum,x,y,i,p1,p2,yp,yi,yi3,yw,ip3,ip13,ip23;
-	int *vmin = new int[txmax(w,h)];
-	int *vmax = new int[txmax(w,h)];
-
-	if (!done)
-	{
-		for (i=0;i<256*3;i++)
-		{
-			dv[i]=(i/3); 
-		}
-		done = true;
-	}
-  
-	yw=yi=0;
- 
-	for (y=0;y<h;y++)
-	{
-		rsum=gsum=bsum=0;
-
-		for(i=-1;i<=1;i++)
-		{
-			ip3 = (yi+txmin(wm,txmax(i,0))); ip3 += ip3<<1;
-			rsum+=pix[ip3 +0];
-			gsum+=pix[ip3 +1];
-			bsum+=pix[ip3 +2];
-		}
-		for (x=0;x<w;x++)
-		{
-			r[yi]=dv[rsum];
-			g[yi]=dv[gsum];
-			b[yi]=dv[bsum];
-
-			if(y==0)
-			{
-				vmin[x]=txmin(x+1+1,wm);
-				vmax[x]=txmax(x-1,0);
-			} 
-			p1=yw+vmin[x];
-			p2=yw+vmax[x];
-			ip13=(p1<<1) + p1;
-			ip23=(p2<<1) + p2;
-
-			rsum+=pix[ip13+0]-pix[ip23+0];
-			gsum+=pix[ip13+1]-pix[ip23+1];
-			bsum+=pix[ip13+2]-pix[ip23+2];
-			yi++;
-		}
-		yw+=w;
-	}
-  
-	for (x=0;x<w;x++)
-	{
-		rsum=gsum=bsum=0;
-		yp=-1*w;
-		for(i=-1;i<=1;i++)
-		{
-			yi=txmax(0,yp)+x;
-			rsum+=r[yi];
-			gsum+=g[yi];
-			bsum+=b[yi];
-			yp+=w;
-		}
-		yi=x;
-		for (y=0;y<h;y++)
-		{
-			yi3=(yi<<1)+yi;
-			pix[yi3+0]=dv[rsum];
-			pix[yi3+1]=dv[gsum];
-			pix[yi3+2]=dv[bsum];
-			if(x==0)
-			{
-				vmin[y]=txmin(y+1+1,hm)*w;
-				vmax[y]=txmax(y-1,0)*w;
-			} 
-			p1=x+vmin[y];
-			p2=x+vmax[y];
-
-			rsum+=r[p1]-r[p2];
-			gsum+=g[p1]-g[p2];
-			bsum+=b[p1]-b[p2];
-
-			yi+=w;
-		}
-	}
-	delete [] vmin; delete [] vmax;
-	delete [] r; delete [] g; delete [] b;
-}*/
 void CGUIFrameTexturePS2::fastblur24(u8 *pix,int radius, int w, int h)
 {//radius fixed to 1
 	if (!done)
@@ -662,8 +454,8 @@ void CGUIFrameTexturePS2::fastblur24(u8 *pix,int radius, int w, int h)
 		tmpPix[0] = sumr>>1; tmpPix[1] = sumg>>1; tmpPix[2] = sumb>>1;
 	}
 }
-#endif
-std::list<CGUIFrameTexturePS2*> CGUIFrameTexturePS2::m_tex_list;// = std::list<CGUIFrameTexturePS2*>();
+
+std::list<CGUIFrameTexturePS2*> CGUIFrameTexturePS2::m_tex_list;
 
 int CGUIFrameTexturePS2::radius = 0;
 int CGUIFrameTexturePS2::kernelSize = 0;
