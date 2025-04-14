@@ -77,15 +77,7 @@ void CGUIMcaGetYesNo::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer 
 
 void CGUIMcaGetYesNo::drawMessage(float alpha)
 {
-	CResources::verdana22.printUTF8Box(
-		m_message
-		, m_x+8 +2, m_y+106 +2
-		, 402, 110
-		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
-	CResources::verdana22.printUTF8Box(
+	CResources::verdana22.printUTF8BoxShadow(
 		m_message
 		, m_x+8, m_y+106
 		, 402, 110
@@ -95,15 +87,7 @@ void CGUIMcaGetYesNo::drawMessage(float alpha)
 	);
 
 	if (m_hover_yesno) m_hover_yesno->drawHover(m_renderer, m_ticks, alpha);
-	CResources::centurygoth38p.printUTF8Box(
-		CResources::mainLang.getText("LNG_OPER_YES")
-		, m_x+8 +3, m_y+230 +3
-		, 190, 50
-		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.25f
-	);
-	CResources::centurygoth38p.printUTF8Box(
+	CResources::centurygoth38p.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_OPER_YES")
 		, m_x+8, m_y+230
 		, 190, 50
@@ -112,21 +96,14 @@ void CGUIMcaGetYesNo::drawMessage(float alpha)
 		, 0, 0, 0, alpha
 	);
 
-	CResources::centurygoth38p.printUTF8Box(
-		CResources::mainLang.getText("LNG_OPER_NO")
-		, m_x+222 +3, m_y+230 +3
-		, 190, 50
-		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.25f
-	);
-	CResources::centurygoth38p.printUTF8Box(
+	CResources::centurygoth38p.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_OPER_NO")
 		, m_x+222, m_y+230
 		, 190, 50
 		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
 		, 00.00f, 1.0f
 		, 0, 0, 0, alpha
+		, 3, 3, alpha * 0.25f
 	);
 }
 

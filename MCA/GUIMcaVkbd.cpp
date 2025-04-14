@@ -90,16 +90,8 @@ void CGUIMcaVkbd::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *tim
 
 void CGUIMcaVkbd::drawText(float alpha)
 {
-	CResources::verdana22.printUTF8Box(
-		m_text.c_str()
-		, m_x+102 +2, m_y+2 +2
-		, 372-12, 24
-		, CIGUIFrameFont<CGUITexture>::etxAlignLeftRight
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
 	tVertex2 pos =
-	CResources::verdana22.printUTF8Box(
+	CResources::verdana22.printUTF8BoxShadow(
 		m_text.c_str()
 		, m_x+102, m_y+2
 		, 372-12, 24
@@ -119,13 +111,7 @@ void CGUIMcaVkbd::drawText(float alpha)
 	if (m_display_caret)
 	{
 		float caretscale = (m_renderer->getFrameHeight() == 512 ? 1.0f : 512.0f/448.0f);
-		CResources::verdana22.printUTF8(
-			"_"
-			, pos.x+2, pos.y+2 +CResources::verdana22.getScale(22.00f*caretscale)*(float)CResources::verdana22.getBasePos()
-			, 22.00f*caretscale, 1.0f
-			, 0, 0, 0, alpha*0.15f
-		);
-		CResources::verdana22.printUTF8(
+		CResources::verdana22.printUTF8Shadow(
 			"_"
 			, pos.x, pos.y +CResources::verdana22.getScale(22.00f*caretscale)*(float)CResources::verdana22.getBasePos()
 			, 22.00f*caretscale, 1.0f

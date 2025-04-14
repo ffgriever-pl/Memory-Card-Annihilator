@@ -46,15 +46,7 @@ void CGUIMcaWarrningNoCard::drawMessage(float alpha)
 	std::string formatted = CResources::mainLang.getText("LNG_WARN_NO_CARD_IN_SLOT");
 	
 	CResources::mainLang.replace(&formatted, "{SLOTNUM}", m_slotnum+1);
-	CResources::verdana22.printUTF8Box(
-		formatted.c_str()
-		, m_x+8 +2, m_y+106 +2
-		, 402, 180
-		, CIGUIFrameFont<CGUITexture>::etxAlignJustify
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
-	CResources::verdana22.printUTF8Box(
+	CResources::verdana22.printUTF8BoxShadow(
 		formatted.c_str()
 		, m_x+8, m_y+106
 		, 402, 180
