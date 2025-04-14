@@ -160,6 +160,11 @@ public:
 	tVertex2 printASCII(const char *string, float xpos, float ypos, float size, float spacing, u8 r, u8 g, u8 b, float alpha, u8 r2 = 0, u8 g2 = 0, u8 b2 = 0, float alpha2 = 0.0f, u8 r3 = 0, u8 g3 = 0, u8 b3 = 0, float alpha3 = 0.0f, u8 r4 = 0, u8 g4 = 0, u8 b4 = 0, float alpha4 = 0.0f, bool goraud = false);//size = 0: default, rgb 0-128, alpha 0-1
 	tVertex2 printUTF8Box(const char *string, float xpos, float ypos, int bw, int bh, eAlignment align, float size, float spacing, u8 r, u8 g, u8 b, float alpha, u8 r2 = 0, u8 g2 = 0, u8 b2 = 0, float alpha2 = 0.0f, u8 r3 = 0, u8 g3 = 0, u8 b3 = 0, float alpha3 = 0.0f, u8 r4 = 0, u8 g4 = 0, u8 b4 = 0, float alpha4 = 0.0f, bool goraud = false);//size = 0: default, rgb 0-128, alpha 0-1
 	tVertex2 printASCIIBox(const char *string, float xpos, float ypos, int bw, int bh, eAlignment align, float size, float spacing, u8 r, u8 g, u8 b, float alpha, u8 r2 = 0, u8 g2 = 0, u8 b2 = 0, float alpha2 = 0.0f, u8 r3 = 0, u8 g3 = 0, u8 b3 = 0, float alpha3 = 0.0f, u8 r4 = 0, u8 g4 = 0, u8 b4 = 0, float alpha4 = 0.0f, bool goraud = false);//size = 0: default, rgb 0-128, alpha 0-1
+
+	tVertex2 printUTF8Shadow(const char* string, float xpos, float ypos, float size, float spacing, u8 r, u8 g, u8 b, float alpha, float sx = 2.0f, float sy = 2.0f, float sa = 0.0f, u8 r2 = 0, u8 g2 = 0, u8 b2 = 0, float alpha2 = 0.0f, u8 r3 = 0, u8 g3 = 0, u8 b3 = 0, float alpha3 = 0.0f, u8 r4 = 0, u8 g4 = 0, u8 b4 = 0, float alpha4 = 0.0f, bool goraud = false);//size = 0: default, rgb 0-128, alpha 0-1
+	tVertex2 printASCIIShadow(const char* string, float xpos, float ypos, float size, float spacing, u8 r, u8 g, u8 b, float alpha, float sx = 2.0f, float sy = 2.0f, float sa = 0.0f, u8 r2 = 0, u8 g2 = 0, u8 b2 = 0, float alpha2 = 0.0f, u8 r3 = 0, u8 g3 = 0, u8 b3 = 0, float alpha3 = 0.0f, u8 r4 = 0, u8 g4 = 0, u8 b4 = 0, float alpha4 = 0.0f, bool goraud = false);//size = 0: default, rgb 0-128, alpha 0-1
+	tVertex2 printUTF8BoxShadow(const char* string, float xpos, float ypos, int bw, int bh, eAlignment align, float size, float spacing, u8 r, u8 g, u8 b, float alpha, float sx = 2.0f, float sy = 2.0f, float sa = 0.0f, u8 r2 = 0, u8 g2 = 0, u8 b2 = 0, float alpha2 = 0.0f, u8 r3 = 0, u8 g3 = 0, u8 b3 = 0, float alpha3 = 0.0f, u8 r4 = 0, u8 g4 = 0, u8 b4 = 0, float alpha4 = 0.0f, bool goraud = false);//size = 0: default, rgb 0-128, alpha 0-1
+	tVertex2 printASCIIBoxShadow(const char* string, float xpos, float ypos, int bw, int bh, eAlignment align, float size, float spacing, u8 r, u8 g, u8 b, float alpha, float sx = 2.0f, float sy = 2.0f, float sa = 0.0f, u8 r2 = 0, u8 g2 = 0, u8 b2 = 0, float alpha2 = 0.0f, u8 r3 = 0, u8 g3 = 0, u8 b3 = 0, float alpha3 = 0.0f, u8 r4 = 0, u8 g4 = 0, u8 b4 = 0, float alpha4 = 0.0f, bool goraud = false);//size = 0: default, rgb 0-128, alpha 0-1
 };
 
 template <class T> CIGUIFrameFont<T>::CIGUIFrameFont()
@@ -1252,6 +1257,34 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 	{
 		return tVertex2(caretx+xpos, carety+ypos -(float)m_base_pos*scale);
 	}
+}
+
+template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Shadow(const char* string, float xpos, float ypos, float size, float spacing, u8 r, u8 g, u8 b, float alpha, float sx, float sy, float sa, u8 r2, u8 g2, u8 b2, float alpha2, u8 r3, u8 g3, u8 b3, float alpha3, u8 r4, u8 g4, u8 b4, float alpha4, bool goraud)
+{
+	if (sa == 0.0f) sa = alpha * 0.15f;
+	printUTF8(string, xpos + sx, ypos + sy, size, spacing, 0, 0, 0, sa);
+	return printUTF8(string, xpos, ypos, size, spacing, r, g, b, alpha, r2, g2, b2, alpha2, r3, g3, b3, alpha3, r4, g4, b4, alpha4, goraud);
+}
+
+template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIShadow(const char* string, float xpos, float ypos, float size, float spacing, u8 r, u8 g, u8 b, float alpha, float sx, float sy, float sa, u8 r2, u8 g2, u8 b2, float alpha2, u8 r3, u8 g3, u8 b3, float alpha3, u8 r4, u8 g4, u8 b4, float alpha4, bool goraud)
+{
+	if (sa == 0.0f) sa = alpha * 0.15f;
+	printASCII(string, xpos + sx, ypos + sy, size, spacing, 0, 0, 0, sa);
+	return printASCII(string, xpos, ypos, size, spacing, r, g, b, alpha, r2, g2, b2, alpha2, r3, g3, b3, alpha3, r4, g4, b4, alpha4, goraud);
+}
+
+template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8BoxShadow(const char* string, float xpos, float ypos, int bw, int bh, eAlignment align, float size, float spacing, u8 r, u8 g, u8 b, float alpha, float sx, float sy, float sa, u8 r2, u8 g2, u8 b2, float alpha2, u8 r3, u8 g3, u8 b3, float alpha3, u8 r4, u8 g4, u8 b4, float alpha4, bool goraud)
+{
+	if (sa == 0.0f) sa = alpha * 0.15f;
+	printUTF8Box(string, xpos + sx, ypos + sy, bw, bh, align, size, spacing, 0, 0, 0, sa);
+	return printUTF8Box(string, xpos, ypos, bw, bh, align, size, spacing, r, g, b, alpha, r2, g2, b2, alpha2, r3, g3, b3, alpha3, r4, g4, b4, alpha4, goraud);
+}
+
+template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBoxShadow(const char* string, float xpos, float ypos, int bw, int bh, eAlignment align, float size, float spacing, u8 r, u8 g, u8 b, float alpha, float sx, float sy, float sa, u8 r2, u8 g2, u8 b2, float alpha2, u8 r3, u8 g3, u8 b3, float alpha3, u8 r4, u8 g4, u8 b4, float alpha4, bool goraud)
+{
+	if (sa == 0.0f) sa = alpha * 0.15f;
+	printASCIIBox(string, xpos + sx, ypos + sy, bw, bh, align, size, spacing, 0, 0, 0, sa);
+	return printASCIIBox(string, xpos, ypos, bw, bh, align, size, spacing, r, g, b, alpha, r2, g2, b2, alpha2, r3, g3, b3, alpha3, r4, g4, b4, alpha4, goraud);
 }
 
 #endif //_IGUIFRAMEFONT_H_

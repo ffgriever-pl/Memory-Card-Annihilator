@@ -502,12 +502,7 @@ void CGUIMcaGetPath::drawBoxArea(float alpha)
 	if (m_curr_path)
 	{
 		m_renderer->setScissor(true, (int)m_x +4, (int)m_y+3, (int)m_x +374, (int)m_y +23);
-		CResources::verdana18s.printUTF8(m_curr_path->c_str()
-			, m_x + 6 +2, m_y + 3 + CResources::verdana18s.getBasePos() +2
-			, 00.0f, 0
-			, 0, 0, 0, alpha*0.15f
-		);
-		CResources::verdana18s.printUTF8(m_curr_path->c_str()
+		CResources::verdana18s.printUTF8Shadow(m_curr_path->c_str()
 			, m_x + 6, m_y + 3 + CResources::verdana18s.getBasePos()
 			, 00.0f, 0
 			, 0, 0, 0, alpha
@@ -577,12 +572,7 @@ void CGUIMcaGetPath::drawFilelist(float alpha)
 				);
 			}
 			
-			CResources::verdana22.printASCII(currstring.c_str()
-				, m_x + 10 +26 +2, m_y + 32 + 21*line +2 +CResources::verdana22.getBasePos()
-				, 0, 0
-				, 0, 0, 0, alpha*0.15f
-			);
-			CResources::verdana22.printASCII(currstring.c_str()
+			CResources::verdana22.printASCIIShadow(currstring.c_str()
 				, m_x + 10 +26, m_y + 32 + 21*line +CResources::verdana22.getBasePos()
 				, 0, 0
 				, 0, 0, 0, alpha

@@ -99,15 +99,7 @@ void CGUIMcaGetSize::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *
 
 void CGUIMcaGetSize::drawMessage(float alpha)
 {
-	CResources::verdana22.printUTF8Box(
-		CResources::mainLang.getText("LNG_OPER_CHOOSE_MC_SIZE")
-		, m_x+8 +2, m_y+106 +2
-		, 402, 90
-		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
-	CResources::verdana22.printUTF8Box(
+	CResources::verdana22.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_OPER_CHOOSE_MC_SIZE")
 		, m_x+8, m_y+106
 		, 402, 90
@@ -118,21 +110,14 @@ void CGUIMcaGetSize::drawMessage(float alpha)
 
 	std::string formatted = CResources::mainLang.getText("LNG_OPER_MEGABYTE");
 	CResources::mainLang.replace(&formatted, "{CARDSIZE}", m_card_mbytes);
-	CResources::centurygoth38p.printUTF8Box(
-		formatted.c_str()
-		, m_x+8 +3, m_y+206 +3
-		, 402, 50
-		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.25f
-	);
-	CResources::centurygoth38p.printUTF8Box(
+	CResources::centurygoth38p.printUTF8BoxShadow(
 		formatted.c_str()
 		, m_x+8, m_y+206
 		, 402, 50
 		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
 		, 00.00f, 1.0f
 		, 0, 0, 0, alpha
+		, 4, 4, alpha * 0.25f
 	);
 }
 

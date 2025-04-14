@@ -44,36 +44,21 @@ void CGUIMcaAbout::drawMessage(float alpha)
 {
 	std::string formatted = CResources::mainLang.getText("LNG_WARN_NO_CARD_IN_SLOT");
 	
-	CResources::centurygoth38p.printUTF8Box(
-		CResources::mainLang.getText("LNG_INFO_THX_CAP")
-		, m_x+8 +4, m_y+15 +4
-		, 402, 38
-		, CIGUIFrameFont<CGUITexture>::etxAlignLeft
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.25f
-	);
-	CResources::centurygoth38p.printUTF8Box(
+	CResources::centurygoth38p.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_THX_CAP")
 		, m_x+8, m_y+15
 		, 402, 38
 		, CIGUIFrameFont<CGUITexture>::etxAlignLeft
 		, 00.00f, 1.0f
 		, 32, 32, 32, alpha
+		, 4, 4, alpha * 0.25f
 		, 32, 32, 32, alpha
 		, 0, 0, 0, alpha
 		, 0, 0, 0, alpha
 		, true
 	);
 
-	CResources::verdana18s.printUTF8Box(
-		CResources::mainLang.getText("LNG_INFO_THX_TXT")
-		, m_x+8 +2, m_y+45+10 +2
-		, 402, 164
-		, CIGUIFrameFont<CGUITexture>::etxAlignJustify
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
-	CResources::verdana18s.printUTF8Box(
+	CResources::verdana18s.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_THX_TXT")
 		, m_x+8, m_y+45+10
 		, 402, 164
@@ -82,15 +67,7 @@ void CGUIMcaAbout::drawMessage(float alpha)
 		, 0, 0, 0, alpha
 	);
 
-	CResources::verdana18s.printUTF8Box(
-		"~ ffgriever / berion\n2010"
-		, m_x+8 +2, m_y+240 +2
-		, 402, 164
-		, CIGUIFrameFont<CGUITexture>::etxAlignRight
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
-	CResources::verdana18s.printUTF8Box(
+	CResources::verdana18s.printUTF8BoxShadow(
 		"~ ffgriever / berion\n2010"
 		, m_x+8, m_y+240
 		, 402, 164
@@ -99,17 +76,7 @@ void CGUIMcaAbout::drawMessage(float alpha)
 		, 0, 0, 0, alpha
 	);
 #ifdef MGMODE
-	CResources::verdana18s.printUTF8Box(
-		"MG MODE: "
-		MGMODE
-		"\nAlt MG By El_isra"
-		, m_x+8 +2, m_y+240 +2
-		, 402, 164
-		, CIGUIFrameFont<CGUITexture>::etxAlignLeft
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
-	CResources::verdana18s.printUTF8Box(
+	CResources::verdana18s.printUTF8BoxShadow(
 		"MG MODE: "
 		MGMODE
 		"\nAlt MG By El_isra"

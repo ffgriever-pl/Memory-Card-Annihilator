@@ -109,15 +109,7 @@ void CGUIMcaOperProgress::drawMessage(float alpha)
 			message = CResources::mainLang.getText("LNG_PROGRESS_FAIL");
 		}
 	}
-	CResources::verdana22.printUTF8Box(
-		message
-		, m_x+8 +2, m_y+106 +2
-		, 402, 110
-		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
-	CResources::verdana22.printUTF8Box(
+	CResources::verdana22.printUTF8BoxShadow(
 		message
 		, m_x+8, m_y+106
 		, 402, 100

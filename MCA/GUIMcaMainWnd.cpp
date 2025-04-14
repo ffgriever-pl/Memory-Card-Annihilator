@@ -346,21 +346,14 @@ void CGUIMcaMainWnd::drawMcIcons(float alpha)
 
 void CGUIMcaMainWnd::drawChoseSlot(float alpha)
 {
-	CResources::centurygoth38p.printUTF8Box(
-		CResources::mainLang.getText("LNG_MWND_CHOOSE_SLOT")//"Wybierz slot"
-		, 100+4, 112+4
-		, 440, 60
-		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.25f
-	);
-	CResources::centurygoth38p.printUTF8Box(
-		CResources::mainLang.getText("LNG_MWND_CHOOSE_SLOT")//"Wybierz slot"
+	CResources::centurygoth38p.printUTF8BoxShadow(
+		CResources::mainLang.getText("LNG_MWND_CHOOSE_SLOT")
 		, 100, 112
 		, 440, 60
 		, CIGUIFrameFont<CGUITexture>::etxAlignCenter
 		, 00.00f, 1.0f
 		, 64, 64, 64, alpha
+		, 4, 4, alpha * 0.25f
 		, 64, 64, 64, alpha
 		, 0, 0, 0, alpha
 		, 0, 0, 0, alpha

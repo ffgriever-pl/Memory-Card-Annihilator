@@ -54,36 +54,21 @@ void CGUIMcaDisplayMessage::drawMessage(float alpha)
 		{
 			if (m_caption != NULL)
 			{
-				CResources::centurygoth38p.printUTF8Box(
-					m_caption
-					, m_x+8 +4, m_y+34 +4
-					, 402, 50
-					, CIGUIFrameFont<CGUITexture>::etxAlignCenter
-					, 00.00f, 1.0f
-					, 0, 0, 0, alpha*0.25f
-				);
-				CResources::centurygoth38p.printUTF8Box(
+				CResources::centurygoth38p.printUTF8BoxShadow(
 					m_caption
 					, m_x+8, m_y+34
 					, 402, 50
 					, CIGUIFrameFont<CGUITexture>::etxAlignCenter
 					, 00.00f, 1.0f
 					, 64, 64, 64, alpha
+					, 4, 4, alpha * 0.25f
 					, 64, 64, 64, alpha
 					, 0, 0, 0, alpha
 					, 0, 0, 0, alpha
 					, true
 				);
 			}
-			CResources::verdana22.printUTF8Box(
-				m_message
-				, m_x+8 +2, m_y+106 +2
-				, 402, 180
-				, m_align
-				, 00.00f, 1.0f
-				, 0, 0, 0, alpha*0.15f
-			);
-			CResources::verdana22.printUTF8Box(
+			CResources::verdana22.printUTF8BoxShadow(
 				m_message
 				, m_x+8, m_y+106
 				, 402, 180
@@ -93,15 +78,7 @@ void CGUIMcaDisplayMessage::drawMessage(float alpha)
 			);
 		} else
 		{
-			CResources::verdana22.printUTF8Box(
-				m_message
-				, m_x+8 +2, m_y+18 +2
-				, 402, 266
-				, m_align
-				, 00.00f, 1.0f
-				, 0, 0, 0, alpha*0.15f
-			);
-			CResources::verdana22.printUTF8Box(
+			CResources::verdana22.printUTF8BoxShadow(
 				m_message
 				, m_x+8, m_y+18
 				, 402, 266

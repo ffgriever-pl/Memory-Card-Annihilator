@@ -367,13 +367,7 @@ void CGUIMcaOperWnd::drawMenu(float alpha)
 
 	for (u32 i = 0; i < countof(m_menu_options); i++)
 	{
-		CResources::verdana22.printUTF8(
-			CResources::mainLang.getText(m_menu_options[i])
-			, 82+2, 266+2 +i*26
-			, 00.00f, 1.0f
-			, 0, 0, 0, alpha*0.15f
-		);
-		CResources::verdana22.printUTF8(
+		CResources::verdana22.printUTF8Shadow(
 			CResources::mainLang.getText(m_menu_options[i])
 			, 82, 266 +i*26
 			, 00.00f, 1.0f
@@ -381,13 +375,7 @@ void CGUIMcaOperWnd::drawMenu(float alpha)
 		);
 	}
 
-	CResources::verdana22.printUTF8(
-		CResources::mainLang.getText(m_menu_format_type[m_menu_item_format])
-		, 342+2, 266+2
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.15f
-	);
-	CResources::verdana22.printUTF8(
+	CResources::verdana22.printUTF8Shadow(
 		CResources::mainLang.getText(m_menu_format_type[m_menu_item_format])
 		, 342, 266
 		, 00.00f, 1.0f
@@ -427,17 +415,12 @@ void CGUIMcaOperWnd::drawStatic(float alpha)
 	);
 	if (m_psx_mode)
 	{
-		CResources::verdana22.printUTF8(
-			CResources::mainLang.getText("LNG_OPER_PSX_MEMORY_CARD")
-			, 8+74+3, 220+3
-			, 26.00f, 1.0f
-			, 0, 0, 0, alpha*0.15f
-		);
-		CResources::verdana22.printUTF8(
+		CResources::verdana22.printUTF8Shadow(
 			CResources::mainLang.getText("LNG_OPER_PSX_MEMORY_CARD")
 			, 8+74, 220
 			, 26.00f, 1.0f
 			, 40, 40, 40, alpha
+			, 3, 3, alpha * 0.15f
 			, 40, 40, 40, alpha
 			, 0, 0, 0, alpha
 			, 0, 0, 0, alpha
@@ -445,17 +428,12 @@ void CGUIMcaOperWnd::drawStatic(float alpha)
 		);
 	} else
 	{
-		CResources::verdana22.printUTF8(
-			CResources::mainLang.getText("LNG_OPER_PS2_MEMORY_CARD")
-			, 8+74+3, 220+3
-			, 26.00f, 1.0f
-			, 0, 0, 0, alpha*0.15f
-		);
-		CResources::verdana22.printUTF8(
+		CResources::verdana22.printUTF8Shadow(
 			CResources::mainLang.getText("LNG_OPER_PS2_MEMORY_CARD")
 			, 8+74, 220
 			, 26.00f, 1.0f
 			, 40, 40, 40, alpha
+			, 3, 3, alpha * 0.15f
 			, 40, 40, 40, alpha
 			, 0, 0, 0, alpha
 			, 0, 0, 0, alpha

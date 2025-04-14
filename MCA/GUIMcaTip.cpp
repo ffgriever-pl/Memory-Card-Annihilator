@@ -76,17 +76,7 @@ void CGUIMcaTip::drawTip(CIGUIFrameRenderer *renderer, u32 new_input, u32 ticks,
 		CResources::m_popup_tip.getWidth(), CResources::m_popup_tip.getHeight(),
 		128, 128, 128, alpha*fadealpha
 	);
-	CResources::verdana18s.printUTF8Box(
-		currentry.text.c_str(),
-		m_x + 6 +2,
-		m_y + 7 +2 +4,
-		298,
-		44,
-		CIGUIFrameFont<CGUITexture>::etxAlignLeft,
-		0.00f, 0.0f,
-		currentry.r, currentry.g, currentry.b, currentry.a*alpha*fadealpha*0.15f
-	);
-	CResources::verdana18s.printUTF8Box(
+	CResources::verdana18s.printUTF8BoxShadow(
 		currentry.text.c_str(),
 		m_x + 6,
 		m_y + 7 +4,
