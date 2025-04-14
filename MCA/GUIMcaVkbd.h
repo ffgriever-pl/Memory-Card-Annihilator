@@ -1,12 +1,12 @@
 #ifndef _GUIMCAVKBD_H_
 #define _GUIMCAVKBD_H_
 
+#include <vector>
+#include <string>
 #include "IGUIFrameRenderer.h"
 #include "IGUIFrameInput.h"
 #include "IGUIFrameTimer.h"
 #include "GUITypes.h"
-#include <vector>
-#include <string>
 
 class CGUIMcaVkbd
 {

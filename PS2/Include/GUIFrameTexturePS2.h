@@ -1,9 +1,9 @@
 #ifndef _GUIFRAMETEXTUREPS2_H_
-#define _GUIFRAMETEXTUREPS2_H_ 1
+#define _GUIFRAMETEXTUREPS2_H_
 
+#include <list>
 #include "GUIFramePS2Includes.h"
 #include "IGUIFrameTexture.h"
-#include <list>
 
 #define TX_GAUSSIAN_RADIUS (2) 
 //min 1, max 248!

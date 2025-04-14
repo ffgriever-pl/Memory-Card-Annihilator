@@ -1,10 +1,10 @@
 #ifndef _GUICONTROLMENULABEL_H_
 #define _GUICONTROLMENULABEL_H_
 
+#include <string>
 #include "IGUIFrameControl.h"
 #include "IGUIFrameFont.h"
 #include "GUITypes.h"
-#include <string>
 
 class CGUIControlMenuLabel :
 	public CIGUIFrameControl

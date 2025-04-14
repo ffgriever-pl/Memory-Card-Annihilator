@@ -1,5 +1,5 @@
 #ifndef _IGUIFRAMETIMER_H_
-#define _IGUIFRAMETIMER_H_ 1
+#define _IGUIFRAMETIMER_H_
 
 #include "IGUIFrameIncludes.h"
 

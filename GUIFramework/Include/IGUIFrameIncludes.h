@@ -1,5 +1,5 @@
 #ifndef _IGUIFRAMEINCLUDES_H_
-#define _IGUIFRAMEINCLUDES_H_ 1
+#define _IGUIFRAMEINCLUDES_H_
 
 #include <tamtypes.h>
 

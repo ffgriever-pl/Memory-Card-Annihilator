@@ -1,6 +1,6 @@
+#include <string>
 #include "GUIMcaCardInfo.h"
 #include "res/resources.h"
-#include <string>
 #include "GUIMcaMan.h"
 
 CGUIMcaCardInfo::CGUIMcaCardInfo(float x, float y)

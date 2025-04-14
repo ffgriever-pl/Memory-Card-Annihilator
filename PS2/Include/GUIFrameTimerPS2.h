@@ -1,5 +1,5 @@
 #ifndef _GUIFRAMETIMERPS2_H_
-#define _GUIFRAMETIMERPS2_H_ 1
+#define _GUIFRAMETIMERPS2_H_
 
 #include "GUIFramePS2Includes.h"
 #include "IGUIFrameTimer.h"

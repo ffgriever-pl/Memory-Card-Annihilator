@@ -34,7 +34,7 @@ void CPS2Application::delInstance()
 		m_pInstance = NULL;
 	}
 }
-#include <fstream>
+
 int CPS2Application::main(int argc, char *argv[])
 {
 	CResources::iopreset = true;

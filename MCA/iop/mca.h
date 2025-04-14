@@ -3,10 +3,10 @@
 
 #define printf(...)
 
-#include "psxcdr_rpc.h"
 #include <sys/stat.h>
 #include <sys/fcntl.h>
 #include <iomanX.h>
+#include "psxcdr_rpc.h"
 
 typedef
 struct t_memcardsOps

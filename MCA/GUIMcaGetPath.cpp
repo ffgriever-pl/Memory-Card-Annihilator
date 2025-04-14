@@ -1,7 +1,7 @@
+#include <string>
 #include "GUIMcaGetPath.h"
 #include "GUIFramePS2Modules.h"
 #include "res/resources.h"
-#include <string>
 #include "GUIFramePS2Includes.h"
 #include "GUIMcaVkbd.h"
 #include "GUIMcaMan.h"

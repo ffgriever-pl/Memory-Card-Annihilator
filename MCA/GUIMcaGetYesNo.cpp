@@ -1,6 +1,6 @@
+#include <string>
 #include "GUIMcaGetYesNo.h"
 #include "res/resources.h"
-#include <string>
 
 CGUIMcaGetYesNo::CGUIMcaGetYesNo(float x, float y, const char* message, int defaultpos)
 	: m_hover_yesno(NULL)

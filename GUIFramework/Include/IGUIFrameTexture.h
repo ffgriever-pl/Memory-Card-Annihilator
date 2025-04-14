@@ -1,8 +1,8 @@
 #ifndef _IGUIFRAMETEXTURE_H_
-#define _IGUIFRAMETEXTURE_H_ 1
+#define _IGUIFRAMETEXTURE_H_
 
-#include "IGUIFrameIncludes.h"
 #include <string>
+#include "IGUIFrameIncludes.h"
 
 class CIGUIFrameTexture
 {
