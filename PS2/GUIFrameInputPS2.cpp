@@ -11,8 +11,6 @@ bool CGUIFrameInputPS2::initInput()
 	if (!m_pad_init_done)
 	{
 		CGUIFramePS2Modules::loadPadModules();
-		/// FIXME: What am I?
-		//padReset();
 		padInit(0);
 
 		int ret;
@@ -58,7 +56,6 @@ bool CGUIFrameInputPS2::initializePad(int port, int slot)
 	
 	if (state != PAD_STATE_DISCONN)
 	{
-		//padSetMainMode(port, slot, PAD_MMODE_DIGITAL, PAD_MMODE_UNLOCK);
 		padSetMainMode(port, slot, PAD_MMODE_DUALSHOCK, PAD_MMODE_UNLOCK);
 		return true;
 	}
