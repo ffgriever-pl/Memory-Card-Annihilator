@@ -7,7 +7,6 @@ CGUIMcaGetSize::CGUIMcaGetSize(float x, float y, int defaultmbytes)
 	m_x = x;
 	m_y = y;
 	m_card_mbytes = defaultmbytes;
-	//m_card_mbytes = 8;
 	m_return = false;
 }
 

@@ -411,7 +411,6 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 				{
 					m_exit = true;
 				}
-				//sio_printf("LIST: Pos %d, Cap \"%s\", it is %s\n", m_listChosen, (*i).name.c_str(), (*i).directory ? "dir" : "file");
 			}
 			if (m_save && m_input_state_new & CIGUIFrameInput::enInStart && m_all_path.size() > 0 && !(m_all_path.size() == 1 && m_all_path.front() == "hdd0:") )
 			{
@@ -472,29 +471,6 @@ void CGUIMcaGetPath::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *
 	m_renderer->swapBuffers();
 }
 
-void CGUIMcaGetPath::drawMessage(float alpha)
-{
-	/*std::string formatted = CResources::mainLang.getText("LNG_WARN_NO_CARD_IN_SLOT");
-	
-	CResources::mainLang.replace(&formatted, "{SLOTNUM}", m_slotnum+1);
-	CResources::verdana22.printUTF8Box(
-		formatted.c_str()
-		, m_x+8 +2, m_y+106 +2
-		, 402, 180
-		, CIGUIFrameFont<CGUITexture>::etxAlignJustify
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha*0.25f
-	);
-	CResources::verdana22.printUTF8Box(
-		formatted.c_str()
-		, m_x+8, m_y+106
-		, 402, 180
-		, CIGUIFrameFont<CGUITexture>::etxAlignJustify
-		, 00.00f, 1.0f
-		, 0, 0, 0, alpha
-	);*/
-}
-
 void CGUIMcaGetPath::drawBoxArea(float alpha)
 {
 	bool drawbar = false;
@@ -510,35 +486,6 @@ void CGUIMcaGetPath::drawBoxArea(float alpha)
 			barprogress = (float)m_listChosen/(float)(dirnum-1);
 		}
 	}
-	/*m_renderer->drawQuadF(
-		m_x +8, m_y +40
-		,m_x +412, m_y +40
-		,m_x +8, m_y +40+2
-		,m_x +412, m_y +40+2
-		,48,48,48,0.25f*alpha
-	);
-	m_renderer->drawQuadF(
-		m_x +8, m_y +280
-		,m_x +412, m_y +280
-		,m_x +8, m_y +280+2
-		,m_x +412, m_y +280+2
-		,48,48,48,0.25f*alpha
-	);
-	m_renderer->drawQuadF(
-		m_x +8, m_y +40+2
-		,m_x +8+2, m_y +40+2
-		,m_x +8, m_y +280
-		,m_x +8+2, m_y +280
-		,48,48,48,0.25f*alpha
-	);
-	m_renderer->drawQuadF(
-		m_x +410, m_y +40+2
-		,m_x +410+2, m_y +40+2
-		,m_x +410, m_y +280
-		,m_x +410+2, m_y +280
-		,48,48,48,0.25f*alpha
-	);*/
-	
 
 	if (drawbar)
 	{
@@ -550,44 +497,7 @@ void CGUIMcaGetPath::drawBoxArea(float alpha)
 			, CResources::m_scroll.getWidth(), CResources::m_scroll.getHeight()
 			, 128, 128, 128, alpha
 		);
-		/*m_renderer->drawQuadF(
-			m_x +394, m_y +40+2
-			,m_x +394+2, m_y +40+2
-			,m_x +394, m_y +280
-			,m_x +394+2, m_y +280
-			,48,48,48,0.25f*alpha
-		);
-		m_renderer->drawQuadF(
-			m_x +10, m_y +42
-			,m_x +394, m_y +42
-			,m_x +10, m_y +280
-			,m_x +394, m_y +280
-			,255,255,255,0.4f*alpha
-		);
-		m_renderer->drawQuadF(
-			m_x +396, m_y +42
-			,m_x +410, m_y +42
-			,m_x +396, m_y +280
-			,m_x +410, m_y +280
-			,220,255,220,0.4f*alpha
-		);
-		m_renderer->drawQuadF(
-			m_x +396, m_y +42 +(230.0f*barprogress)
-			,m_x +410, m_y +42 +(230.0f*barprogress)
-			,m_x +396, m_y +42+8 +(230.0f*barprogress)
-			,m_x +410, m_y +42+8 +(230.0f*barprogress)
-			,48,48,48,0.5f*alpha
-		);*/
-	}/* else
-	{
-		m_renderer->drawQuadF(
-			m_x +10, m_y +42
-			,m_x +410, m_y +42
-			,m_x +10, m_y +280
-			,m_x +410, m_y +280
-			,255,255,255,0.4f*alpha
-		);
-	}*/
+	}
 
 	if (m_curr_path)
 	{
@@ -666,31 +576,18 @@ void CGUIMcaGetPath::drawFilelist(float alpha)
 					, 128, 128, 128, alpha
 				);
 			}
-			/*if (pos-1 == m_listChosen)
-			{
-				CResources::verdana22.printUTF8(currstring.c_str()
-					, m_x + 10 +26 +2, m_y + 32 + 21*line +2 +CResources::verdana22.getBasePos()
-					, 0, 0
-					, 0, 0, 0, alpha*0.15f
-				);
-				CResources::verdana22.printUTF8(currstring.c_str()
-					, m_x + 10 +26, m_y + 32 + 21*line +CResources::verdana22.getBasePos()
-					, 0, 0
-					, 64, 0, 0, alpha
-				);
-			} else*/
-			{
-				CResources::verdana22.printASCII(currstring.c_str()
-					, m_x + 10 +26 +2, m_y + 32 + 21*line +2 +CResources::verdana22.getBasePos()
-					, 0, 0
-					, 0, 0, 0, alpha*0.15f
-				);
-				CResources::verdana22.printASCII(currstring.c_str()
-					, m_x + 10 +26, m_y + 32 + 21*line +CResources::verdana22.getBasePos()
-					, 0, 0
-					, 0, 0, 0, alpha
-				);
-			}
+			
+			CResources::verdana22.printASCII(currstring.c_str()
+				, m_x + 10 +26 +2, m_y + 32 + 21*line +2 +CResources::verdana22.getBasePos()
+				, 0, 0
+				, 0, 0, 0, alpha*0.15f
+			);
+			CResources::verdana22.printASCII(currstring.c_str()
+				, m_x + 10 +26, m_y + 32 + 21*line +CResources::verdana22.getBasePos()
+				, 0, 0
+				, 0, 0, 0, alpha
+			);
+
 			line++;
 			if (line >= LIST_POSITION) break;
 		}
@@ -699,37 +596,18 @@ void CGUIMcaGetPath::drawFilelist(float alpha)
 
 void CGUIMcaGetPath::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 {
-	/*bool drawbar = false;
-
-	if (m_curr_dir)
-	{
-		int dirnum = m_curr_dir->size();
-		if (dirnum > LIST_POSITION)
-		{
-			drawbar = true;
-		}
-	}*/
 	m_renderer->setAlpha(true);
 	m_renderer->setTestAlpha(true);
 	m_renderer->setScissor(false);
 	m_renderer->clearFrontBuffer();
 	if (prevBuffTex != NULL) m_renderer->restoreFrameTex(prevBuffTex);
 	drawMngrWnd(alpha);
-	//drawWindow(alpha);
-	//drawExclam(alpha);
-	drawMessage(alpha);
 	drawBoxArea(alpha);
-	//if (drawbar)
-	{
-		m_renderer->setScissor(true, (int)m_x +8, (int)m_y+26, (int)m_x +478, (int)m_y +270);
-		drawFilelist(alpha);
-		m_renderer->setScissor(false);
-	}/* else
-	{
-		m_renderer->setScissor(true, (int)m_x +12, (int)m_y+44, (int)m_x +406, (int)m_y +278);
-		drawFilelist(alpha);
-		m_renderer->setScissor(false);
-	}*/
+
+	m_renderer->setScissor(true, (int)m_x +8, (int)m_y+26, (int)m_x +478, (int)m_y +270);
+	drawFilelist(alpha);
+	m_renderer->setScissor(false);
+
 	m_tips.drawTip(m_renderer, m_input_state_new, m_ticks, alpha*0.90f);
 }
 
@@ -758,11 +636,7 @@ void CGUIMcaGetPath::doTopLevel(CIGUIFrameTexture *prevBuffTex, float alpha)
 
 	m_curr_path = &caption;
 
-	//top_dir.push_back(t_fileentry("mc0:", true));
-	//top_dir.push_back(t_fileentry("mc1:", true));
-	//top_dir.push_back(t_fileentry("mass0:", true));
 	top_dir.push_back(t_fileentry("hdd0:", true));
-	//if (!m_save) top_dir.push_back(t_fileentry("cdfs:", true));
 	if (!CResources::iopreset) top_dir.push_back(t_fileentry("host:", true));
 
 	top_dir.sort();
@@ -1079,7 +953,6 @@ int CGUIMcaGetPath::doGetName(CIGUIFrameRenderer *renderer, CIGUIFrameInput *inp
 
 	ret = m_retpath;
 
-	//fileXioUmount("pfs0:"); fileXioUmount("pfs1:"); fileXioUmount("pfs2:"); fileXioUmount("pfs3:");
 	m_mountpath[0] = ""; m_mountpath[1] = ""; m_mountpath[2] = ""; m_mountpath[3] = "";
 
 	return 1;

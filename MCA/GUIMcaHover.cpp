@@ -53,7 +53,7 @@ void CGUIMcaHover::setDest(float dx, float dy, bool instantly)
 void CGUIMcaHover::drawHover(CIGUIFrameRenderer *renderer, u32 ticks, float alpha)
 {
 	if (!m_visible) return;
-	//float addcol = (float)ticks/(float)m_cspd;
+
 	float addalp = (float)ticks/(float)m_aspd;
 	float addpos = (float)ticks/(float)m_speed_cur;
 

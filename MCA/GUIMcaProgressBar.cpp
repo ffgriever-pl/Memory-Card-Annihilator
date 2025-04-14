@@ -80,14 +80,7 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 		, CResources::m_bar_black.getWidth(), CResources::m_bar_black.getHeight()
 		, 128, 128, 128, alpha*0.18f
 	);
-	/*renderer->drawSpriteT(
-		&CResources::m_bar_black
-		, m_x, m_y+shadowpos
-		, CResources::m_bar_black.getWidth(), CResources::m_bar_black.getHeight()
-		, 0, CResources::m_bar_black.getHeight()
-		, CResources::m_bar_black.getWidth(), 0
-		, 128, 128, 128, alpha*0.05f
-	);*/
+
 	renderer->drawQuadGT(
 		&CResources::m_bar_black
 		, m_x, m_y+shadowpos
@@ -126,7 +119,7 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 				break;
 		}
 		if (state_lead)
-		{//>= 2, <- 359
+		{
 			if (362.0f*m_progress >= 3.0f && 362.0f*m_progress <= 361.0f)
 			{
 				renderer->drawSpriteT(
@@ -137,14 +130,7 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 					, state_lead->getWidth(), state_lead->getHeight()
 					, 128, 128, 128, alpha
 				);
-				/*renderer->drawSpriteT(
-					state_lead
-					, m_x+3.0f -4.0f +362.0f*m_progress, m_y+shadowpos
-					, state_lead->getWidth(), state_lead->getHeight()
-					, 0, state_lead->getHeight()
-					, state_lead->getWidth(), 0
-					, 128, 128, 128, alpha*0.10f
-				);*/
+
 				renderer->drawQuadGT(
 					state_lead
 					, m_x+3.0f -4.0f +362.0f*m_progress, m_y+shadowpos
@@ -174,14 +160,6 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 			, 3.0f + 362.0f*m_progress, state_bar->getHeight()
 			, 128, 128, 128, alpha
 		);
-		/*renderer->drawSpriteT(
-			state_bar
-			, m_x, m_y+shadowpos
-			, 3.0f + 362.0f*m_progress, state_bar->getHeight()
-			, 0, state_bar->getHeight()
-			, 3.0f + 362.0f*m_progress, 0
-			, 128, 128, 128, alpha*0.10f
-		);*/
 		renderer->drawQuadGT(
 			state_bar
 			, m_x, m_y+shadowpos
@@ -202,91 +180,6 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 			, alpha*0.00f
 		);
 	}
-	/*renderer->drawSpriteT(
-		&CResources::m_bar_empty
-		, m_x, m_y
-		, CResources::m_bar_empty.getWidth(), CResources::m_bar_empty.getHeight()
-		, 0, 0
-		, CResources::m_bar_empty.getWidth(), CResources::m_bar_empty.getHeight()
-		, 128, 128, 128, alpha
-	);
-
-	if (m_progress > 0.0f)
-	{
-		//1 px
-		renderer->drawQuadG(
-			m_x + 2, m_y +3
-			, m_x + 2 + 1, m_y + 3
-			, m_x + 2, m_y + 3 + 7
-			, m_x + 2 + 1, m_y + 3 + 7
-			, m_r1, m_g1, m_b1
-			, m_r1, m_g1, m_b1
-			, m_r2, m_g2, m_b2
-			, m_r2, m_g2, m_b2
-			, alpha, alpha, alpha, alpha
-		);
-		renderer->drawQuadG(
-			m_x + 2, m_y +10
-			, m_x + 2 + 1, m_y + 10
-			, m_x + 2, m_y + 10 + 8
-			, m_x + 2 + 1, m_y + 10 + 8
-			, m_r3, m_g3, m_b3
-			, m_r3, m_g3, m_b3
-			, m_r4, m_g4, m_b4
-			, m_r4, m_g4, m_b4
-			, alpha, alpha, alpha, alpha
-		);
-		//all
-		renderer->drawQuadG(
-			m_x + 3, m_y + 2
-			, m_x + 3 + 362.0f*m_progress, m_y + 2
-			, m_x + 3, m_y + 2 + 8
-			, m_x + 3 + 362.0f*m_progress, m_y + 2 + 8
-			, m_r1, m_g1, m_b1
-			, m_r1, m_g1, m_b1
-			, m_r2, m_g2, m_b2
-			, m_r2, m_g2, m_b2
-			, alpha, alpha, alpha, alpha
-		);
-		renderer->drawQuadG(
-			m_x + 3, m_y + 10
-			, m_x + 3 + 362.0f*m_progress, m_y + 10
-			, m_x + 3, m_y + 10 + 9
-			, m_x + 3 + 362.0f*m_progress, m_y + 10 + 9
-			, m_r3, m_g3, m_b3
-			, m_r3, m_g3, m_b3
-			, m_r4, m_g4, m_b4
-			, m_r4, m_g4, m_b4
-			, alpha, alpha, alpha, alpha
-		);
-
-		if (m_progress >= 1.0f)
-		{
-			//1 px
-			renderer->drawQuadG(
-				m_x + 365, m_y +3
-				, m_x + 365 + 1, m_y + 3
-				, m_x + 365, m_y + 3 + 7
-				, m_x + 365 + 1, m_y + 3 + 7
-				, m_r1, m_g1, m_b1
-				, m_r1, m_g1, m_b1
-				, m_r2, m_g2, m_b2
-				, m_r2, m_g2, m_b2
-				, alpha, alpha, alpha, alpha
-			);
-			renderer->drawQuadG(
-				m_x + 365, m_y +10
-				, m_x + 365 + 1, m_y + 10
-				, m_x + 365, m_y + 10 + 8
-				, m_x + 365 + 1, m_y + 10 + 8
-				, m_r3, m_g3, m_b3
-				, m_r3, m_g3, m_b3
-				, m_r4, m_g4, m_b4
-				, m_r4, m_g4, m_b4
-				, alpha, alpha, alpha, alpha
-			);
-		}
-	}*/
 }
 
 void CGUIMcaProgressBar::setProgress(float progress)

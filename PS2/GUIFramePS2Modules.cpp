@@ -367,8 +367,6 @@ bool CGUIFramePS2Modules::loadCdvdModules()
 				case CDVD_TYPE_PS2CDDA:
 				case CDVD_TYPE_PS2DVD:
 					doloop = false;
-					//cdInit(CDVD_INIT_EXIT);
-					//cdInit(CDVD_INIT_INIT);
 					m_modules_cdvd_init = true;
 					break;
 				case CDVD_TYPE_UNKNOWN:

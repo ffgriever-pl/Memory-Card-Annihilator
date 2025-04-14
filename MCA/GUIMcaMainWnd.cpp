@@ -5,6 +5,7 @@
 #include "GUIMcaGetPath.h"
 #include "GUIMcaDisplayMessage.h"
 #include "GUIFramePS2Modules.h"
+#include "GUIMcaVkbd.h"
 
 bool CGUIMcaMainWnd::checkMessages()
 {
@@ -33,15 +34,7 @@ bool CGUIMcaMainWnd::checkMessages()
 		}
 	}
 
-	if (
-		m_input_state_all & CIGUIFrameInput::enInSelect //select
-		//m_input_state_all & CIGUIFrameInput::enInStart //start
-		//&& m_input_state_all & CIGUIFrameInput::enInSelect //select
-		//&& m_input_state_all & CIGUIFrameInput::enInL1 //l1
-		//&& m_input_state_all & CIGUIFrameInput::enInR1 //r1
-		//&& m_input_state_all & CIGUIFrameInput::enInL2 //l2
-		//&& m_input_state_all & CIGUIFrameInput::enInR2 //r2
-		)
+	if (m_input_state_all & CIGUIFrameInput::enInSelect)
 	{
 		CGUIMcaGetPath getPath(67,106,"mc0:/BOOT/BOOT.ELF");
 		getPath.addMaskEntry(".elf");
@@ -70,7 +63,6 @@ bool CGUIMcaMainWnd::checkMessages()
 					partition = chkpath.substr(0, pos);
 					chkpath = pfsPath;
 					sio_printf("Mounted path: '%s'\n", chkpath.c_str());
-					//chkpath = /*chkpath.substr(0, revpos) + std::string("\n") + */"host:" + chkpath.substr(revpos+1, chkpath.length()-revpos-1);
 				}
 			}
 			int chkfd = fioOpen(chkpath.c_str(), O_RDONLY | O_BINARY);
@@ -81,14 +73,14 @@ bool CGUIMcaMainWnd::checkMessages()
 				fioClose(chkfd);
 				if (magic != 0x464c457f)
 				{
-					CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_EXIT_INVALID"), /*CResources::mainLang.getText("LNG_WARN_CAP")*/NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+					CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_EXIT_INVALID"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
 					myMessage.display(m_renderer, m_input, m_timer, false);
 				} else
 				{
 					m_timer->deinitTimer();
 					m_renderer->deinitRenderer();
 					padPortClose(0, 0);
-					if (/*chkpath.substr(0, 4) != "mass" && */CResources::iopreset)
+					if (CResources::iopreset)
 					{
 						CGUIFramePS2Modules::iopReset(false);
 						CGUIFramePS2Modules::loadMcModules();
@@ -97,8 +89,7 @@ bool CGUIMcaMainWnd::checkMessages()
 						CGUIFramePS2Modules::loadUsbModules();
 						CGUIFramePS2Modules::loadMcModules();
 						CGUIFramePS2Modules::loadCdvdModules();
-						//sbv_patch_enable_lmb();
-						//sbv_patch_disable_prefix_check();
+
 						if (chkpath.substr(0, 5) == "pfs0:")
 						{
 							CGUIFramePS2Modules::loadHddModules();
@@ -120,15 +111,7 @@ bool CGUIMcaMainWnd::checkMessages()
 							}
 						}
 					}
-					/*if (chkpath.substr(0, 4) == "mc0:" || chkpath.substr(0, 4) == "mc1:")
-					{
-						//CResources::iopreset
-						CGUIFramePS2Modules::iopReset();
-						CGUIFramePS2Modules::loadMcModules();
-						
-						CGUIFramePS2Modules::iopReset();
-						CGUIFramePS2Modules::loadMcModules();
-					}*/
+
 					u8 *boot_elf;
 					elf_header_t *eh;
 					elf_pheader_t *eph;
@@ -153,17 +136,9 @@ bool CGUIMcaMainWnd::checkMessages()
 									eph[i].memsz - eph[i].filesz);
 						}
 					}
-					//m_timer->deinitTimer();
-					//m_renderer->deinitRenderer();
-					//padPortClose(0, 0);
-					//fioExit();
-					//SifInitRpc(0);
-					//SifExitRpc();
+
 					fioExit();
-					//SifExitIopHeap();
-					//SifLoadFileExit();
 					SifExitRpc();
-					//SifExitCmd();
 
 					FlushCache(0);
 					FlushCache(2);
@@ -177,7 +152,7 @@ bool CGUIMcaMainWnd::checkMessages()
 				}
 			} else
 			{
-				CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_EXIT_FAILED"), /*CResources::mainLang.getText("LNG_WARN_CAP")*/NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+				CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_EXIT_FAILED"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
 				myMessage.display(m_renderer, m_input, m_timer, false);
 			}
 		}
@@ -371,14 +346,6 @@ void CGUIMcaMainWnd::drawMcIcons(float alpha)
 
 void CGUIMcaMainWnd::drawChoseSlot(float alpha)
 {
-	/*m_renderer->drawSpriteT(
-		&m_wyb_slot
-		, 140, 120+40
-		, m_wyb_slot.getWidth(), m_wyb_slot.getHeight()
-		, 0, 0
-		, m_wyb_slot.getWidth(), m_wyb_slot.getHeight()
-		, 128, 128, 128, alpha
-	);*/
 	CResources::centurygoth38p.printUTF8Box(
 		CResources::mainLang.getText("LNG_MWND_CHOOSE_SLOT")//"Wybierz slot"
 		, 100+4, 112+4
@@ -399,31 +366,6 @@ void CGUIMcaMainWnd::drawChoseSlot(float alpha)
 		, 0, 0, 0, alpha
 		, true
 	);
-	/*CResources::verdana22.printUTF8("Test tylko...", 50+2, 90+2, 0, 1, 0, 0, 0, alpha*0.25f);
-	CResources::verdana22.printUTF8("Test tylko...", 50, 90, 0, 1, 0, 0, 0, alpha);
-
-	CResources::verdana22.printUTF8Box(
-		"To jest następny przykładowy tekst napisany tylko po to, żeby sprawdzić, czy wszystko działa tak, jak działać powinno.\n"
-		"W każdym razie wydaje mi się, że teraz jest już chyba lepiej, jak było wcześniej. Zarówno cyferki: 1, 2, 3, 9... Jak i literki wyświetlane są jak trzeba."
-		, 30+2, 180+2
-		, 580, 260
-		, CIGUIFrameFont<CGUITexture>::etxAlignJustify
-		, 0, 1
-		, 0, 0, 0, alpha*0.25f
-	);
-	CResources::verdana22.printUTF8Box(
-		"To jest następny przykładowy tekst napisany tylko po to, żeby sprawdzić, czy wszystko działa tak, jak działać powinno.\n"
-		"W każdym razie wydaje mi się, że teraz jest już chyba lepiej, jak było wcześniej. Zarówno cyferki: 1, 2, 3, 9... Jak i literki wyświetlane są jak trzeba."
-		, 30, 180
-		, 580, 260
-		, CIGUIFrameFont<CGUITexture>::etxAlignJustify
-		, 0, 1
-		, 16, 0, 16, alpha
-		, 16, 0, 16, alpha
-		, 0, 0, 0, alpha
-		, 0, 0, 0, alpha
-		, true
-	);*/
 }
 
 void CGUIMcaMainWnd::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
@@ -438,8 +380,7 @@ void CGUIMcaMainWnd::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 	drawChoseSlot(alpha);
 	drawSlots(alpha);
 }
-#include "GUIMcaGetPath.h"
-#include "GUIMcaVkbd.h"
+
 int CGUIMcaMainWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur)
 {
 	m_input_state_new = 0;
@@ -448,16 +389,10 @@ int CGUIMcaMainWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 	m_input = input;
 	m_timer = timer;
 
-	CIGUIFrameTexture *prevBuffTex = NULL;//renderer->getFrameTex();
+	CIGUIFrameTexture *prevBuffTex = NULL;
 	m_ticks = 0;
 	checkMessages();
 	fadeInOut(prevBuffTex, timer, 25000, false);
-	/*CGUIMcaGetPath myPath(110,106,"dupa");
-	std::string getpath;
-	myPath.doGetName(renderer, input, timer, getpath, false, true);*/
-	/*CGUIMcaVkbd myKbd(74, 153);
-	std::string kbdret;
-	myKbd.getEntry(m_renderer, m_input, m_timer, "test.bin", kbdret, 32, true);*/
 
 	u32 currTick = 0, oldTick = 0;
 	currTick = oldTick = timer->getTicks();
@@ -479,28 +414,8 @@ int CGUIMcaMainWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 
 		oldTick = currTick;
 		currTick = timer->getTicks();
-
-		/*if (m_input_state_new & CIGUIFrameInput::enInSelect)
-		{
-			u64 head[] = {
-				0x00010004324d4954, 0x0000000000000000,
-				0x00000000000f0030, 0x00000030000f0000,
-				0x0200028002000100, 0x0000000268100000,
-				0x0000000000000260, 0x0000000000000000
-			};
-			CGUIFrameTexturePS2 *test = (CGUIFrameTexturePS2 *)renderer->getFrameTex();
-			int fd = open("host:test.bin.tm2", O_WRONLY | O_CREAT | O_TRUNC | O_BINARY);
-			write(fd, head, sizeof(head));
-			write(fd, (void*)test->getTexPointer()->Mem, gsKit_texture_size_ee(test->getTexPointer()->Width, test->getTexPointer()->Height, test->getTexPointer()->PSM));
-			close(fd);
-
-			delete test;
-		}*/
-
-	} while (/*(m_input_state_new & CIGUIFrameInput::enInTriangle) == 0*/1);
+	} while (true);
 	fadeInOut(prevBuffTex, timer, 25000, true);
-
-	//delete prevBuffTex;
 
 	return 1;
 }

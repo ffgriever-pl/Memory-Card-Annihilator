@@ -38,19 +38,15 @@ bool CGUIMcaOperProgress::checkMessages()
 		m_progressBar->setProgress(CGUIMcaMan::progressBarData.promil/1000.0f);
 		if (CGUIMcaMan::progressBarData.finished == 0)
 		{
-			//m_progressBar->setColor(255, 133, 112, 244, 116, 96, 207, 31, 0, 149, 22, 0);
 			m_progressBar->setState(CGUIMcaProgressBar::ensPending);
 		} else
 		{
 			if (CGUIMcaMan::progressBarData.error == 0)
 			{
-				//m_progressBar->setColor(109, 243, 107, 109, 210, 107, 3, 170, 0, 2, 105, 0);
 				m_progressBar->setState(CGUIMcaProgressBar::ensSuccess);
 			} else
 			{
-				//m_progressBar->setColor(165, 165, 165, 124, 124, 124, 0, 0, 0, 0, 0, 0);
 				m_progressBar->setState(CGUIMcaProgressBar::ensFail);
-				//m_progressBar->setColor(121, 135, 255, 82, 104, 255, 9, 43, 255, 0, 38, 203);
 			}
 		}
 	}
@@ -60,7 +56,6 @@ bool CGUIMcaOperProgress::checkMessages()
 		if (m_input_state_new & CIGUIFrameInput::enInTriangle)
 		{
 			m_return = true;
-			//m_result = ;
 		} else if (m_input_state_new & CIGUIFrameInput::enInCross)
 		{
 			m_return = true;

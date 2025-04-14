@@ -47,19 +47,10 @@ bool CGUIFrameRendererPS2::initRenderer(u32 width, u32 height, u32 vwidth, u32 v
 		m_vwidth = vwidth;
 		m_vheight = vheight;
 
-#if 0
-		m_xmove = 0.0f;
-		m_ymove = ((s32)m_height-(s32)((((float)m_vheight/(float)m_vwidth)*(float)m_width)+0.5f))/2.0f;
-		m_xscale = (float)m_width/(float)m_vwidth;
-		m_yscale = m_xscale;
-#else
 		m_xmove = 0.0f;
 		m_ymove = 0.0f;
 		m_xscale = (float)m_width/(float)m_vwidth;
 		m_yscale = (float)m_height/(float)m_vheight;
-#endif
-
-		//printf("xm: %0.2f, ym: %0.2f, xs: %0.2f, ys: %0.2f\n", m_xmove, m_ymove, m_xscale, m_yscale);
 
 		m_gsGlobal->PSM = bpp;
 		m_gsGlobal->Dithering = GS_SETTING_OFF;
@@ -181,7 +172,6 @@ void CGUIFrameRendererPS2::setTestAlpha(bool enable)
 	}
 }
 
-//void gsKit_set_scissor(GSGLOBAL *gsGlobal, int x1, int y1, int x2, int y2);
 void CGUIFrameRendererPS2::setScissor(bool enable, int x1, int y1, int x2, int y2)
 {
 	if (!m_bInitDone) return;
@@ -223,7 +213,6 @@ void CGUIFrameRendererPS2::swapBuffers()
 	if (!m_bInitDone) return;
 	gsKit_sync_flip(m_gsGlobal);
 	gsKit_queue_exec(m_gsGlobal);
-	//gsKit_set_scissor(m_gsGlobal, GS_SETREG_SCISSOR(0, m_gsGlobal->Width, 0, m_gsGlobal->Height));
 	gsKit_clear(m_gsGlobal, GS_SETREG_RGBAQ(0x00,0x00,0x00,0x80,0x00));
 }
 
@@ -304,35 +293,7 @@ void CGUIFrameRendererPS2::drawQuadF(const float x1, const float y1, const float
 void CGUIFrameRendererPS2::drawQuadG(const float x1, const float y1, const float x2, const float y2, const float x3, const float y3, const float x4, const float y4, const u8 r1, const u8 g1, const u8 b1, const u8 r2, const u8 g2, const u8 b2, const u8 r3, const u8 g3, const u8 b3, const u8 r4, const u8 g4, const u8 b4, float alpha1, float alpha2, float alpha3, float alpha4)
 {
 	if (!m_bInitDone) return;
-#if 0
-	setTestAlpha(false);
-	setAlpha(true);
-	m_gsGlobal->PrimAlphaEnable = GS_SETTING_OFF;
-	m_gsGlobal->PrimAAEnable = GS_SETTING_ON;
-	gsKit_prim_triangle_gouraud(
-		m_gsGlobal,
-		((float)x1*m_xscale)+m_xmove, ((float)y1*m_yscale)+m_ymove,
-		((float)x2*m_xscale)+m_xmove-1.0f+0.0625f, ((float)y2*m_yscale)+m_ymove,
-		((float)x3*m_xscale)+m_xmove, ((float)y3*m_yscale)+m_ymove-1.0f+0.0625f,
-		0,
-		GS_SETREG_RGBAQ(r1,g1,b1,(u32)(((float)0x80*alpha1)+0.5f),0x00),
-		GS_SETREG_RGBAQ(r2,g2,b2,(u32)(((float)0x80*alpha2)+0.5f),0x00),
-		GS_SETREG_RGBAQ(r3,g3,b3,(u32)(((float)0x80*alpha3)+0.5f),0x00)
-	);
-	gsKit_prim_triangle_gouraud(
-		m_gsGlobal,
-		((float)x3*m_xscale)+m_xmove, ((float)y3*m_yscale)+m_ymove-1,
-		((float)x2*m_xscale)+m_xmove-1.0f+0.0625f, ((float)y2*m_yscale)+m_ymove,
-		((float)x4*m_xscale)+m_xmove-1.0f+0.0625f, ((float)y4*m_yscale)+m_ymove-1.0f+0.0625f,
-		0,
-		GS_SETREG_RGBAQ(r3,g3,b3,(u32)(((float)0x80*alpha3)+0.5f),0x00),
-		GS_SETREG_RGBAQ(r2,g2,b2,(u32)(((float)0x80*alpha2)+0.5f),0x00),
-		GS_SETREG_RGBAQ(r4,g4,b4,(u32)(((float)0x80*alpha4)+0.5f),0x00)
-	);
-	setAlpha(true);
-	setTestAlpha(true);
-	m_gsGlobal->PrimAAEnable = GS_SETTING_OFF;
-#else
+
 	gsKit_prim_quad_gouraud(
 		m_gsGlobal,
 		((float)x1*m_xscale)+m_xmove, ((float)y1*m_yscale)+m_ymove,
@@ -345,7 +306,6 @@ void CGUIFrameRendererPS2::drawQuadG(const float x1, const float y1, const float
 		GS_SETREG_RGBAQ(r3,g3,b3,(u32)(((float)0x80*alpha3)+0.5f),0x00),
 		GS_SETREG_RGBAQ(r4,g4,b4,(u32)(((float)0x80*alpha4)+0.5f),0x00)
 	);
-#endif
 }
 
 void CGUIFrameRendererPS2::drawTriangleFT(CIGUIFrameTexture *texture, const float x1, const float y1, const float u1, const float v1, const float x2, const float y2, const float u2, const float v2, const float x3, const float y3, const float u3, const float v3, const u8 r, const u8 g, const u8 b, float alpha)
@@ -548,7 +508,7 @@ void CGUIFrameRendererPS2::downloadVram(void *virtPage, int physPage, int addr, 
 	// vif1 must be available
 	if ((*EE_D1_CHCR & 0x0100) != 0)
 	{
-		printf("Problem z VIF1!!\n");
+		printf("There was a problem with VIF1!\n");
 	}	
 
 	DPUT_GS_CSR(2);
@@ -602,34 +562,6 @@ void CGUIFrameRendererPS2::downloadVram(void *virtPage, int physPage, int addr, 
 }
 void CGUIFrameRendererPS2::screenshot(u8 *buff)
 {
-	/*u8 *page;
-	int y;
-	int sizebytes;
-	switch (m_gsGlobal->PSM)
-	{
-		case GS_PSM_CT16:
-		case GS_PSM_CT16S:
-			sizebytes = 2;
-			break;
-		case GS_PSM_CT24:
-			sizebytes = 3;
-			break;
-		default:
-			sizebytes = 4;
-	}
-	// write a constant targa header for a 640x480, 16bit picture
-	page = buff;
-	memset(page, 0, m_gsGlobal->Width*sizebytes*m_gsGlobal->Height);
-	
-	dmaKit_wait_fast();
-	for(y = 0; y < m_gsGlobal->Height/64; y++)
-	{
-		//memset(page, 0, gsGlobal->Width*sizebytes*64);
-		//printf("Linia %d\n", y);
-		downloadVram(page, (u32)page, m_gsGlobal->ScreenBuffer[m_gsGlobal->ActiveBuffer]/256, m_gsGlobal->Width/64, 0, y*64, m_gsGlobal->Width, 64, m_gsGlobal->PSM);
-		page += m_gsGlobal->Width*sizebytes*64;
-		//FlushCache(0);
-	}*/
 	dmaKit_wait_fast();
 	downloadVram(buff, (u32)buff, m_gsGlobal->ScreenBuffer[m_gsGlobal->ActiveBuffer]/256, m_gsGlobal->Width/64, 0, 0, m_gsGlobal->Width, m_gsGlobal->Height, m_gsGlobal->PSM);
 }
@@ -650,7 +582,7 @@ CIGUIFrameTexture *CGUIFrameRendererPS2::getFrameTex(int divfac)
 		default:
 			bytes = 2;
 	}
-	int tmpSize = /*gsKit_texture_size_ee(m_gsGlobal->Width, m_gsGlobal->Height, m_gsGlobal->PSM)*/m_gsGlobal->Width*m_gsGlobal->Height*bytes;
+	int tmpSize = m_gsGlobal->Width*m_gsGlobal->Height*bytes;
 	u32 size128 = ((tmpSize+15)>>4);
 	u128 *texbuf = new u128[size128];
 	u8 *tmpBuff = (u8*)texbuf;
@@ -665,9 +597,8 @@ CIGUIFrameTexture *CGUIFrameRendererPS2::getFrameTex(int divfac)
 		int h = m_gsGlobal->Height>>divfac;
 		int bw = m_gsGlobal->Width;
 		int bh = m_gsGlobal->Height;
-		int newtmpSize = /*gsKit_texture_size_ee(w, h, m_gsGlobal->PSM)*/w*h*3;
+		int newtmpSize = w*h*3;
 		int oldlinesize = bw*3;
-		//int newlinesize = w*bytes;
 
 		if (divfac == 1)
 		{
@@ -764,17 +695,10 @@ void CGUIFrameRendererPS2::restoreFrameTex(CIGUIFrameTexture *tex)
 		0, 0,
 		0, 0,
 		m_gsGlobal->Width-1, m_gsGlobal->Height-1,
-		tex->getWidth(), tex->getHeight(),// m_gsGlobal->Width, m_gsGlobal->Height,
+		tex->getWidth(), tex->getHeight(),
 		0,
 		GS_SETREG_RGBAQ(128,128,128,128,0)
 	);
-	/*CGUIFrameTexturePS2 *texture = (CGUIFrameTexturePS2 *)tex;
-	GSTEXTURE *tmpTex = texture->getTexPointer();
-	tmpTex->Vram = m_gsGlobal->ScreenBuffer[m_gsGlobal->PrimContext];
-
-	gsKit_setup_tbw(tmpTex);
-	gsKit_texture_send_inline(m_gsGlobal, tmpTex->Mem, tmpTex->Width, tmpTex->Height, tmpTex->Vram, tmpTex->PSM, tmpTex->TBW, GS_CLUT_NONE);
-	*/
 	setAlpha(lastAlpha);
 }
 

@@ -10,7 +10,6 @@ CGUIMcaVkbd::CGUIMcaVkbd(float x, float y)
 	CResources::m_vkbd.loadTextureBuffer(CResources::vkbd_tm2, CResources::size_vkbd_tm2, true);
 	CResources::m_cursor.loadTextureBuffer(CResources::cursor_tm2, CResources::size_cursor_tm2, true);
 	CResources::m_vkbd_hover.loadTextureBuffer(CResources::vkbd_hover_tm2, CResources::size_vkbd_hover_tm2, true);
-	//CResources::m_vkbd.setTexfilter(CIGUIFrameTexture::etFiltBilinear);
 	CResources::m_cursor.setTexfilter(CIGUIFrameTexture::etFiltBilinear);
 	CResources::m_vkbd_hover.setTexfilter(CIGUIFrameTexture::etFiltBilinear);
 	m_x = x;
@@ -141,13 +140,6 @@ void CGUIMcaVkbd::drawKeys(float alpha)
 	{
 		if (i == (u32)m_over_num)
 		{
-			/*m_renderer->drawQuadF(
-				m_x +m_keys[i].x, m_y +m_keys[i].y
-				, m_x +m_keys[i].x+m_keys[i].w, m_y +m_keys[i].y
-				, m_x +m_keys[i].x, m_y +m_keys[i].y+m_keys[i].h
-				, m_x +m_keys[i].x+m_keys[i].w, m_y +m_keys[i].y+m_keys[i].h
-				, 0, 255, 0, alpha*0.15f
-			);*/
 			m_renderer->drawSpriteT(&CResources::m_vkbd_hover
 				, m_x +m_keys[i].x+m_keys[i].w-CResources::m_vkbd_hover.getWidth()+3, m_y +m_keys[i].y-2
 				, CResources::m_vkbd_hover.getWidth(), CResources::m_vkbd_hover.getHeight()
@@ -244,7 +236,7 @@ bool CGUIMcaVkbd::checkMessages()
 					if (m_filename && m_text.find_first_of("\\/:*?\"<>|") != std::string::npos)
 					{
 						m_exit_now = false;
-						CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), /*CResources::mainLang.getText("LNG_WARN_CAP")*/NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+						CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
 						myMessage.display(m_renderer, m_input, m_timer, true);
 					} else if (m_filename)
 					{
@@ -267,7 +259,7 @@ bool CGUIMcaVkbd::checkMessages()
 		if (m_filename && m_text.find_first_of("\\/:*?\"<>|") != std::string::npos)
 		{
 			m_exit_now = false;
-			CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), /*CResources::mainLang.getText("LNG_WARN_CAP")*/NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+			CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
 			myMessage.display(m_renderer, m_input, m_timer, true);
 		} else if (m_filename)
 		{

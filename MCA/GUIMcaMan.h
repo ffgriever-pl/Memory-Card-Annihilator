@@ -3,8 +3,6 @@
 
 #include "GUIFramePS2Includes.h"
 
-#define MCA_BIND
-
 #define MCANNIHMAGIC 0x8088554D
 
 #define MCA_WAIT		0

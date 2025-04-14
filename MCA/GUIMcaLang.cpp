@@ -10,9 +10,6 @@ CGUIMcaLang::CGUIMcaLang(void)
 	{
 		m_curr_lang.insert(*i);
 	}
-	//std::map<const std::string, const std::string>::iterator ilang;
-	//if ( (ilang = m_curr_lang.find("LNG_PHRASE_ETC")) != m_curr_lang.end() )
-	//but here easier to use: m_curr_lang["LNG_PHRASE_ETC"];
 }
 
 void CGUIMcaLang::trimLeft(std::string& str, const char* chars2remove)
@@ -24,7 +21,7 @@ void CGUIMcaLang::trimLeft(std::string& str, const char* chars2remove)
 		if (pos != std::string::npos)
 			str.erase(0,pos);
 		else
-			str.erase( str.begin() , str.end() ); // make empty
+			str.erase( str.begin() , str.end() );
 	}
 }
 
@@ -37,10 +34,10 @@ void CGUIMcaLang::trimRight(std::string& str, const char* chars2remove)
 		if (pos != std::string::npos)
 			str.erase(pos+1);
 		else
-			str.erase( str.begin() , str.end() ); // make empty
+			str.erase( str.begin() , str.end() );
 	}
 }
-//#define sio_printf printf
+
 void CGUIMcaLang::initLang(std::string input)
 {
 	replace(&input, "\r\n", "\n");
@@ -79,7 +76,6 @@ void CGUIMcaLang::initLang(std::string input)
 						m_curr_lang[(*i).first] = all_lines[li].substr(subpos+1, (laspos)-(subpos+1));
 						replace(&m_curr_lang[(*i).first], "\\\"", "\"");
 						replace(&m_curr_lang[(*i).first], "\\n", "\n");
-						//sio_printf("Def repl: %s=%s\n", (*i).first.c_str(), m_curr_lang[(*i).first].c_str());
 					}
 				}
 			}

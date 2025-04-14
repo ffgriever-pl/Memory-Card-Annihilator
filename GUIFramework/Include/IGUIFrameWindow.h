@@ -12,7 +12,6 @@ class CIGUIFrameWindow
 {
 protected:
 	std::vector<CIGUIFrameControl*> m_control_list;
-	//CIGUIFrameRenderer *m_renderer;
 public:
 	CIGUIFrameWindow(void);
 	virtual ~CIGUIFrameWindow(void);

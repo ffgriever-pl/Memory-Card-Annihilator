@@ -221,19 +221,12 @@ template <class T> bool CIGUIFrameFont<T>::loadFontBuffer(u8 *buffer, u32 size, 
 	m_tex_width = myHead->tex_width;
 	m_tex_height = myHead->tex_height;
 
-	/*
-		u16 tex_numof;
-	*/
-
 	tmyGlyph *myGlyphs = (tmyGlyph *)&buffer[myHead->glyph_offset];
 	tmyKern *myKerns = (tmyKern *)&buffer[myHead->kern_offset];
 	u32 *myTexOffsets = (u32 *)&buffer[myHead->tex_offset];
 
 	for (u32 i = 0; i < myHead->glyph_numof; i++)
 	{
-		//printf("Glyph: %08x, x: %d, y: %d, width: %d, ", i, myGlyphs[i].x, myGlyphs[i].y, myGlyphs[i].width);
-		//printf("height: %d, xoff: %d, yoff: %d, xadv: %d, ", myGlyphs[i].height, myGlyphs[i].xoff, myGlyphs[i].yoff, myGlyphs[i].xadv);
-		//printf("page: %d\n", myGlyphs[i].pagenum);
 		m_glyphs[myGlyphs[i].unicode] = new tGlyph(myGlyphs[i].x, myGlyphs[i].y, myGlyphs[i].width, myGlyphs[i].height, myGlyphs[i].xoff, myGlyphs[i].yoff, myGlyphs[i].xadv, myGlyphs[i].pagenum);
 	}
 	for (u32 i = 0; i < myHead->kern_numof; i++)
@@ -375,22 +368,16 @@ template <class T> tVertex2 CIGUIFrameFont<T>::checkLenUTF8(const char *string, 
 	float caretx = 0;
 	float carety = 0;
 	spacing = 0.0f;
-	//float defspacing = spacing;
-	//u8 defr = r, defg = g, defb = b;
-	//float defalpha = alpha;
-	//float defsize = size;
 
 	float scale = (size == 0.0f ? 1.0f : size/(float)m_font_height);
 
-	utf8decode(string, unicode, max_uni_size-1);//tylko lb sw - napisac swoj
-	//mbstowcs((wchar_t*)unicode, string, max_uni_size-1);
+	utf8decode(string, unicode, max_uni_size-1);
 	unicode[max_uni_size-1] = 0;
 
 	typename std::map<int, tGlyph *>::iterator iglyph;
 
 	while ((*curchar))
 	{
-		//tutaj switch case dla moich
 		if ( (iglyph = m_glyphs.find(*curchar)) != m_glyphs.end() )
 		{
 			if (prevchar != 0)
@@ -410,7 +397,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::checkLenUTF8(const char *string, 
 			caretx += (float)(*iglyph).second->xadv * scale;
 		}
 		
-		//
 		prevchar = *curchar;
 		curchar++;
 	}
@@ -430,22 +416,16 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8(const char *string, flo
 	float caretx = 0;
 	float carety = 0;
 	spacing = 0.0f;
-	//float defspacing = spacing;
-	//u8 defr = r, defg = g, defb = b;
-	//float defalpha = alpha;
-	//float defsize = size;
 
 	float scale = (size == 0.0f ? 1.0f : size/(float)m_font_height);
 
-	utf8decode(string, unicode, max_uni_size-1);//tylko lb sw - napisac swoj
-	//mbstowcs((wchar_t*)unicode, string, max_uni_size-1);
+	utf8decode(string, unicode, max_uni_size-1);
 	unicode[max_uni_size-1] = 0;
 
 	typename std::map<int, tGlyph *>::iterator iglyph;
 
 	while ((*curchar))
 	{
-		//tutaj switch case dla moich
 		if ( (iglyph = m_glyphs.find(*curchar)) != m_glyphs.end() )
 		{
 			float x, y, u1, v1, w, h, u2, v2;
@@ -469,8 +449,7 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8(const char *string, flo
 					}
 				}
 			}
-			/*if (prevchar == 0)
-				caretx -= (float)(*iglyph).second->xoff*scale;*/
+
 			x = xpos + caretx +(float)(*iglyph).second->xoff*scale + spacing*scale;
 			y = ypos + carety +(float)(*iglyph).second->yoff*scale -(float)m_base_pos*scale;
 
@@ -501,10 +480,8 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8(const char *string, flo
 			}
 
 			caretx += (float)(*iglyph).second->xadv * scale;
-			//(*iglyph).second->
 		}
 		
-		//
 		prevchar = *curchar;
 		curchar++;
 	}
@@ -524,22 +501,16 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCII(const char *string, fl
 	float caretx = 0;
 	float carety = 0;
 	spacing = 0.0f;
-	//float defspacing = spacing;
-	//u8 defr = r, defg = g, defb = b;
-	//float defalpha = alpha;
-	//float defsize = size;
 
 	float scale = (size == 0.0f ? 1.0f : size/(float)m_font_height);
 
-	asciidecode(string, unicode, max_uni_size-1);//tylko lb sw - napisac swoj
-	//mbstowcs((wchar_t*)unicode, string, max_uni_size-1);
+	asciidecode(string, unicode, max_uni_size-1);
 	unicode[max_uni_size-1] = 0;
 
 	typename std::map<int, tGlyph *>::iterator iglyph;
 
 	while ((*curchar))
 	{
-		//tutaj switch case dla moich
 		if ( (iglyph = m_glyphs.find(*curchar)) != m_glyphs.end() )
 		{
 			float x, y, u1, v1, w, h, u2, v2;
@@ -563,8 +534,7 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCII(const char *string, fl
 					}
 				}
 			}
-			/*if (prevchar == 0)
-				caretx -= (float)(*iglyph).second->xoff*scale;*/
+
 			x = xpos + caretx +(float)(*iglyph).second->xoff*scale + spacing*scale;
 			y = ypos + carety +(float)(*iglyph).second->yoff*scale -(float)m_base_pos*scale;
 
@@ -595,10 +565,8 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCII(const char *string, fl
 			}
 
 			caretx += (float)(*iglyph).second->xadv * scale;
-			//(*iglyph).second->
 		}
 		
-		//
 		prevchar = *curchar;
 		curchar++;
 	}
@@ -619,32 +587,13 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 	float caretx = 0;
 	float carety = (float)m_base_pos*scale;
 	spacing = 0.0f;
-	//float defspacing = spacing;
-	//u8 defr = r, defg = g, defb = b;
-	//float defalpha = alpha;
-	//float defsize = size;
-	//bool defgoraud = goraud;
 
-	//float scaledspacewidth = 5.0f*scale;
-	//float scaledjapspacewidth = 5.0f*scale;//0x3000
 	int spacesinline = 0;
-	//float prevcaretx = 0.0f;
 	int wordstart = 0;
 	int charnum = 0;
 	typename std::map<int, tGlyph *>::iterator iglyph;
 
-
-	/*if ((iglyph = m_glyphs.find(0x20)) != m_glyphs.end())
-	{
-		scaledspacewidth = (float)(*iglyph).second->xadv*scale;
-	}
-	if ((iglyph = m_glyphs.find(0x3000)) != m_glyphs.end())
-	{
-		scaledjapspacewidth = (float)(*iglyph).second->xadv*scale;
-	}*/
-
-	utf8decode(string, unicode, max_uni_size-1);//tylko lb sw - napisac swoj
-	//mbstowcs((wchar_t*)unicode, string, max_uni_size-1);
+	utf8decode(string, unicode, max_uni_size-1);
 	unicode[max_uni_size-1] = 0;
 
 	typename std::vector<tCharToDraw> line;
@@ -655,7 +604,7 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 	while ((*curchar))
 	{
 		if (carety -(float)m_base_pos*scale > (float)bh) break;
-		//tutaj switch case dla moich
+
 		if (curchar[1] == 0) last = true;
 		switch (*curchar)
 		{
@@ -692,7 +641,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 						switch (align)
 						{
 							case etxAlignJustify:
-								//if (!last && spacesinline > 0) movespace = ((float)bw - endpos)/(float)spacesinline; //if space then xadv += xadv*movespacescale
 								break;
 							case etxAlignRight:
 								movestart = (float)bw - endpos;
@@ -742,7 +690,7 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 
 					spacesinline = 0;
 					caretx = 0;
-					carety += m_line_height*scale;//if I add changing size, always keep largest scale for line
+					carety += m_line_height*scale; //if variable height is implemented, always keep largest scale for line
 					curchar++;
 					charnum++;
 					wordstart = charnum;
@@ -788,8 +736,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 				float movestart = 0.0f;
 				float movespace = 0.0f;
 
-				//if (caretx > (float)bw) last = false;
-
 				if (spacesinline > 0 && *curchar != 0x20 && *curchar != 0x3000) spacesinline--;
 				if (spacesinline == 0)
 				{//simply break... looooooooong text in line
@@ -805,17 +751,11 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 						line.push_back(word[i]);
 					}
 					word.clear();
-					/*while(!line.empty() && line.back().space)
-					{
-						spacescumulwidth -= line.back().xadv;
-						caretx -= line.back().xadv;
-						line.pop_back();
-					}*/
+
 					float endpos = line.back().x+line.back().w-xpos;
 					switch (align)
 					{
 						case etxAlignJustify:
-							//if (!last) movespace = ((float)bw - endpos)/spacescumulwidth; //if space then xadv += xadv*movespacescale
 							break;
 						case etxAlignRight:
 							movestart = (float)bw - endpos;
@@ -834,15 +774,11 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 					if (!last)
 					{
 						caretx = 0;
-						if (align != etxAlignLeftRight) carety += m_line_height*scale;//if I add changing size, always keep largest scale for line
+						if (align != etxAlignLeftRight) carety += m_line_height*scale; //if variable height is implemented, always keep largest scale for line
 					}
-					y +=  m_line_height*scale;//if I add changing size, always keep largest scale for line
+					y +=  m_line_height*scale; //if variable height is implemented, always keep largest scale for line
 					drawWholeLine = true;
-					//int addword = 1;
-					//while (curchar[addword] == 0x20 || curchar[addword] == 0x3000) addword++;
-					//wordstart = charnum+addword;
 					wordstart = charnum;
-					//last = false;
 				} else
 				{
 					if (last || (*curchar == 0x20 || *curchar == 0x3000))
@@ -869,7 +805,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 					while(!line.empty() && line.back().space)
 					{
 						spacesinline--;
-						//caretx -= line.back().xadv;
 						line.pop_back();
 					}
 					float endpos = line.back().x+line.back().w-xpos;
@@ -877,7 +812,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 					{
 						case etxAlignJustify:
 							if (!last && spacesinline > 0) movespace = ((float)bw - endpos)/(float)spacesinline; //if space then xadv += xadv*movespacescale
-							//printf("Justify: left: %0.3f, num: %d, perspace: %0.3f\n", ((float)bw - endpos), spacesinline, movespace);
 							break;
 						case etxAlignRight:
 							movestart = (float)bw - endpos;
@@ -897,18 +831,16 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 					if (!last)
 					{
 						caretx = 0;
-						carety += m_line_height*scale;//if I add changing size, always keep largest scale for line
+						carety += m_line_height*scale; //if variable height is implemented, always keep largest scale for line
 					}
 					word.clear();
 					drawWholeLine = true;
-					//last = false;
 				}
 				if (drawWholeLine)
-				{//tutaj rysowanie
+				{
 					float spaceadd = 0.0f;
 					for (u32 i = 0; i < line.size(); i++)
 					{
-						//printf("Justify: spaceadd: %0.3f, movestart: %0.3f\n", spaceadd, movestart);
 						if (line[i].goraud)
 						{
 							m_renderer->drawSpriteGT(
@@ -935,12 +867,10 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 							);
 						}
 						if (line[i].space) spaceadd += movespace;
-						//line[i].
 					}
 					prevchar = 0;
 					line.clear();
-					//charnum++;
-					//curchar++;
+
 					if (last) break;
 					continue;
 				}
@@ -954,16 +884,14 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printUTF8Box(const char *string, 
 					}
 					word.clear();
 				}
-				//(float _x, float _y, float _w, float _h, float _u1, float _u2, float _v1, float _v2, float _xadv, bool _space, int _page, u8 _r, u8 _g, u8 _b, float _alpha)
+
 				if (goraud)
 					word.push_back(tCharToDraw(x, y, w, h, u1, u2, v1, v2, (float)(*iglyph).second->xadv * scale, ((*curchar == 0x20 || *curchar == 0x3000) ? true : false), (*iglyph).second->page, r, g, b, alpha, r2, g2, b2, alpha2, r3, g3, b3, alpha3, r4, g4, b4, alpha4, true));
 				else
 					word.push_back(tCharToDraw(x, y, w, h, u1, u2, v1, v2, (float)(*iglyph).second->xadv * scale, ((*curchar == 0x20 || *curchar == 0x3000) ? true : false), (*iglyph).second->page, r, g, b, alpha));
 			}			
-			//(*iglyph).second->
 		}
 		
-		//
 		prevchar = *curchar;
 		charnum++;
 		curchar++;
@@ -998,32 +926,13 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 	float caretx = 0;
 	float carety = (float)m_base_pos*scale;
 	spacing = 0.0f;
-	//float defspacing = spacing;
-	//u8 defr = r, defg = g, defb = b;
-	//float defalpha = alpha;
-	//float defsize = size;
-	//bool defgoraud = goraud;
 
-	//float scaledspacewidth = 5.0f*scale;
-	//float scaledjapspacewidth = 5.0f*scale;//0x3000
 	int spacesinline = 0;
-	//float prevcaretx = 0.0f;
 	int wordstart = 0;
 	int charnum = 0;
 	typename std::map<int, tGlyph *>::iterator iglyph;
 
-
-	/*if ((iglyph = m_glyphs.find(0x20)) != m_glyphs.end())
-	{
-		scaledspacewidth = (float)(*iglyph).second->xadv*scale;
-	}
-	if ((iglyph = m_glyphs.find(0x3000)) != m_glyphs.end())
-	{
-		scaledjapspacewidth = (float)(*iglyph).second->xadv*scale;
-	}*/
-
-	asciidecode(string, unicode, max_uni_size-1);//tylko lb sw - napisac swoj
-	//mbstowcs((wchar_t*)unicode, string, max_uni_size-1);
+	asciidecode(string, unicode, max_uni_size-1);
 	unicode[max_uni_size-1] = 0;
 
 	typename std::vector<tCharToDraw> line;
@@ -1034,7 +943,7 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 	while ((*curchar))
 	{
 		if (carety -(float)m_base_pos*scale > (float)bh) break;
-		//tutaj switch case dla moich
+
 		if (curchar[1] == 0) last = true;
 		switch (*curchar)
 		{
@@ -1071,7 +980,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 						switch (align)
 						{
 							case etxAlignJustify:
-								//if (!last && spacesinline > 0) movespace = ((float)bw - endpos)/(float)spacesinline; //if space then xadv += xadv*movespacescale
 								break;
 							case etxAlignRight:
 								movestart = (float)bw - endpos;
@@ -1121,7 +1029,7 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 
 					spacesinline = 0;
 					caretx = 0;
-					carety += m_line_height*scale;//if I add changing size, always keep largest scale for line
+					carety += m_line_height*scale; //if variable height is implemented, always keep largest scale for line
 					curchar++;
 					charnum++;
 					wordstart = charnum;
@@ -1167,8 +1075,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 				float movestart = 0.0f;
 				float movespace = 0.0f;
 
-				//if (caretx > (float)bw) last = false;
-
 				if (spacesinline > 0 && *curchar != 0x20 && *curchar != 0x3000) spacesinline--;
 				if (spacesinline == 0)
 				{//simply break... looooooooong text in line
@@ -1184,17 +1090,11 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 						line.push_back(word[i]);
 					}
 					word.clear();
-					/*while(!line.empty() && line.back().space)
-					{
-						spacescumulwidth -= line.back().xadv;
-						caretx -= line.back().xadv;
-						line.pop_back();
-					}*/
+
 					float endpos = line.back().x+line.back().w-xpos;
 					switch (align)
 					{
 						case etxAlignJustify:
-							//if (!last) movespace = ((float)bw - endpos)/spacescumulwidth; //if space then xadv += xadv*movespacescale
 							break;
 						case etxAlignRight:
 							movestart = (float)bw - endpos;
@@ -1213,15 +1113,11 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 					if (!last)
 					{
 						caretx = 0;
-						if (align != etxAlignLeftRight) carety += m_line_height*scale;//if I add changing size, always keep largest scale for line
+						if (align != etxAlignLeftRight) carety += m_line_height*scale; //if variable height is implemented, always keep largest scale for line
 					}
-					y +=  m_line_height*scale;//if I add changing size, always keep largest scale for line
+					y +=  m_line_height*scale; //if variable height is implemented, always keep largest scale for line
 					drawWholeLine = true;
-					//int addword = 1;
-					//while (curchar[addword] == 0x20 || curchar[addword] == 0x3000) addword++;
-					//wordstart = charnum+addword;
 					wordstart = charnum;
-					//last = false;
 				} else
 				{
 					if (last || (*curchar == 0x20 || *curchar == 0x3000))
@@ -1248,7 +1144,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 					while(!line.empty() && line.back().space)
 					{
 						spacesinline--;
-						//caretx -= line.back().xadv;
 						line.pop_back();
 					}
 					float endpos = line.back().x+line.back().w-xpos;
@@ -1256,7 +1151,6 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 					{
 						case etxAlignJustify:
 							if (!last && spacesinline > 0) movespace = ((float)bw - endpos)/(float)spacesinline; //if space then xadv += xadv*movespacescale
-							//printf("Justify: left: %0.3f, num: %d, perspace: %0.3f\n", ((float)bw - endpos), spacesinline, movespace);
 							break;
 						case etxAlignRight:
 							movestart = (float)bw - endpos;
@@ -1276,18 +1170,16 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 					if (!last)
 					{
 						caretx = 0;
-						carety += m_line_height*scale;//if I add changing size, always keep largest scale for line
+						carety += m_line_height*scale; //if variable height is implemented, always keep largest scale for line
 					}
 					word.clear();
 					drawWholeLine = true;
-					//last = false;
 				}
 				if (drawWholeLine)
-				{//tutaj rysowanie
+				{
 					float spaceadd = 0.0f;
 					for (u32 i = 0; i < line.size(); i++)
 					{
-						//printf("Justify: spaceadd: %0.3f, movestart: %0.3f\n", spaceadd, movestart);
 						if (line[i].goraud)
 						{
 							m_renderer->drawSpriteGT(
@@ -1314,12 +1206,10 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 							);
 						}
 						if (line[i].space) spaceadd += movespace;
-						//line[i].
 					}
 					prevchar = 0;
 					line.clear();
-					//charnum++;
-					//curchar++;
+
 					if (last) break;
 					continue;
 				}
@@ -1333,16 +1223,14 @@ template <class T> tVertex2 CIGUIFrameFont<T>::printASCIIBox(const char *string,
 					}
 					word.clear();
 				}
-				//(float _x, float _y, float _w, float _h, float _u1, float _u2, float _v1, float _v2, float _xadv, bool _space, int _page, u8 _r, u8 _g, u8 _b, float _alpha)
+
 				if (goraud)
 					word.push_back(tCharToDraw(x, y, w, h, u1, u2, v1, v2, (float)(*iglyph).second->xadv * scale, ((*curchar == 0x20 || *curchar == 0x3000) ? true : false), (*iglyph).second->page, r, g, b, alpha, r2, g2, b2, alpha2, r3, g3, b3, alpha3, r4, g4, b4, alpha4, true));
 				else
 					word.push_back(tCharToDraw(x, y, w, h, u1, u2, v1, v2, (float)(*iglyph).second->xadv * scale, ((*curchar == 0x20 || *curchar == 0x3000) ? true : false), (*iglyph).second->page, r, g, b, alpha));
 			}			
-			//(*iglyph).second->
 		}
 		
-		//
 		prevchar = *curchar;
 		charnum++;
 		curchar++;

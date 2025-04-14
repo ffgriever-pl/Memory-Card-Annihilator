@@ -69,13 +69,11 @@ private:
 	void drawAll(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
 	void fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out = false);
 	void drawMngrWnd(float alpha = 1.0f);
-	void drawMessage(float alpha = 1.0f);
 	void drawBoxArea(float alpha = 1.0f);
 	void drawFilelist(float alpha = 1.0f);
 	void doTopLevel(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
 	void doSubLevel(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
 	bool checkMessagesTop(bool topdir = false);
-	bool checkMessagesSub();
 	CGUIMcaGetPath(void);
 	int display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur = false);
 public:
