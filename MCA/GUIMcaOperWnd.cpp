@@ -30,7 +30,7 @@ bool CGUIMcaOperWnd::checkMessages()
 	bool windowCalled = false;
 	CGUIMcaMan::updateMca();
 
-	//if (CGUIMcaMan::mce_memcards[m_oper_slot].type == CGUIMcaMan::enctNone || m_input_state_new & CIGUIFrameInput::enInMenu)
+	//if (CGUIMcaMan::mce_memcards[m_oper_slot].type == CGUIMcaMan::enctNone || m_input_state_new & CIGUIFrameInput::enInStart)
 	if ((m_psx_mode && (CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPsx && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPda)) || (!m_psx_mode && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPs2))
 	{
 		//display warrning
@@ -71,7 +71,7 @@ bool CGUIMcaOperWnd::checkMessages()
 	}
 
 
-	if (m_input_state_new & CIGUIFrameInput::enInSwitch)
+	if (m_input_state_new & CIGUIFrameInput::enInSelect)
 	{
 		/*std::string content = CResources::mainLang.getText("LNG_INFO_ALL");
 		CResources::mainLang.replace(&content, "{SLOTNUM}", m_oper_slot+1);
@@ -99,7 +99,7 @@ bool CGUIMcaOperWnd::checkMessages()
 		windowCalled = true;
 		return windowCalled;
 	}
-	else if (m_input_state_new & CIGUIFrameInput::enInMenu)
+	else if (m_input_state_new & CIGUIFrameInput::enInStart)
 	{
 		CGUIMcaAbout myAbout(110, 106);
 		myAbout.display(m_renderer, m_input, m_timer, true);
@@ -107,7 +107,7 @@ bool CGUIMcaOperWnd::checkMessages()
 	}
 
 
-	if (m_input_state_new & CIGUIFrameInput::enInOk)
+	if (m_input_state_new & CIGUIFrameInput::enInCross)
 	{
 		switch (m_menu_item)
 		{
@@ -575,7 +575,7 @@ int CGUIMcaOperWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 		oldTick = currTick;
 		currTick = timer->getTicks();
 
-	} while ((m_input_state_new & CIGUIFrameInput::enInCancel) == 0);
+	} while ((m_input_state_new & CIGUIFrameInput::enInTriangle) == 0);
 	fadeInOut(prevBuffTex, timer, 25000, true);
 
 	delete prevBuffTex;

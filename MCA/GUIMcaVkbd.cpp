@@ -191,9 +191,9 @@ bool CGUIMcaVkbd::checkMessages()
 {
 	bool windowCalled = false;
 
-	if (m_input_state_new & CIGUIFrameInput::enInTabBck) m_caps = !m_caps;
-	m_shift = m_input_state_all & CIGUIFrameInput::enInTabFwd;
-	if (m_input_state_new & CIGUIFrameInput::enInTabFwd) m_tmp_shift = false;
+	if (m_input_state_new & CIGUIFrameInput::enInL1) m_caps = !m_caps;
+	m_shift = m_input_state_all & CIGUIFrameInput::enInR1;
+	if (m_input_state_new & CIGUIFrameInput::enInR1) m_tmp_shift = false;
 
 	m_over_num = -1;
 
@@ -210,7 +210,7 @@ bool CGUIMcaVkbd::checkMessages()
 		}
 	}
 
-	if (m_input_state_new & CIGUIFrameInput::enInOk)
+	if (m_input_state_new & CIGUIFrameInput::enInCross)
 	{
 		if (m_over_num != -1 && (m_max_chars == 0 || m_text.size() <= m_max_chars) && m_over_num >= enfkKeyb)
 		{
@@ -254,13 +254,13 @@ bool CGUIMcaVkbd::checkMessages()
 					break;
 			}
 		}
-	} else if (m_input_state_new & CIGUIFrameInput::enInNeutral)
+	} else if (m_input_state_new & CIGUIFrameInput::enInSquare)
 	{
 		if (m_max_chars == 0 || m_text.size() <= m_max_chars) m_text += ' ';
-	} else if (m_input_state_new & CIGUIFrameInput::enInPrev)
+	} else if (m_input_state_new & CIGUIFrameInput::enInCircle)
 	{
 		if (m_text.size() > 0) m_text.resize(m_text.size()-1);
-	} else if (m_input_state_new & CIGUIFrameInput::enInMenu)
+	} else if (m_input_state_new & CIGUIFrameInput::enInStart)
 	{
 		m_exit_now = true;
 		windowCalled = true;
@@ -349,7 +349,7 @@ int CGUIMcaVkbd::getEntry(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, 
 		oldTick = currTick;
 		currTick = timer->getTicks();
 
-	} while ((m_input_state_new & CIGUIFrameInput::enInCancel) == 0);
+	} while ((m_input_state_new & CIGUIFrameInput::enInTriangle) == 0);
 	fadeInOut(prevBuffTex, timer, 25000, true);
 
 	if (prevtex == NULL) delete prevBuffTex;

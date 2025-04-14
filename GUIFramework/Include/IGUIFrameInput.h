@@ -19,21 +19,21 @@ private:
 public:
 	enum enInputData
 	{
-		enInCancel	= 0x00000001,
-		enInOk		= 0x00000002,
-		enInLeft	= 0x00000004,
-		enInRight	= 0x00000008,
-		enInUp		= 0x00000010,
-		enInDown	= 0x00000020,
-		enInMenu	= 0x00000040,
-		enInSwitch	= 0x00000080,
-		enInTabFwd	= 0x00000100,
-		enInTabBck	= 0x00000200,
-		enInTab2Fwd	= 0x00000400,
-		enInTab2Bck	= 0x00000800,
-		enInNeutral	= 0x00001000,
-		enInPrev	= 0x00002000,
-		enInKey		= 0x80000000
+		enInTriangle	= 0x00000001,
+		enInCross		= 0x00000002,
+		enInLeft		= 0x00000004,
+		enInRight		= 0x00000008,
+		enInUp			= 0x00000010,
+		enInDown		= 0x00000020,
+		enInStart		= 0x00000040,
+		enInSelect		= 0x00000080,
+		enInR1			= 0x00000100,
+		enInL1			= 0x00000200,
+		enInR2			= 0x00000400,
+		enInL2			= 0x00000800,
+		enInSquare		= 0x00001000,
+		enInCircle		= 0x00002000,
+		enInKey			= 0x80000000
 	};
 	CIGUIFrameInput(void);
 	virtual ~CIGUIFrameInput(void);

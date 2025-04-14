@@ -31,12 +31,12 @@ bool CGUIMcaGetYesNo::checkMessages()
 {
 	bool windowCalled = false;
 
-	if (m_input_state_new & CIGUIFrameInput::enInCancel)
+	if (m_input_state_new & CIGUIFrameInput::enInTriangle)
 	{
 		m_return = true;
 		m_result = enresNo;
 		if (m_hover_yesno) m_hover_yesno->setDest(m_x+222+20,m_y+232, true);
-	} else if (m_input_state_new & CIGUIFrameInput::enInOk)
+	} else if (m_input_state_new & CIGUIFrameInput::enInCross)
 	{
 		m_return = true;
 	} else if (m_input_state_new & CIGUIFrameInput::enInLeft)

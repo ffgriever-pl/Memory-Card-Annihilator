@@ -11,8 +11,6 @@ bool CGUIFrameInputPS2::initInput()
 	if (!m_pad_init_done)
 	{
 		CGUIFramePS2Modules::loadPadModules();
-		/// FIXME: What am I?
-		//padReset();
 		padInit(0);
 
 		int ret;
@@ -58,7 +56,6 @@ bool CGUIFrameInputPS2::initializePad(int port, int slot)
 	
 	if (state != PAD_STATE_DISCONN)
 	{
-		//padSetMainMode(port, slot, PAD_MMODE_DIGITAL, PAD_MMODE_UNLOCK);
 		padSetMainMode(port, slot, PAD_MMODE_DUALSHOCK, PAD_MMODE_UNLOCK);
 		return true;
 	}
@@ -91,20 +88,20 @@ u32 CGUIFrameInputPS2::updateInternal()
 			u32 returndata = 0;
 			paddata = 0xffff ^ m_buttons[0].btns;
 
-			if (paddata & PAD_TRIANGLE)	returndata |= enInCancel;
-			if (paddata & PAD_CROSS)	returndata |= enInOk;
+			if (paddata & PAD_TRIANGLE)	returndata |= enInTriangle;
+			if (paddata & PAD_CROSS)	returndata |= enInCross;
 			if (paddata & PAD_DOWN)		returndata |= enInDown;
 			if (paddata & PAD_UP)		returndata |= enInUp;
 			if (paddata & PAD_LEFT)		returndata |= enInLeft;
 			if (paddata & PAD_RIGHT)	returndata |= enInRight;
-			if (paddata & PAD_R1)		returndata |= enInTabFwd;
-			if (paddata & PAD_L1)		returndata |= enInTabBck;
-			if (paddata & PAD_R2)		returndata |= enInTab2Fwd;
-			if (paddata & PAD_L2)		returndata |= enInTab2Bck;
-			if (paddata & PAD_SELECT)	returndata |= enInSwitch;
-			if (paddata & PAD_START)	returndata |= enInMenu;
-			if (paddata & PAD_SQUARE)	returndata |= enInNeutral;
-			if (paddata & PAD_CIRCLE)	returndata |= enInPrev;
+			if (paddata & PAD_R1)		returndata |= enInR1;
+			if (paddata & PAD_L1)		returndata |= enInL1;
+			if (paddata & PAD_R2)		returndata |= enInR2;
+			if (paddata & PAD_L2)		returndata |= enInL2;
+			if (paddata & PAD_SELECT)	returndata |= enInSelect;
+			if (paddata & PAD_START)	returndata |= enInStart;
+			if (paddata & PAD_SQUARE)	returndata |= enInSquare;
+			if (paddata & PAD_CIRCLE)	returndata |= enInCircle;
 
 			int xadd = 0;
 			int yadd = 0;
