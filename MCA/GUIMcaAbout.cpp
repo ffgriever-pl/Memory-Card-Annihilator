@@ -1,6 +1,6 @@
+#include <string>
 #include "GUIMcaAbout.h"
 #include "res/resources.h"
-#include <string>
 
 CGUIMcaAbout::CGUIMcaAbout(float x, float y)
 {

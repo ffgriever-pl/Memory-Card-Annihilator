@@ -1,5 +1,5 @@
 #ifndef _CPS2APPLICATION_H_
-#define _CPS2APPLICATION_H_ 1
+#define _CPS2APPLICATION_H_
 
 #include <string>
 #include "GUIFramePS2Includes.h"

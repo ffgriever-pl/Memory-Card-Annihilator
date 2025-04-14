@@ -1,12 +1,12 @@
 #ifndef _IGUIFRAMEFONT_H_
-#define _IGUIFRAMEFONT_H_ 1
+#define _IGUIFRAMEFONT_H_
 
-#include "IGUIFrameIncludes.h"
-#include "IGUIFrameTexture.h"
-#include "IGUIFrameRenderer.h"
 #include <vector>
 #include <map>
 #include <cstdio>
+#include "IGUIFrameIncludes.h"
+#include "IGUIFrameTexture.h"
+#include "IGUIFrameRenderer.h"
 
 template <class T>
 class CIGUIFrameFont

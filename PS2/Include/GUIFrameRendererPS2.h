@@ -1,8 +1,9 @@
 #ifndef _GUIFRAMERENDERERPS2_H_
-#define _GUIFRAMERENDERERPS2_H_ 1
+#define _GUIFRAMERENDERERPS2_H_
 
 #include "GUIFramePS2Includes.h"
 #include "IGUIFrameRenderer.h"
+#include "GUIFrameTexturePS2.h"
 
 #define GS_SETREG_SCISSOR(scax0, scax1, scay0, scay1) \
   ((u64)(scax0)        | ((u64)(scax1) << 16) | \
@@ -10,7 +11,6 @@
 extern "C" {
 	void gsKit_set_scissor(GSGLOBAL *gsGlobal, u64 ScissorBounds);
 }
-#include "GUIFrameTexturePS2.h"
 
 class CGUIFrameRendererPS2 :
 	public CIGUIFrameRenderer

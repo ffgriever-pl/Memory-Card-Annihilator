@@ -1,5 +1,5 @@
 #ifndef _IGUIFRAMERENDERER_H_
-#define _IGUIFRAMERENDERER_H_ 1
+#define _IGUIFRAMERENDERER_H_
 
 #include "IGUIFrameIncludes.h"
 #include "IGUIFrameTexture.h"

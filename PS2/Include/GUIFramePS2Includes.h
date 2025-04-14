@@ -1,5 +1,5 @@
 #ifndef _GUIFRAMEPS2INCLUDES_H_
-#define _GUIFRAMEPS2INCLUDES_H_ 1
+#define _GUIFRAMEPS2INCLUDES_H_
 
 #include <kernel.h>
 #include <sifrpc.h>
@@ -23,9 +23,9 @@
 #include <sys/fcntl.h>
 #include <math.h>
 #include <libcdvd.h>
-#include "cdvd_rpc.h"
 #include <cstdio>
 #include <dirent.h>
+#include "cdvd_rpc.h"
 
 //#define sio_printf printf
 #ifdef NO_PRINTF

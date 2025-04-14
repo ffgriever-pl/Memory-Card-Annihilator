@@ -1,6 +1,6 @@
+#include <string>
 #include "GUIMcaGetSize.h"
 #include "res/resources.h"
-#include <string>
 
 CGUIMcaGetSize::CGUIMcaGetSize(float x, float y, int defaultmbytes)
 {

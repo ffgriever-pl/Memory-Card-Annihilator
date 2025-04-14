@@ -1,5 +1,5 @@
 #ifndef _RESOURCES_H_
-#define _RESOURCES_H_ 1
+#define _RESOURCES_H_
 
 #include "GUIFramePS2Includes.h"
 //#include "../../GUIFramework/Include/IGUIFrameFont.h

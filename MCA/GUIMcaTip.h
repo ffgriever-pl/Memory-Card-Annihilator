@@ -1,8 +1,8 @@
 #ifndef _GUIMCATIP_H_
 #define _GUIMCATIP_H_
 
-#include "IGUIFrameRenderer.h"
 #include <queue>
+#include "IGUIFrameRenderer.h"
 
 class CGUIMcaTip
 {

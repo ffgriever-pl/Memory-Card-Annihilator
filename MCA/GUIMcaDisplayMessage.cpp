@@ -1,6 +1,6 @@
+#include <string>
 #include "GUIMcaDisplayMessage.h"
 #include "res/resources.h"
-#include <string>
 
 CGUIMcaDisplayMessage::CGUIMcaDisplayMessage(float x, float y, const char *message, const char *caption, enIconType icon, CIGUIFrameFont<CGUITexture>::eAlignment align)
 {

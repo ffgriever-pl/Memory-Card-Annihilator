@@ -1,7 +1,7 @@
+#include <string>
 #include "GUIMcaOperProgress.h"
 #include "GUIMcaMan.h"
 #include "res/resources.h"
-#include <string>
 
 CGUIMcaOperProgress::CGUIMcaOperProgress(float x, float y)
 	: m_progressBar(NULL)

@@ -1,7 +1,7 @@
+#include <string>
 #include "GUIMcaMan.h"
 #include "iop/mca_irx.h"
 #include "GUIFramePS2Modules.h"
-#include <string>
 
 
 CGUIMcaMan::CGUIMcaMan(void)

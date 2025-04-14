@@ -1,6 +1,6 @@
+#include <string>
 #include "GUIMcaWarrningNoCard.h"
 #include "res/resources.h"
-#include <string>
 
 CGUIMcaWarrningNoCard::CGUIMcaWarrningNoCard(float x, float y, int slotnum)
 {

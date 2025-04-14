@@ -1,10 +1,10 @@
 #ifndef _GUICONTROLLABEL_H_
 #define _GUICONTROLLABEL_H_
 
+#include <string>
 #include "IGUIFrameControl.h"
 #include "IGUIFrameFont.h"
 #include "GUITypes.h"
-#include <string>
 
 class CGUIControlLabel :
 	public CIGUIFrameControl

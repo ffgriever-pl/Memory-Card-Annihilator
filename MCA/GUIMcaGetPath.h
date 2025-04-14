@@ -1,12 +1,12 @@
 #ifndef _GUIMCAGETPATH_H_
 #define _GUIMCAGETPATH_H_
 
+#include <string>
+#include <list>
+#include <locale>
 #include "GUIMcaPopup.h"
 #include "GUIMcaHover.h"
 #include "GUIMcaTip.h"
-#include <string>
-#include <locale>
-#include <list>
 
 template <typename Elem, typename Traits, typename Ax>
 std::basic_string<Elem, Traits, Ax> tolower(std::basic_string<Elem, Traits, Ax> str)
