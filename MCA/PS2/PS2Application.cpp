@@ -60,7 +60,7 @@ int CPS2Application::main(int argc, char *argv[])
 	CGUIMcaMan::initMca();
 
 	if (!languageLoaded) //let it try after iopreset and modules load
-		initLanguage(processHddBootPath(CResources::boot_path));
+		initLanguage(processBootPath(CResources::boot_path));
 
 	CGUIFrameTimerPS2 ps2Timer;
 	CGUIFrameRendererPS2 ps2renderer;
@@ -173,6 +173,51 @@ std::string CPS2Application::processHddBootPath(const std::string& bootPath)
 	return "pfs0:" + path;
 }
 
+std::string CPS2Application::processMassBootPath(const std::string& bootPath)
+{
+	if (bootPath.length() < 5) // "mass:"
+		return bootPath;
+
+	if (bootPath.substr(0, 4) != "mass")
+		return bootPath;
+
+	if (bootPath[4] != ':' && (bootPath[4] < '0' || bootPath[4] > '9' || bootPath[5] != ':'))
+		return bootPath;
+
+	CGUIFramePS2Modules::loadUsbModules();
+
+	if (waitForDisk(bootPath, 50))
+		return bootPath;
+
+	// It seems that the mass device has changed number, let's try to find it
+	const char massNumber = bootPath[4] == ':' ? 0 : bootPath[4] - '0';
+	std::string path = "mass0:"+ bootPath.substr(bootPath.find(":") + 1); //at this point, we know it exists
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (i == massNumber)
+			continue;
+
+		path[4] = '0' + i;
+		if (waitForDisk(path, 1)) //at this point it should be already detected
+			return path;
+	}
+	return bootPath;
+}
+
+std::string CPS2Application::processBootPath(const std::string& bootPath)
+{
+	if (bootPath.substr(0, 4) == "hdd0")
+	{
+		return processHddBootPath(bootPath);
+	}
+	else if (bootPath.substr(0, 4) == "mass")
+	{
+		return processMassBootPath(bootPath);
+	}
+	return bootPath;
+}
+
 bool CPS2Application::loadLanguage(const std::string& langfile)
 {
 	int fd = fioOpen(langfile.c_str(), O_BINARY | O_RDONLY);
@@ -214,6 +259,14 @@ void CPS2Application::setBootPath(const char* path)
 	if	(stpos != std::string::npos)
 		CResources::boot_path = CResources::boot_path.substr(0, stpos+1);
 		
+}
+
+bool CPS2Application::waitForDisk(const std::string path, int delay)
+{
+	iox_stat_t chk_stat;
+	int ret;
+	while ((ret = fileXioGetStat(path.c_str(), &chk_stat)) < 0 && --delay > 0) { nopdelay(); }
+	return ret >= 0;
 }
 
 CPS2Application *CPS2Application::m_pInstance = NULL;

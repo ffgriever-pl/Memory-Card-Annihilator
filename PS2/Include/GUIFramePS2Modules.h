@@ -58,6 +58,7 @@ public:
 	static void iopReset(bool xmodules = false);
 	static bool resetFlags();
 	static bool loadSio2Man();
+	static bool loadFileXio();
 	static bool loadPadModules();
 	static bool loadMcModules();
 	static bool loadUsbModules();
