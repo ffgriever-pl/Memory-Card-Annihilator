@@ -44,27 +44,15 @@ void CGUIFramePS2Modules::iopReset(bool xmodules)
 {
 #ifdef MGMODE
 	while(!SifIopRebootBuffer(ioprp, size_ioprp));
+#elif defined(USE_HOMEBREW_MODULES)
+	while (!SifIopReset("", 0));
 #else
 	while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
 #endif
 	while(!SifIopSync());
 
-	fioExit();
-	SifExitIopHeap();
-	SifLoadFileExit();
-	SifExitRpc();
-	SifExitCmd();
 	SifInitRpc(0);
-	FlushCache(0);
-	FlushCache(2);
-	resetFlags();
-	m_use_xmodules = xmodules;
-
-	sbv_patch_enable_lmb();
-	sbv_patch_disable_prefix_check();
-	int ret, id;
-	id = SifExecModuleBuffer(iomanx_irx, size_iomanx_irx, 0, NULL, &ret);
-	IRX_REPORT("iomanX", id, ret);
+	finalizeIopState(xmodules);
 }
 bool CGUIFramePS2Modules::resetFlags()
 {
@@ -90,97 +78,25 @@ bool CGUIFramePS2Modules::resetFlags()
 
 void CGUIFramePS2Modules::initPS2Iop(bool reset, bool xmodules)
 {
-	int id, ret;
-	m_use_xmodules = xmodules;
-	m_modules_padman = false;
-	m_modules_sio2man = false;
-	m_modules_mcman = false;
-	m_modules_mcserv = false;
-	m_modules_poweroff = false;
-	m_modules_filexio = false;
-	m_modules_dev9 = false;
-	m_modules_fs = false;
-	m_modules_hdd = false;
-	m_modules_atad = false;
-	m_modules_usbd = false;
-	m_modules_usbhdfsd = false;
-	m_modules_cdvd = false;
-	m_modules_cdvd_init = false;
-	m_modules_fakehost = false;
-
 	SifInitRpc(0);
 	if (reset)
 	{
-		if (xmodules)
-		{
-			#ifdef MGMODE
-				while(!SifIopRebootBuffer(ioprp, size_ioprp));
-			#else
-				while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
-			#endif
-				while(!SifIopSync());
-			fioExit();
-			SifExitIopHeap();
-			SifLoadFileExit();
-			SifExitRpc();
-			SifExitCmd();
-			SifInitRpc(0);
-			FlushCache(0);
-			FlushCache(2);
-#ifdef USE_HOMEBREW_MODULES
-			id = SifExecModuleBuffer(sio2man_irx, size_sio2man_irx, 0, NULL, &ret);
-			IRX_REPORT("sio2man", id, ret);
-			id = SifExecModuleBuffer(mcman_irx, size_mcman_irx, 0, NULL, &ret);
-			IRX_REPORT("mcman", id, ret);
-			id = SifExecModuleBuffer(mcserv_irx, size_mcserv_irx, 0, NULL, &ret);
-			IRX_REPORT("mcserv", id, ret);
-			id = SifExecModuleBuffer(padman_irx, size_padman_irx, 0, NULL, &ret);
-			IRX_REPORT("padman", id, ret);
-#else
-			id = SifLoadStartModule("rom0:XSIO2MAN", 0, NULL, &ret);
-			IRX_REPORT("rom0:XSIO2MAN", id, ret);
-			id = SifLoadStartModule("rom0:XMCMAN", 0, NULL, &ret);
-			IRX_REPORT("rom0:XMCMAN", id, ret);
-			id = SifLoadStartModule("rom0:XMCSERV", 0, NULL, &ret);
-			IRX_REPORT("rom0:XMCSERV", id, ret);
-			id = SifLoadStartModule("rom0:XPADMAN", 0, NULL, &ret);
-			IRX_REPORT("rom0:XPADMAN", id, ret);
-#endif
-		}
-		#ifdef MGMODE
-			while(!SifIopRebootBuffer(ioprp, size_ioprp));
-		#else
-			while(!SifIopReset("rom0:UDNL rom0:EELOADCNF",0));
-		#endif
-			while(!SifIopSync());
+		iopReset(xmodules);
 	}
-	fioExit();
-	SifExitIopHeap();
-	SifLoadFileExit();
-	SifExitRpc();
-	SifExitCmd();
-	SifInitRpc(0);
-	FlushCache(0);
-	FlushCache(2);
+	else
+	{
+		finalizeIopState(xmodules);
+	}
+}
 
-	m_modules_padman = false;
-	m_modules_sio2man = false;
-	m_modules_mcman = false;
-	m_modules_mcserv = false;
-	m_modules_poweroff = false;
-	m_modules_filexio = false;
-	m_modules_dev9 = false;
-	m_modules_fs = false;
-	m_modules_hdd = false;
-	m_modules_atad = false;
-	m_modules_usbd = false;
-	m_modules_usbhdfsd = false;
-	m_modules_cdvd = false;
-	m_modules_cdvd_init = false;
-	m_modules_fakehost = false;
+void CGUIFramePS2Modules::finalizeIopState(bool xmodules)
+{
+	resetFlags();
+	m_use_xmodules = xmodules;
 
 	sbv_patch_enable_lmb();
 	sbv_patch_disable_prefix_check();
+	int id, ret;
 	id = SifExecModuleBuffer(iomanx_irx, size_iomanx_irx, 0, NULL, &ret);
 	IRX_REPORT("iomanX", id, ret);
 }

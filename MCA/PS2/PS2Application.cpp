@@ -53,7 +53,7 @@ int CPS2Application::main(int argc, char *argv[])
 	bool languageLoaded = initLanguage(CResources::boot_path); //allow to load before iopreset (potentially unsupported devices with already loaded modules)
 
 	ResetEE(0xffffffff);
-	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset, true);
+	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset);
 	CGUIFramePS2Modules::loadMcModules();
 	CGUIFramePS2Modules::loadUsbModules();
 	CGUIFramePS2Modules::loadCdvdModules();
