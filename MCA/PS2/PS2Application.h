@@ -10,7 +10,7 @@ private:
 	static CPS2Application *m_pInstance;
 	CPS2Application(void);
 	static bool loadLanguage(const std::string& langfile);
-	static void initLanguage();
+	static bool initLanguage(const std::string& langfile);
 	static void setBootPath(const char* path);
 public:
 	~CPS2Application(void);

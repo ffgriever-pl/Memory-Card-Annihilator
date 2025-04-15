@@ -50,7 +50,7 @@ int CPS2Application::main(int argc, char *argv[])
 	
 	setBootPath(argv[0]);
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
-	initLanguage();
+	initLanguage(CResources::boot_path);
 
 	ResetEE(0xffffffff);
 	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset, true);
@@ -113,7 +113,7 @@ int CPS2Application::main(int argc, char *argv[])
 	return 0;
 }
 
-void CPS2Application::initLanguage()
+bool CPS2Application::initLanguage(const std::string& bootPath)
 {
 	
 	static const char* languageFiles[] = {
@@ -129,16 +129,16 @@ void CPS2Application::initLanguage()
 		// Korean, Traditional and Simplified Chinese do not have a valid font yet
 	};
 	
-	std::string defaultLangFile = CResources::boot_path + "lang.lng";
-	if (!loadLanguage(defaultLangFile))
-	{
-		int systemLanguage = configGetLanguage();
-		if (systemLanguage >= 0 && systemLanguage < static_cast<int>(countof(languageFiles)))
-		{
-			std::string systemLanguageFile = CResources::boot_path + languageFiles[systemLanguage];
-			loadLanguage(systemLanguageFile);
-		}
-	}
+	std::string defaultLangFile = bootPath + "lang.lng";
+	if (loadLanguage(defaultLangFile))
+		return true;
+
+	int systemLanguage = configGetLanguage();
+	if (systemLanguage < 0 || systemLanguage >= static_cast<int>(countof(languageFiles)))
+		return false;
+
+	std::string systemLanguageFile = bootPath + languageFiles[systemLanguage];
+	return loadLanguage(systemLanguageFile);
 }
 
 bool CPS2Application::loadLanguage(const std::string& langfile)
