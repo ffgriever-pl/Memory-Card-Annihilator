@@ -50,7 +50,7 @@ int CPS2Application::main(int argc, char *argv[])
 	
 	setBootPath(argv[0]);
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
-	initLanguage(CResources::boot_path);
+	bool languageLoaded = initLanguage(CResources::boot_path); //allow to load before iopreset (potentially unsupported devices with already loaded modules)
 
 	ResetEE(0xffffffff);
 	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset, true);
@@ -58,6 +58,9 @@ int CPS2Application::main(int argc, char *argv[])
 	CGUIFramePS2Modules::loadUsbModules();
 	CGUIFramePS2Modules::loadCdvdModules();
 	CGUIMcaMan::initMca();
+
+	if (!languageLoaded) //let it try after iopreset and modules load
+		initLanguage(processHddBootPath(CResources::boot_path));
 
 	CGUIFrameTimerPS2 ps2Timer;
 	CGUIFrameRendererPS2 ps2renderer;
@@ -115,7 +118,6 @@ int CPS2Application::main(int argc, char *argv[])
 
 bool CPS2Application::initLanguage(const std::string& bootPath)
 {
-	
 	static const char* languageFiles[] = {
 		"lang.lng",	// Japanese does not have a valid font yet
 		"lang_en.lng",
@@ -139,6 +141,36 @@ bool CPS2Application::initLanguage(const std::string& bootPath)
 
 	std::string systemLanguageFile = bootPath + languageFiles[systemLanguage];
 	return loadLanguage(systemLanguageFile);
+}
+
+std::string CPS2Application::processHddBootPath(const std::string& bootPath) 
+{
+	const std::string hddPrefix = "hdd0:";
+	if (bootPath.substr(0, hddPrefix.length()) != hddPrefix)
+		return bootPath;
+		
+	const size_t pfsPos = bootPath.find(":pfs", hddPrefix.length());
+	if (pfsPos == std::string::npos)
+		return bootPath;
+		
+	const std::string partition = bootPath.substr(0, pfsPos);
+	const std::string pfs = bootPath.substr(pfsPos + 1);
+
+	const size_t pathPos = pfs.find(":");
+	if (pathPos == std::string::npos)
+		return bootPath;
+		
+	const std::string path = pfs.substr(pathPos + 1);
+
+	CGUIFramePS2Modules::loadHddModules();
+	if (hddCheckFormatted() != 0)
+		return bootPath;
+		
+	fileXioUmount("pfs0:");
+	if (fileXioMount("pfs0:", partition.c_str(), FIO_MT_RDWR) != 0)
+		return bootPath;
+		
+	return "pfs0:" + path;
 }
 
 bool CPS2Application::loadLanguage(const std::string& langfile)
