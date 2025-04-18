@@ -109,7 +109,7 @@ void CGUIMcaOperProgress::drawMessage(float alpha)
 			message = CResources::mainLang.getText("LNG_PROGRESS_FAIL");
 		}
 	}
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		message
 		, m_x+8, m_y+106
 		, 402, 100

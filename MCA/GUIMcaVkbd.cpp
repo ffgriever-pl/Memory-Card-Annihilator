@@ -91,7 +91,7 @@ void CGUIMcaVkbd::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *tim
 void CGUIMcaVkbd::drawText(float alpha)
 {
 	tVertex2 pos =
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		m_text.c_str()
 		, m_x+102, m_y+2
 		, 372-12, 24
@@ -111,9 +111,9 @@ void CGUIMcaVkbd::drawText(float alpha)
 	if (m_display_caret)
 	{
 		float caretscale = (m_renderer->getFrameHeight() == 512 ? 1.0f : 512.0f/448.0f);
-		CResources::verdana22.printUTF8Shadow(
+		CResources::mediumFont.printUTF8Shadow(
 			"_"
-			, pos.x, pos.y +CResources::verdana22.getScale(22.00f*caretscale)*(float)CResources::verdana22.getBasePos()
+			, pos.x, pos.y +CResources::mediumFont.getScale(22.00f*caretscale)*(float)CResources::mediumFont.getBasePos()
 			, 22.00f*caretscale, 1.0f
 			, 0, 0, 0, alpha
 		);
@@ -140,7 +140,7 @@ void CGUIMcaVkbd::drawKeys(float alpha)
 		else if (m_shift || m_tmp_shift) type = 1; //shift
 
 		char key[] = {m_keys[i].key[type], 0};
-		CResources::verdana22.printUTF8Box(
+		CResources::mediumFont.printUTF8Box(
 			key,
 			m_x +m_keys[i].x, m_y +m_keys[i].y+3,
 			(int)m_keys[i].w, (int)m_keys[i].h-3,

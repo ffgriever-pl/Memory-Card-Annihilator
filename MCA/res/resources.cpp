@@ -72,9 +72,9 @@ CGUITexture CResources::m_bar_green;
 CGUITexture CResources::m_bar_lead_green;
 CGUITexture CResources::m_bar_lead_red;
 
-CIGUIFrameFont<CGUITexture> CResources::verdana18s;
-CIGUIFrameFont<CGUITexture> CResources::verdana22;
+CIGUIFrameFont<CGUITexture> CResources::smallFont;
+CIGUIFrameFont<CGUITexture> CResources::mediumFont;
 //CIGUIFrameFont<CGUITexture> CResources::verdana38;
 //CIGUIFrameFont<CGUITexture> CResources::verdana38p;
-CIGUIFrameFont<CGUITexture> CResources::centurygoth38p;
-CIGUIFrameFont<CGUITexture> CResources::urwmed20;
+CIGUIFrameFont<CGUITexture> CResources::headerFont;
+CIGUIFrameFont<CGUITexture> CResources::versionFont;

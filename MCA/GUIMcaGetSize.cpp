@@ -99,7 +99,7 @@ void CGUIMcaGetSize::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *
 
 void CGUIMcaGetSize::drawMessage(float alpha)
 {
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_OPER_CHOOSE_MC_SIZE")
 		, m_x+8, m_y+106
 		, 402, 90
@@ -110,7 +110,7 @@ void CGUIMcaGetSize::drawMessage(float alpha)
 
 	std::string formatted = CResources::mainLang.getText("LNG_OPER_MEGABYTE");
 	CResources::mainLang.replace(&formatted, "{CARDSIZE}", m_card_mbytes);
-	CResources::centurygoth38p.printUTF8BoxShadow(
+	CResources::headerFont.printUTF8BoxShadow(
 		formatted.c_str()
 		, m_x+8, m_y+206
 		, 402, 50

@@ -54,7 +54,7 @@ void CGUIMcaDisplayMessage::drawMessage(float alpha)
 		{
 			if (m_caption != NULL)
 			{
-				CResources::centurygoth38p.printUTF8BoxShadow(
+				CResources::headerFont.printUTF8BoxShadow(
 					m_caption
 					, m_x+8, m_y+34
 					, 402, 50
@@ -68,7 +68,7 @@ void CGUIMcaDisplayMessage::drawMessage(float alpha)
 					, true
 				);
 			}
-			CResources::verdana22.printUTF8BoxShadow(
+			CResources::mediumFont.printUTF8BoxShadow(
 				m_message
 				, m_x+8, m_y+106
 				, 402, 180
@@ -78,7 +78,7 @@ void CGUIMcaDisplayMessage::drawMessage(float alpha)
 			);
 		} else
 		{
-			CResources::verdana22.printUTF8BoxShadow(
+			CResources::mediumFont.printUTF8BoxShadow(
 				m_message
 				, m_x+8, m_y+18
 				, 402, 266

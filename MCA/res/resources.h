@@ -28,12 +28,12 @@ public:
 	static unsigned int size_urwmed20_bfnk;
 	static unsigned char urwmed20_bfnk[];
 
-	static CIGUIFrameFont<CGUITexture> verdana18s;
-	static CIGUIFrameFont<CGUIFrameTexturePS2> verdana22;
+	static CIGUIFrameFont<CGUITexture> smallFont;
+	static CIGUIFrameFont<CGUIFrameTexturePS2> mediumFont;
 	/*static CIGUIFrameFont<CGUIFrameTexturePS2> verdana38;
 	static CIGUIFrameFont<CGUIFrameTexturePS2> verdana38p;*/
-	static CIGUIFrameFont<CGUIFrameTexturePS2> centurygoth38p;
-	static CIGUIFrameFont<CGUIFrameTexturePS2> urwmed20;
+	static CIGUIFrameFont<CGUIFrameTexturePS2> headerFont;
+	static CIGUIFrameFont<CGUIFrameTexturePS2> versionFont;
 	
 	//universal
 	static unsigned int size_bgimg_tm2;

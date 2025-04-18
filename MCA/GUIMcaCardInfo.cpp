@@ -45,7 +45,7 @@ void CGUIMcaCardInfo::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer 
 
 void CGUIMcaCardInfo::drawMessage(float alpha)
 {
-	CResources::centurygoth38p.printUTF8BoxShadow(
+	CResources::headerFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_CAPTION")
 		, m_x+60, m_y+11
 		, 310, 50
@@ -72,7 +72,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 	const int infvalh = infh;
 	CIGUIFrameFont<CGUITexture>::eAlignment infvalalign = CIGUIFrameFont<CGUITexture>::etxAlignRight;
 
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_SLOT")
 		, m_x+infstartx, m_y+infstarty +i*multfact
 		, infw, infh
@@ -82,7 +82,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 	);
 	std::string infslotnum = "{SLOTNUM}";
 	CResources::mainLang.replace(&infslotnum, "{SLOTNUM}", m_oper_slot+1);
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		infslotnum.c_str()
 		, m_x+infvalstartx, m_y+infvalstarty +i*multfact
 		, infvalw, infvalh
@@ -93,7 +93,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 
 
 	i++;
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_TYPE")
 		, m_x+infstartx, m_y+infstarty +i*multfact
 		, infw, infh
@@ -103,7 +103,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 	);
 	std::string inftype = "{MCTYPE}";
 	CResources::mainLang.replace(&inftype, "{MCTYPE}", m_psxmode ? CResources::mainLang.getText("LNG_INFO_MC_PSX") : CResources::mainLang.getText("LNG_INFO_MC_PS2"));
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		inftype.c_str()
 		, m_x+infvalstartx, m_y+infvalstarty +i*multfact
 		, infvalw, infvalh
@@ -114,7 +114,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 
 
 	i++;
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_PAGESIZE")
 		, m_x+infstartx, m_y+infstarty +i*multfact
 		, infw, infh
@@ -124,7 +124,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 	);
 	std::string infpagesize = "{PAGESIZE}";
 	CResources::mainLang.replace(&infpagesize, "{PAGESIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].pageSize);
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		infpagesize.c_str()
 		, m_x+infvalstartx, m_y+infvalstarty +i*multfact
 		, infvalw, infvalh
@@ -135,7 +135,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 
 
 	i++;
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_PAGESINBLOCK")
 		, m_x+infstartx, m_y+infstarty +i*multfact
 		, infw, infh
@@ -145,7 +145,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 	);
 	std::string infpagesinblock = "{PAGESINBLOCK}";
 	CResources::mainLang.replace(&infpagesinblock, "{PAGESINBLOCK}", CGUIMcaMan::mce_memcards[m_oper_slot].pagesPerBlock);
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		infpagesinblock.c_str()
 		, m_x+infvalstartx, m_y+infvalstarty +i*multfact
 		, infvalw, infvalh
@@ -156,7 +156,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 
 
 	i++;
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_PAGESTOTAL")
 		, m_x+infstartx, m_y+infstarty +i*multfact
 		, infw, infh
@@ -175,7 +175,7 @@ void CGUIMcaCardInfo::drawMessage(float alpha)
 		CResources::mainLang.replace(&infpagestotal, "{CARDSIZE}", CGUIMcaMan::mce_memcards[m_oper_slot].totalPages*CGUIMcaMan::mce_memcards[m_oper_slot].pageSize/1024/1024);
 		CResources::mainLang.replace(&infpagestotal, "{UNIT}", CResources::mainLang.getText("LNG_INFO_UNIT_MB"));
 	}
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		infpagestotal.c_str()
 		, m_x+infvalstartx, m_y+infvalstarty +i*multfact
 		, infvalw, infvalh

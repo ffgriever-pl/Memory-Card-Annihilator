@@ -367,7 +367,7 @@ void CGUIMcaOperWnd::drawMenu(float alpha)
 
 	for (u32 i = 0; i < countof(m_menu_options); i++)
 	{
-		CResources::verdana22.printUTF8Shadow(
+		CResources::mediumFont.printUTF8Shadow(
 			CResources::mainLang.getText(m_menu_options[i])
 			, 82, 266 +i*26
 			, 00.00f, 1.0f
@@ -375,7 +375,7 @@ void CGUIMcaOperWnd::drawMenu(float alpha)
 		);
 	}
 
-	CResources::verdana22.printUTF8Shadow(
+	CResources::mediumFont.printUTF8Shadow(
 		CResources::mainLang.getText(m_menu_format_type[m_menu_item_format])
 		, 342, 266
 		, 00.00f, 1.0f
@@ -401,7 +401,7 @@ void CGUIMcaOperWnd::drawStatic(float alpha)
 		, m_mca_logo.getWidth(), m_mca_logo.getHeight()
 		, 128, 128, 128, alpha
 	);
-	CResources::urwmed20.printUTF8Box(
+	CResources::versionFont.printUTF8Box(
 		VERSION_FULL
 		, 62, 136
 		, 500, 30
@@ -415,7 +415,7 @@ void CGUIMcaOperWnd::drawStatic(float alpha)
 	);
 	if (m_psx_mode)
 	{
-		CResources::verdana22.printUTF8Shadow(
+		CResources::mediumFont.printUTF8Shadow(
 			CResources::mainLang.getText("LNG_OPER_PSX_MEMORY_CARD")
 			, 8+74, 220
 			, 26.00f, 1.0f
@@ -428,7 +428,7 @@ void CGUIMcaOperWnd::drawStatic(float alpha)
 		);
 	} else
 	{
-		CResources::verdana22.printUTF8Shadow(
+		CResources::mediumFont.printUTF8Shadow(
 			CResources::mainLang.getText("LNG_OPER_PS2_MEMORY_CARD")
 			, 8+74, 220
 			, 26.00f, 1.0f
