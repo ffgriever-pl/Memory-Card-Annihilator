@@ -119,7 +119,7 @@ int CPS2Application::main(int argc, char *argv[])
 bool CPS2Application::initLanguage(const std::string& bootPath)
 {
 	static const char* languageFiles[] = {
-		"lang.lng",	// Japanese does not have a valid font yet
+		"lang_jp.lng",	// Japanese does not have a valid font yet
 		"lang_en.lng",
 		"lang_fr.lng",
 		"lang_es.lng",
