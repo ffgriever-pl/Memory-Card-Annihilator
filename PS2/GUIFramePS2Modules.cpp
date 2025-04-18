@@ -211,6 +211,17 @@ bool CGUIFramePS2Modules::loadSio2Man()
 #endif
 	return true;
 }
+bool CGUIFramePS2Modules::loadFileXio()
+{
+	if (!m_modules_filexio)
+	{
+		int id, ret;
+		id = SifExecModuleBuffer(&filexio_irx, size_filexio_irx, 0, NULL, &ret);
+		IRX_REPORT("fileXio", id, ret);
+		m_modules_filexio = true;
+	}
+	return true;
+}
 bool CGUIFramePS2Modules::loadPadModules()
 {
 	int id, ret;
@@ -293,7 +304,7 @@ bool CGUIFramePS2Modules::loadFakehost(const char *path)
 	{
 		int id, ret;
 		id = SifExecModuleBuffer(fakehost_irx, size_fakehost_irx, strlen(path), path, &ret);
-		IRX_REPORT("iomanX", id, ret);
+		IRX_REPORT("fakehost", id, ret);
 		m_modules_fakehost = true;
 	}
 	return true;
@@ -333,6 +344,7 @@ bool CGUIFramePS2Modules::loadUsbModules()
 		m_modules_usbhdfsd = true;
 	}
 #endif
+	loadFileXio();
 	return true;
 }
 
@@ -409,12 +421,7 @@ bool CGUIFramePS2Modules::loadHddModules()
 		poweroffSetCallback((poweroff_callback)poweroffHandler, NULL);
 		m_modules_poweroff = true;
 	}
-	if (!m_modules_filexio)
-	{
-		id = SifExecModuleBuffer(&filexio_irx, size_filexio_irx, 0, NULL, &ret);
-		IRX_REPORT("fileXio", id, ret);
-		m_modules_filexio = true;
-	}
+	loadFileXio();
 	if (!m_modules_dev9)
 	{
 		id = SifExecModuleBuffer(&ps2dev9_irx, size_ps2dev9_irx, 0, NULL, &ret);

@@ -50,7 +50,7 @@ int CPS2Application::main(int argc, char *argv[])
 	
 	setBootPath(argv[0]);
 	printf("BOOT path: %s\n", CResources::boot_path.c_str());
-	initLanguage();
+	bool languageLoaded = initLanguage(CResources::boot_path); //allow to load before iopreset (potentially unsupported devices with already loaded modules)
 
 	ResetEE(0xffffffff);
 	CGUIFramePS2Modules::initPS2Iop(CResources::iopreset, true);
@@ -58,6 +58,9 @@ int CPS2Application::main(int argc, char *argv[])
 	CGUIFramePS2Modules::loadUsbModules();
 	CGUIFramePS2Modules::loadCdvdModules();
 	CGUIMcaMan::initMca();
+
+	if (!languageLoaded) //let it try after iopreset and modules load
+		initLanguage(processBootPath(CResources::boot_path));
 
 	CGUIFrameTimerPS2 ps2Timer;
 	CGUIFrameRendererPS2 ps2renderer;
@@ -113,9 +116,8 @@ int CPS2Application::main(int argc, char *argv[])
 	return 0;
 }
 
-void CPS2Application::initLanguage()
+bool CPS2Application::initLanguage(const std::string& bootPath)
 {
-	
 	static const char* languageFiles[] = {
 		"lang.lng",	// Japanese does not have a valid font yet
 		"lang_en.lng",
@@ -129,16 +131,91 @@ void CPS2Application::initLanguage()
 		// Korean, Traditional and Simplified Chinese do not have a valid font yet
 	};
 	
-	std::string defaultLangFile = CResources::boot_path + "lang.lng";
-	if (!loadLanguage(defaultLangFile))
+	std::string defaultLangFile = bootPath + "lang.lng";
+	if (loadLanguage(defaultLangFile))
+		return true;
+
+	int systemLanguage = configGetLanguage();
+	if (systemLanguage < 0 || systemLanguage >= static_cast<int>(countof(languageFiles)))
+		return false;
+
+	std::string systemLanguageFile = bootPath + languageFiles[systemLanguage];
+	return loadLanguage(systemLanguageFile);
+}
+
+std::string CPS2Application::processHddBootPath(const std::string& bootPath) 
+{
+	const std::string hddPrefix = "hdd0:";
+	if (bootPath.substr(0, hddPrefix.length()) != hddPrefix)
+		return bootPath;
+		
+	const size_t pfsPos = bootPath.find(":pfs", hddPrefix.length());
+	if (pfsPos == std::string::npos)
+		return bootPath;
+		
+	const std::string partition = bootPath.substr(0, pfsPos);
+	const std::string pfs = bootPath.substr(pfsPos + 1);
+
+	const size_t pathPos = pfs.find(":");
+	if (pathPos == std::string::npos)
+		return bootPath;
+		
+	const std::string path = pfs.substr(pathPos + 1);
+
+	CGUIFramePS2Modules::loadHddModules();
+	if (hddCheckFormatted() != 0)
+		return bootPath;
+		
+	fileXioUmount("pfs0:");
+	if (fileXioMount("pfs0:", partition.c_str(), FIO_MT_RDWR) != 0)
+		return bootPath;
+		
+	return "pfs0:" + path;
+}
+
+std::string CPS2Application::processMassBootPath(const std::string& bootPath)
+{
+	if (bootPath.length() < 5) // "mass:"
+		return bootPath;
+
+	if (bootPath.substr(0, 4) != "mass")
+		return bootPath;
+
+	if (bootPath[4] != ':' && (bootPath[4] < '0' || bootPath[4] > '9' || bootPath[5] != ':'))
+		return bootPath;
+
+	CGUIFramePS2Modules::loadUsbModules();
+
+	if (waitForDisk(bootPath, 50))
+		return bootPath;
+
+	// It seems that the mass device has changed number, let's try to find it
+	const char massNumber = bootPath[4] == ':' ? 0 : bootPath[4] - '0';
+	std::string path = "mass0:"+ bootPath.substr(bootPath.find(":") + 1); //at this point, we know it exists
+
+	for (int i = 0; i < 10; i++)
 	{
-		int systemLanguage = configGetLanguage();
-		if (systemLanguage >= 0 && systemLanguage < static_cast<int>(countof(languageFiles)))
-		{
-			std::string systemLanguageFile = CResources::boot_path + languageFiles[systemLanguage];
-			loadLanguage(systemLanguageFile);
-		}
+		if (i == massNumber)
+			continue;
+
+		path[4] = '0' + i;
+		if (waitForDisk(path, 1)) //at this point it should be already detected
+			return path;
 	}
+	return bootPath;
+}
+
+std::string CPS2Application::processBootPath(const std::string& bootPath)
+{
+	if (bootPath.substr(0, 4) == "hdd0")
+	{
+		return processHddBootPath(bootPath);
+	}
+	else if (bootPath.substr(0, 4) == "mass")
+	{
+		return processMassBootPath(bootPath);
+	}
+	return bootPath;
 }
 
 bool CPS2Application::loadLanguage(const std::string& langfile)
@@ -182,6 +259,14 @@ void CPS2Application::setBootPath(const char* path)
 	if	(stpos != std::string::npos)
 		CResources::boot_path = CResources::boot_path.substr(0, stpos+1);
 		
+}
+
+bool CPS2Application::waitForDisk(const std::string path, int delay)
+{
+	iox_stat_t chk_stat;
+	int ret;
+	while ((ret = fileXioGetStat(path.c_str(), &chk_stat)) < 0 && --delay > 0) { nopdelay(); }
+	return ret >= 0;
 }
 
 CPS2Application *CPS2Application::m_pInstance = NULL;

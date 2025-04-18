@@ -10,8 +10,12 @@ private:
 	static CPS2Application *m_pInstance;
 	CPS2Application(void);
 	static bool loadLanguage(const std::string& langfile);
-	static void initLanguage();
+	static bool initLanguage(const std::string& bootPath);
+	static std::string processHddBootPath(const std::string& bootPath);
+	static std::string processMassBootPath(const std::string& bootPath);
+	static std::string processBootPath(const std::string& bootPath);
 	static void setBootPath(const char* path);
+	static bool waitForDisk(const std::string path, int delay);
 public:
 	~CPS2Application(void);
 	int main(int argc, char *argv[]);
