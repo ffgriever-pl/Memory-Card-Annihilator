@@ -1,0 +1,69 @@
+# AngelCode Bitmap Font Generator configuration file
+fileVersion=1
+
+# font settings
+fontName=Meiryo UI
+fontFile=
+charSet=0
+fontSize=18
+aa=1
+scaleH=100
+useSmoothing=1
+isBold=1
+isItalic=0
+useUnicode=1
+disableBoxChars=1
+outputInvalidCharGlyph=0
+dontIncludeKerningPairs=0
+useHinting=1
+renderFromOutline=0
+useClearType=1
+autoFitNumPages=0
+autoFitFontSizeMin=0
+autoFitFontSizeMax=0
+
+# character alignment
+paddingDown=0
+paddingUp=1
+paddingRight=0
+paddingLeft=1
+spacingHoriz=0
+spacingVert=0
+useFixedHeight=0
+forceZero=0
+widthPaddingFactor=0.00
+
+# output file
+outWidth=256
+outHeight=256
+outBitDepth=32
+fontDescFormat=2
+fourChnlPacked=0
+textureFormat=png
+textureCompression=0
+alphaChnl=0
+redChnl=4
+greenChnl=4
+blueChnl=4
+invA=0
+invR=0
+invG=0
+invB=0
+
+# outline
+outlineThickness=0
+
+# selected chars
+chars=32-126,160-383,402,506-511,710-711,713,728-733,768-769,771,1025-1036,1038-1103,1105-1116,1118-1119
+chars=1144-1145,1148-1149,1168-1171,1174-1175,1178-1181,1186-1187,1192-1193,1198-1203,1208-1215,1240-1241
+chars=1256-1257,8210-8213,8215-8226,8230,8240,8242-8244,8249-8250,8252,8254,8260,8352-8373,8453,8467,8470
+chars=8480,8482,8486,8494,12289-12290,12293,12300-12305,12316-12319,12353-12438,12441-12543,19978,19981
+chars=20102,20219,20307,20316,20379,20445,20462,20803,20840,20869,20889,20966,20999,21021,21147,21177
+chars=21270,21332,21435,21462,21487,21517,21547,21578,22312,22577,22793,22806,22812,22833,22899,23383
+chars=23384,23436,23450,23455,23481,23517,24120,24335,24418,24433,24444,24489,24615,24773,24847,24863
+chars=25104,25147,25244,25246,25276,25552,25613,25774,25943,25968,25991,26032,26041,26082,26356,26360
+chars=26367,26377,26399,26412,27005,27096,27231,27491,28040,28304,28961,29694,29702,30330,30495,30772
+chars=32154,32207,33021,34892,35215,35299,35501,35613,35686,36229,36275,36766,36796,36942,36984,37327
+chars=38263,38283,38500,38651,65281-65311,65374
+
+# imported icon images

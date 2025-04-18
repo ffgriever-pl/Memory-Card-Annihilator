@@ -1,10 +1,8 @@
 #include "resources.h"
 
-#include "verdana18s_bfnk.h"
-#include "verdana22_bfnk.h"
-//#include "verdana38_bfnk.h"
-//#include "verdana38p_bfnk.h"
-#include "centurygoth38p_bfnk.h"
+#include "meiryo18_bfnk.h"
+#include "meiryo22_bfnk.h"
+#include "mplus1p42_bfnk.h"
 #include "urwmed20_bfnk.h"
 
 #include "bgimg_tm2.h"

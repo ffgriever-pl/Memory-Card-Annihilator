@@ -15,3 +15,4 @@ bin/*.lng
 PS2/ioprp_ARCADE.c
 PS2/ioprp_DEVELOPER.c
 PS2/ioprp_PROTOTYPE.c
+build-imports.c

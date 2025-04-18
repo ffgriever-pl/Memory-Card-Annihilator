@@ -15,23 +15,17 @@ public:
 	static std::string boot_path;
 	static bool iopreset;
 	//fonts
-	static unsigned int size_verdana18s_bfnk;
-	static unsigned char verdana18s_bfnk[];
-	static unsigned int size_verdana22_bfnk;
-	static unsigned char verdana22_bfnk[];
-	/*static unsigned int size_verdana38_bfnk;
-	static unsigned char verdana38_bfnk[];
-	static unsigned int size_verdana38p_bfnk;
-	static unsigned char verdana38p_bfnk[];*/
-	static unsigned int size_centurygoth38p_bfnk;
-	static unsigned char centurygoth38p_bfnk[];
+	static unsigned int size_meiryo18_bfnk;
+	static unsigned char meiryo18_bfnk[];
+	static unsigned int size_meiryo22_bfnk;
+	static unsigned char meiryo22_bfnk[];
+	static unsigned int size_mplus1p42_bfnk;
+	static unsigned char mplus1p42_bfnk[];
 	static unsigned int size_urwmed20_bfnk;
 	static unsigned char urwmed20_bfnk[];
 
 	static CIGUIFrameFont<CGUITexture> smallFont;
 	static CIGUIFrameFont<CGUIFrameTexturePS2> mediumFont;
-	/*static CIGUIFrameFont<CGUIFrameTexturePS2> verdana38;
-	static CIGUIFrameFont<CGUIFrameTexturePS2> verdana38p;*/
 	static CIGUIFrameFont<CGUIFrameTexturePS2> headerFont;
 	static CIGUIFrameFont<CGUIFrameTexturePS2> versionFont;
 	
