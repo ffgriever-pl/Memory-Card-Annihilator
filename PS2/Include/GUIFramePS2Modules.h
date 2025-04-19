@@ -65,7 +65,8 @@ public:
 	static bool loadHddModules();
 	static bool loadCdvdModules();
 	static bool loadFakehost(const char *path);
-	static void initPS2Iop(bool reset, bool xmodules);
+	static void initPS2Iop(bool reset, bool xmodules = true);
+	static void finalizeIopState(bool xmodules = true);
 	static void poweroffHandler(int i);
 	static void umountAll();
 };
