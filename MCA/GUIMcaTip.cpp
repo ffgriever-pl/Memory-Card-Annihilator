@@ -76,7 +76,7 @@ void CGUIMcaTip::drawTip(CIGUIFrameRenderer *renderer, u32 new_input, u32 ticks,
 		CResources::m_popup_tip.getWidth(), CResources::m_popup_tip.getHeight(),
 		128, 128, 128, alpha*fadealpha
 	);
-	CResources::verdana18s.printUTF8BoxShadow(
+	CResources::smallFont.printUTF8BoxShadow(
 		currentry.text.c_str(),
 		m_x + 6,
 		m_y + 7 +4,

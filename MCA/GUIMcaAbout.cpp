@@ -44,7 +44,7 @@ void CGUIMcaAbout::drawMessage(float alpha)
 {
 	std::string formatted = CResources::mainLang.getText("LNG_WARN_NO_CARD_IN_SLOT");
 	
-	CResources::centurygoth38p.printUTF8BoxShadow(
+	CResources::headerFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_THX_CAP")
 		, m_x+8, m_y+15
 		, 402, 38
@@ -58,7 +58,7 @@ void CGUIMcaAbout::drawMessage(float alpha)
 		, true
 	);
 
-	CResources::verdana18s.printUTF8BoxShadow(
+	CResources::smallFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_THX_TXT")
 		, m_x+8, m_y+45+10
 		, 402, 164
@@ -67,7 +67,7 @@ void CGUIMcaAbout::drawMessage(float alpha)
 		, 0, 0, 0, alpha
 	);
 
-	CResources::verdana18s.printUTF8BoxShadow(
+	CResources::smallFont.printUTF8BoxShadow(
 		"~ ffgriever / berion\n2010"
 		, m_x+8, m_y+240
 		, 402, 164
@@ -76,7 +76,7 @@ void CGUIMcaAbout::drawMessage(float alpha)
 		, 0, 0, 0, alpha
 	);
 #ifdef MGMODE
-	CResources::verdana18s.printUTF8BoxShadow(
+	CResources::smallFont.printUTF8BoxShadow(
 		"MG MODE: "
 		MGMODE
 		"\nAlt MG By El_isra"

@@ -83,22 +83,22 @@ int CPS2Application::main(int argc, char *argv[])
 		ps2renderer.initRenderer(0, 0, 640, 512, GS_PSM_CT24, 0, GS_MODE_PAL, CGUIFrameRendererPS2::etFLPS2automode);
 	}
 
-	if (!CResources::verdana18s.loadFontBuffer(CResources::verdana18s_bfnk, CResources::size_verdana18s_bfnk, &ps2renderer))
+	if (!CResources::smallFont.loadFontBuffer(CResources::meiryo18_bfnk, CResources::size_meiryo18_bfnk, &ps2renderer))
 	{
-		printf("Couldn't load main small font. Exiting...\n");
+		printf("Couldn't load small font. Exiting...\n");
 		return -1;
 	}
-	if (!CResources::verdana22.loadFontBuffer(CResources::verdana22_bfnk, CResources::size_verdana22_bfnk, &ps2renderer))
+	if (!CResources::mediumFont.loadFontBuffer(CResources::meiryo22_bfnk, CResources::size_meiryo22_bfnk, &ps2renderer))
 	{
-		printf("Couldn't load main font. Exiting...\n");
+		printf("Couldn't load medium font. Exiting...\n");
 		return -1;
 	}
-	if (!CResources::centurygoth38p.loadFontBuffer(CResources::centurygoth38p_bfnk, CResources::size_centurygoth38p_bfnk, &ps2renderer))
+	if (!CResources::headerFont.loadFontBuffer(CResources::mplus1p42_bfnk, CResources::size_mplus1p42_bfnk, &ps2renderer))
 	{
-		printf("Couldn't load main font. Exiting...\n");
+		printf("Couldn't load header font. Exiting...\n");
 		return -1;
 	}
-	if (!CResources::urwmed20.loadFontBuffer(CResources::urwmed20_bfnk, CResources::size_urwmed20_bfnk, &ps2renderer))
+	if (!CResources::versionFont.loadFontBuffer(CResources::urwmed20_bfnk, CResources::size_urwmed20_bfnk, &ps2renderer))
 	{
 		printf("Couldn't load version font. Exiting...\n");
 		return -1;
@@ -119,7 +119,7 @@ int CPS2Application::main(int argc, char *argv[])
 bool CPS2Application::initLanguage(const std::string& bootPath)
 {
 	static const char* languageFiles[] = {
-		"lang.lng",	// Japanese does not have a valid font yet
+		"lang_jp.lng",	// Japanese does not have a valid font yet
 		"lang_en.lng",
 		"lang_fr.lng",
 		"lang_es.lng",

@@ -346,7 +346,7 @@ void CGUIMcaMainWnd::drawMcIcons(float alpha)
 
 void CGUIMcaMainWnd::drawChoseSlot(float alpha)
 {
-	CResources::centurygoth38p.printUTF8BoxShadow(
+	CResources::headerFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_MWND_CHOOSE_SLOT")
 		, 100, 112
 		, 440, 60

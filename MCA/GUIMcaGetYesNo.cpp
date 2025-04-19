@@ -77,7 +77,7 @@ void CGUIMcaGetYesNo::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer 
 
 void CGUIMcaGetYesNo::drawMessage(float alpha)
 {
-	CResources::verdana22.printUTF8BoxShadow(
+	CResources::mediumFont.printUTF8BoxShadow(
 		m_message
 		, m_x+8, m_y+106
 		, 402, 110
@@ -87,7 +87,7 @@ void CGUIMcaGetYesNo::drawMessage(float alpha)
 	);
 
 	if (m_hover_yesno) m_hover_yesno->drawHover(m_renderer, m_ticks, alpha);
-	CResources::centurygoth38p.printUTF8BoxShadow(
+	CResources::headerFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_OPER_YES")
 		, m_x+8, m_y+230
 		, 190, 50
@@ -96,7 +96,7 @@ void CGUIMcaGetYesNo::drawMessage(float alpha)
 		, 0, 0, 0, alpha
 	);
 
-	CResources::centurygoth38p.printUTF8BoxShadow(
+	CResources::headerFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_OPER_NO")
 		, m_x+222, m_y+230
 		, 190, 50
