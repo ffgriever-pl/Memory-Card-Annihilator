@@ -233,6 +233,7 @@ bool CPS2Application::loadLanguage(const std::string& langfile)
 
 			CResources::mainLang.initLang(buff);
 			delete [] buff;
+			fioClose(fd);
 			return true;
 		}
 		fioClose(fd);
