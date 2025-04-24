@@ -104,12 +104,12 @@ int CPS2Application::main(int argc, char *argv[])
 		return -1;
 	}
 
-	CGUIMcaMainWnd mainWindow;
+	CGUIMcaMainWnd mainWindow(&ps2renderer, &ps2input, &ps2Timer);
 
 	ps2renderer.setAlpha(false);
 	ps2renderer.setTestAlpha(false);
 
-	mainWindow.display(&ps2renderer, &ps2input, &ps2Timer);
+	mainWindow.display();
 
 	ps2renderer.deinitRenderer();
 	ps2Timer.deinitTimer();

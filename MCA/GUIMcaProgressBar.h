@@ -15,8 +15,6 @@ public:
 		ensFail,
 	};
 private:
-	CGUIMcaProgressBar(void);
-
 	float m_x;
 	float m_y;
 
@@ -29,10 +27,11 @@ private:
 	u8 m_r4; u8 m_g4; u8 m_b4;
 
 	enStateProgress m_state;
+	CIGUIFrameRenderer* m_renderer;
 public:
-	CGUIMcaProgressBar(float x, float y);
+	CGUIMcaProgressBar(CIGUIFrameRenderer* renderer, float x, float y);
 	virtual ~CGUIMcaProgressBar(void);
-	void display(CIGUIFrameRenderer *renderer, float alpha = 1.0f);
+	void display(float alpha = 1.0f);
 	void setProgress(float progress);
 	void setState(enStateProgress state);
 	void setColor(u8 r1, u8 g1, u8 b1, u8 r2, u8 g2, u8 b2, u8 r3, u8 g3, u8 b3, u8 r4, u8 g4, u8 b4);

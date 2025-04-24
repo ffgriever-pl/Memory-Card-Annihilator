@@ -2,20 +2,12 @@
 #include "GUIMcaGetSize.h"
 #include "res/resources.h"
 
-CGUIMcaGetSize::CGUIMcaGetSize(float x, float y, int defaultmbytes)
+CGUIMcaGetSize::CGUIMcaGetSize(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y, int defaultmbytes)
+	: CGUIMcaPopup(renderer, input, timer, x, y)
 {
-	m_x = x;
-	m_y = y;
 	m_card_mbytes = defaultmbytes;
 	m_return = false;
 }
-
-CGUIMcaGetSize::CGUIMcaGetSize(void)
-{
-	m_card_mbytes = 8;
-	m_return = false;
-}
-
 
 CGUIMcaGetSize::~CGUIMcaGetSize(void)
 {
@@ -74,29 +66,6 @@ bool CGUIMcaGetSize::checkMessages()
 	return windowCalled;
 }
 
-void CGUIMcaGetSize::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out)
-{
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
-
-	float alpha = 0.0f;
-	u32 ticks = 0;
-	do
-	{
-		ticks = currTick - oldTick;
-		alpha = (float)ticks/(float)ms;
-		if (alpha > 1.0f) alpha = 1.0f;
-		if (out) alpha = 1.0f - alpha;
-
-		drawAll(prevBuffTex, alpha);
-		m_renderer->swapBuffers();
-
-		currTick = timer->getTicks();
-	} while (ticks <= ms);
-	drawAll(prevBuffTex, alpha);
-	m_renderer->swapBuffers();
-}
-
 void CGUIMcaGetSize::drawMessage(float alpha)
 {
 	CResources::mediumFont.printUTF8BoxShadow(
@@ -133,38 +102,35 @@ void CGUIMcaGetSize::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 	drawMessage(alpha);
 }
 
-int CGUIMcaGetSize::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur)
+int CGUIMcaGetSize::display(bool blur)
 {
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
 
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
-		prevBuffTex = renderer->getFrameTex(1);
+		prevBuffTex = m_renderer->getFrameTex(1);
 		prevBuffTex->blur(0);
 		prevBuffTex->blur(0);
 	} else
 	{
-		prevBuffTex = renderer->getFrameTex();
+		prevBuffTex = m_renderer->getFrameTex();
 	}
 	m_ticks = 0;
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex, 25000, false);
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
 		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
 
 		if (checkMessages())
 		{
-			currTick = oldTick = timer->getTicks();
+			currTick = oldTick = m_timer->getTicks();
 			continue;
 		}
 
@@ -172,10 +138,10 @@ int CGUIMcaGetSize::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 
 	} while ( !m_return );
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
 

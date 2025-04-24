@@ -22,7 +22,7 @@ EE_OBJS =	res/resources.o ../PS2/GUIFramePS2Modules.o GUIMcaMan.o GUIMcaLang.o \
 			../PS2/GUIFrameTimerPS2.o \
 			../PS2/GUIFrameTexturePS2.o ../PS2/GUIFrameRendererPS2.o \
 			../PS2/GUIFrameInputPS2.o \
-			GUIMcaHover.o \
+			GUIMcaBaseWindow.o GUIMcaHover.o \
 			GUIMcaOperWnd.o GUIMcaPopup.o GUIMcaWarrningNoCard.o \
 			GUIMcaGetSize.o GUIMcaGetYesNo.o GUIMcaOperProgress.o \
 			GUIMcaProgressBar.o GUIMcaGetPath.o GUIMcaVkbd.o \

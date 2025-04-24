@@ -3,28 +3,18 @@
 #include "GUIMcaMan.h"
 #include "res/resources.h"
 
-CGUIMcaOperProgress::CGUIMcaOperProgress(float x, float y)
-	: m_progressBar(NULL)
+CGUIMcaOperProgress::CGUIMcaOperProgress(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y)
+	: CGUIMcaPopup(renderer, input, timer, x, y)
+	, m_result(enresFail)
+	, m_default(enresFail)
+	, m_return(false)
+	, m_locked(true)
+	, m_progressBar(renderer, x + 25, y + 224)
 {
-	m_x = x;
-	m_y = y;
-	m_return = false;
-	m_locked = true;
-	m_progressBar = new CGUIMcaProgressBar(m_x+25, m_y+224);
 }
-
-CGUIMcaOperProgress::CGUIMcaOperProgress(void)
-	: m_progressBar(NULL)
-{
-	m_result = enresFail;
-	m_return = false;
-	m_locked = true;
-}
-
 
 CGUIMcaOperProgress::~CGUIMcaOperProgress(void)
 {
-	if (m_progressBar) delete m_progressBar;
 }
 
 bool CGUIMcaOperProgress::checkMessages()
@@ -33,21 +23,18 @@ bool CGUIMcaOperProgress::checkMessages()
 
 	CGUIMcaMan::getProgress();
 
-	if (m_progressBar)
+	m_progressBar.setProgress(CGUIMcaMan::progressBarData.promil/1000.0f);
+	if (CGUIMcaMan::progressBarData.finished == 0)
 	{
-		m_progressBar->setProgress(CGUIMcaMan::progressBarData.promil/1000.0f);
-		if (CGUIMcaMan::progressBarData.finished == 0)
+		m_progressBar.setState(CGUIMcaProgressBar::ensPending);
+	} else
+	{
+		if (CGUIMcaMan::progressBarData.error == 0)
 		{
-			m_progressBar->setState(CGUIMcaProgressBar::ensPending);
+			m_progressBar.setState(CGUIMcaProgressBar::ensSuccess);
 		} else
 		{
-			if (CGUIMcaMan::progressBarData.error == 0)
-			{
-				m_progressBar->setState(CGUIMcaProgressBar::ensSuccess);
-			} else
-			{
-				m_progressBar->setState(CGUIMcaProgressBar::ensFail);
-			}
+			m_progressBar.setState(CGUIMcaProgressBar::ensFail);
 		}
 	}
 
@@ -68,29 +55,6 @@ bool CGUIMcaOperProgress::checkMessages()
 	}
 		
 	return windowCalled;
-}
-
-void CGUIMcaOperProgress::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out)
-{
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
-
-	float alpha = 0.0f;
-	u32 ticks = 0;
-	do
-	{
-		ticks = currTick - oldTick;
-		alpha = (float)ticks/(float)ms;
-		if (alpha > 1.0f) alpha = 1.0f;
-		if (out) alpha = 1.0f - alpha;
-
-		drawAll(prevBuffTex, alpha);
-		m_renderer->swapBuffers();
-
-		currTick = timer->getTicks();
-	} while (ticks <= ms);
-	drawAll(prevBuffTex, alpha);
-	m_renderer->swapBuffers();
 }
 
 void CGUIMcaOperProgress::drawMessage(float alpha)
@@ -143,23 +107,20 @@ void CGUIMcaOperProgress::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 	}
 
 	drawMessage(alpha);
-	if (m_progressBar) m_progressBar->display(m_renderer, alpha);
+	m_progressBar.display(alpha);
 }
 
-int CGUIMcaOperProgress::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur)
+int CGUIMcaOperProgress::display(bool blur)
 {
 	return 0;
 }
 
-int CGUIMcaOperProgress::doFormat(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, int slot, bool fast, bool psx, int pagestotal, bool blur)
+int CGUIMcaOperProgress::doFormat(int slot, bool fast, bool psx, int pagestotal, bool blur)
 {
 	m_result = m_default;
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
-	if (m_progressBar) m_progressBar->setProgress(0);
+	m_progressBar.setProgress(0);
 	CGUIMcaMan::progressBarData.error = 0;
 	CGUIMcaMan::progressBarData.promil = 0;
 	CGUIMcaMan::progressBarData.finished = 0;
@@ -168,31 +129,31 @@ int CGUIMcaOperProgress::doFormat(CIGUIFrameRenderer *renderer, CIGUIFrameInput 
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
-		prevBuffTex = renderer->getFrameTex(1);
+		prevBuffTex = m_renderer->getFrameTex(1);
 		prevBuffTex->blur(0);
 		prevBuffTex->blur(0);
 	} else
 	{
-		prevBuffTex = renderer->getFrameTex();
+		prevBuffTex = m_renderer->getFrameTex();
 	}
 
 	m_ticks = 0;
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex, 25000, false);
 
 	CGUIMcaMan::doFormat(slot, psx, fast, pagestotal);
 
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
 		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
 
 		if (checkMessages())
 		{
-			currTick = oldTick = timer->getTicks();
+			currTick = oldTick = m_timer->getTicks();
 			continue;
 		}
 
@@ -200,25 +161,23 @@ int CGUIMcaOperProgress::doFormat(CIGUIFrameRenderer *renderer, CIGUIFrameInput 
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 
 	} while ( !m_return );
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
 
 	return m_result;
 }
 
-int CGUIMcaOperProgress::doUnformat(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, int slot, bool psx, int pagestotal, bool blur)
+int CGUIMcaOperProgress::doUnformat(int slot, bool psx, int pagestotal, bool blur)
 {
 	m_result = m_default;
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
-	if (m_progressBar) m_progressBar->setProgress(0);
+
+	m_progressBar.setProgress(0);
 	CGUIMcaMan::progressBarData.error = 0;
 	CGUIMcaMan::progressBarData.promil = 0;
 	CGUIMcaMan::progressBarData.finished = 0;
@@ -226,31 +185,31 @@ int CGUIMcaOperProgress::doUnformat(CIGUIFrameRenderer *renderer, CIGUIFrameInpu
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
-		prevBuffTex = renderer->getFrameTex(1);
+		prevBuffTex = m_renderer->getFrameTex(1);
 		prevBuffTex->blur(0);
 		prevBuffTex->blur(0);
 	} else
 	{
-		prevBuffTex = renderer->getFrameTex();
+		prevBuffTex = m_renderer->getFrameTex();
 	}
 
 	m_ticks = 0;
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex, 25000, false);
 
 	CGUIMcaMan::doUnformat(slot, psx, pagestotal);
 
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
 		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
 
 		if (checkMessages())
 		{
-			currTick = oldTick = timer->getTicks();
+			currTick = oldTick = m_timer->getTicks();
 			continue;
 		}
 
@@ -258,25 +217,22 @@ int CGUIMcaOperProgress::doUnformat(CIGUIFrameRenderer *renderer, CIGUIFrameInpu
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 
 	} while ( !m_return );
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
 
 	return m_result;
 }
 
-int CGUIMcaOperProgress::doCreateImage(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, int slot, bool psx, int pagestotal, const char *path, bool blur)
+int CGUIMcaOperProgress::doCreateImage(int slot, bool psx, int pagestotal, const char *path, bool blur)
 {
 	m_result = m_default;
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
-	if (m_progressBar) m_progressBar->setProgress(0);
+	m_progressBar.setProgress(0);
 	CGUIMcaMan::progressBarData.error = 0;
 	CGUIMcaMan::progressBarData.promil = 0;
 	CGUIMcaMan::progressBarData.finished = 0;
@@ -284,31 +240,31 @@ int CGUIMcaOperProgress::doCreateImage(CIGUIFrameRenderer *renderer, CIGUIFrameI
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
-		prevBuffTex = renderer->getFrameTex(1);
+		prevBuffTex = m_renderer->getFrameTex(1);
 		prevBuffTex->blur(0);
 		prevBuffTex->blur(0);
 	} else
 	{
-		prevBuffTex = renderer->getFrameTex();
+		prevBuffTex = m_renderer->getFrameTex();
 	}
 
 	m_ticks = 0;
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex, 25000, false);
 
 	CGUIMcaMan::doCreateImage(slot, psx, pagestotal, path);
 
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
 		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
 
 		if (checkMessages())
 		{
-			currTick = oldTick = timer->getTicks();
+			currTick = oldTick = m_timer->getTicks();
 			continue;
 		}
 
@@ -316,25 +272,22 @@ int CGUIMcaOperProgress::doCreateImage(CIGUIFrameRenderer *renderer, CIGUIFrameI
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 
 	} while ( !m_return );
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
 
 	return m_result;
 }
 
-int CGUIMcaOperProgress::doRestoreImage(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, int slot, bool psx, const char *path, bool blur)
+int CGUIMcaOperProgress::doRestoreImage(int slot, bool psx, const char *path, bool blur)
 {
 	m_result = m_default;
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
-	if (m_progressBar) m_progressBar->setProgress(0);
+	m_progressBar.setProgress(0);
 	CGUIMcaMan::progressBarData.error = 0;
 	CGUIMcaMan::progressBarData.promil = 0;
 	CGUIMcaMan::progressBarData.finished = 0;
@@ -342,31 +295,31 @@ int CGUIMcaOperProgress::doRestoreImage(CIGUIFrameRenderer *renderer, CIGUIFrame
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
-		prevBuffTex = renderer->getFrameTex(1);
+		prevBuffTex = m_renderer->getFrameTex(1);
 		prevBuffTex->blur(0);
 		prevBuffTex->blur(0);
 	} else
 	{
-		prevBuffTex = renderer->getFrameTex();
+		prevBuffTex = m_renderer->getFrameTex();
 	}
 
 	m_ticks = 0;
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex, 25000, false);
 
 	CGUIMcaMan::doRestoreImage(slot, psx, path);
 
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
 		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
 
 		if (checkMessages())
 		{
-			currTick = oldTick = timer->getTicks();
+			currTick = oldTick = m_timer->getTicks();
 			continue;
 		}
 
@@ -374,10 +327,10 @@ int CGUIMcaOperProgress::doRestoreImage(CIGUIFrameRenderer *renderer, CIGUIFrame
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 
 	} while ( !m_return );
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
 

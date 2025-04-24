@@ -1,22 +1,14 @@
 #include "GUIMcaTip.h"
 #include "res/resources.h"
 
-CGUIMcaTip::CGUIMcaTip(void)
+CGUIMcaTip::CGUIMcaTip(CIGUIFrameRenderer* renderer, float x, float y, int time)
+	: m_x(x)
+	, m_y(y)
+	, m_fade_ticks_total(0)
+	, m_fade_ticks(time)
+	, m_visible(true)
+	, m_renderer(renderer)
 {
-	m_fade_ticks = 1;
-	m_fade_ticks_total = 0;
-
-	CResources::m_popup_tip.loadTextureBuffer(CResources::popup_tip_tm2, CResources::size_popup_tip_tm2, true);
-}
-
-CGUIMcaTip::CGUIMcaTip(float x, float y, int time)
-{
-	m_x = x;
-	m_y = y;
-	m_fade_ticks = time;
-	m_fade_ticks_total = 0;
-	m_visible = true;
-
 	CResources::m_popup_tip.loadTextureBuffer(CResources::popup_tip_tm2, CResources::size_popup_tip_tm2, true);
 }
 
@@ -25,7 +17,7 @@ void CGUIMcaTip::addTip(std::string message, u8 r, u8 g, u8 b, float a, u32 time
 	m_queue.push( t_entry(message, r, g, b, a, time, key_pressed) );
 }
 
-void CGUIMcaTip::drawTip(CIGUIFrameRenderer *renderer, u32 new_input, u32 ticks, float alpha)
+void CGUIMcaTip::drawTip(u32 new_input, u32 ticks, float alpha)
 {
 	if (!m_visible || m_queue.size() == 0) return;
 	float fadealpha = 0;
@@ -68,7 +60,7 @@ void CGUIMcaTip::drawTip(CIGUIFrameRenderer *renderer, u32 new_input, u32 ticks,
 	}
 	//finally draw the thing
 
-	renderer->drawSpriteT(
+	m_renderer->drawSpriteT(
 		&CResources::m_popup_tip,
 		m_x, m_y,
 		CResources::m_popup_tip.getWidth(), CResources::m_popup_tip.getHeight(),

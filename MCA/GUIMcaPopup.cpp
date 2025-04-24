@@ -2,9 +2,8 @@
 #include "res/resources.h"
 
 
-CGUIMcaPopup::CGUIMcaPopup(void)
-	: m_x(0.0f)
-	, m_y(0.0f)
+CGUIMcaPopup::CGUIMcaPopup(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y)
+	: CGUIMcaBaseWindow(renderer, input, timer, x, y)
 {
 	CResources::m_popup_pal.loadTextureBuffer(CResources::popup_pal_tm2, CResources::size_popup_pal_tm2, true);
 	CResources::m_popup_pal_info.loadTextureBuffer(CResources::popup_pal_info_tm2, CResources::size_popup_pal_info_tm2, true);

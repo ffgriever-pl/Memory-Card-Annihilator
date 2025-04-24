@@ -60,29 +60,27 @@ private:
 	int m_listChosen;
 	int m_listBegin;
 	int m_maskItems;
-	CGUIMcaHover *m_hover_files;
+	CGUIMcaHover m_hover_files;
 	CGUIMcaTip m_tips;
 	bool m_keyb_tip_shown;
 	bool m_mask_enabled;
 	std::vector<std::string> m_mask;
 	const char* m_caption;
 	void drawAll(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
-	void fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out = false);
 	void drawMngrWnd(float alpha = 1.0f);
 	void drawBoxArea(float alpha = 1.0f);
 	void drawFilelist(float alpha = 1.0f);
 	void doTopLevel(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
 	void doSubLevel(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
 	bool checkMessagesTop(bool topdir = false);
-	CGUIMcaGetPath(void);
-	int display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur = false);
+	int display(bool blur = false);
 public:
-	CGUIMcaGetPath(float x, float y, const char *defaultname);
+	CGUIMcaGetPath(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y, const char *defaultname);
 	~CGUIMcaGetPath(void);
 	void enableMask(bool enable) { m_mask_enabled = enable; }
 	void clearMask();
 	void addMaskEntry(std::string mask);
-	int doGetName(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, std::string &ret, bool save = false, bool blur = false, const char *caption = NULL);
+	int doGetName(std::string &ret, bool save = false, bool blur = false, const char *caption = NULL);
 };
 
 #endif //_GUIMCAGETPATH_H_

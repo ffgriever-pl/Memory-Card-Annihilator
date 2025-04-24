@@ -2,42 +2,13 @@
 #include "GUIMcaAbout.h"
 #include "res/resources.h"
 
-CGUIMcaAbout::CGUIMcaAbout(float x, float y)
-{
-	m_x = x;
-	m_y = y;
-}
-
-CGUIMcaAbout::CGUIMcaAbout(void)
+CGUIMcaAbout::CGUIMcaAbout(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y)
+	: CGUIMcaPopup(renderer, input, timer, x, y)
 {
 }
-
 
 CGUIMcaAbout::~CGUIMcaAbout(void)
 {
-}
-
-void CGUIMcaAbout::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out)
-{
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
-
-	float alpha = 0.0f;
-	u32 ticks = 0;
-	do
-	{
-		ticks = currTick - oldTick;
-		alpha = (float)ticks/(float)ms;
-		if (alpha > 1.0f) alpha = 1.0f;
-		if (out) alpha = 1.0f - alpha;
-
-		drawAll(prevBuffTex, alpha);
-		m_renderer->swapBuffers();
-
-		currTick = timer->getTicks();
-	} while (ticks <= ms);
-	drawAll(prevBuffTex, alpha);
-	m_renderer->swapBuffers();
 }
 
 void CGUIMcaAbout::drawMessage(float alpha)
@@ -98,43 +69,40 @@ void CGUIMcaAbout::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 	drawMessage(alpha);
 }
 
-int CGUIMcaAbout::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur)
+int CGUIMcaAbout::display(bool blur)
 {
-	m_input_state_new = 0;
-	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
+	u32 state_new = 0;
+	u32 state_all = 0;
 
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
-		prevBuffTex = renderer->getFrameTex(1);
+		prevBuffTex = m_renderer->getFrameTex(1);
 		prevBuffTex->blur(0);
 		prevBuffTex->blur(0);
 	} else
 	{
-		prevBuffTex = renderer->getFrameTex();
+		prevBuffTex = m_renderer->getFrameTex();
 	}
-	m_ticks = 0;
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	u32 ticks = 0;
+	fadeInOut(prevBuffTex, 25000, false);
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
-		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		ticks = currTick - oldTick;
+		m_input->update();
+		state_new = m_input->getNew(ticks);
+		state_all = m_input->getAll();
 
 		drawAll(prevBuffTex);
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 
-	} while (m_input_state_new == 0);
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	} while (state_new == 0);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
 

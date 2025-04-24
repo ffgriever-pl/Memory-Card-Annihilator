@@ -7,7 +7,6 @@
 class CGUIMcaTip
 {
 private:
-	CGUIMcaTip(void);
 	float m_x;
 	float m_y;
 	int m_fade_ticks_total;
@@ -32,11 +31,12 @@ private:
 	};
 	std::queue<t_entry> m_queue;
 	bool m_visible;
+	CIGUIFrameRenderer* m_renderer;
 public:
-	CGUIMcaTip(float x, float y, int time);
+	CGUIMcaTip(CIGUIFrameRenderer* renderer, float x, float y, int time);
 	virtual ~CGUIMcaTip(void);
 	virtual void addTip(std::string message, u8 r = 0, u8 g = 0, u8 b = 0, float a = 1.0f, u32 time = 25000, bool key_pressed = false);
-	virtual void drawTip(CIGUIFrameRenderer *renderer, u32 new_input, u32 ticks, float alpha);
+	virtual void drawTip(u32 new_input, u32 ticks, float alpha);
 	void setVisibility(bool value) { m_visible = value; }
 };
 

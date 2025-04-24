@@ -5,37 +5,26 @@
 #include "GUIMcaDisplayMessage.h"
 #include "helpers.h"
 
-CGUIMcaVkbd::CGUIMcaVkbd(float x, float y)
+CGUIMcaVkbd::CGUIMcaVkbd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y)
+	: CGUIMcaBaseWindow(renderer, input, timer, x, y)
+	, m_over_num(-1)
+	, m_max_chars(0)
+	, m_display_caret(false)
+	, m_caret_ticks(0)
+	, m_curx(0)
+	, m_cury(0)
+	, m_exit_now(false)
+	, m_caps(false)
+	, m_shift(false)
+	, m_tmp_shift(false)
+	, m_filename(false)
 {
 	CResources::m_vkbd.loadTextureBuffer(CResources::vkbd_tm2, CResources::size_vkbd_tm2, true);
 	CResources::m_cursor.loadTextureBuffer(CResources::cursor_tm2, CResources::size_cursor_tm2, true);
 	CResources::m_vkbd_hover.loadTextureBuffer(CResources::vkbd_hover_tm2, CResources::size_vkbd_hover_tm2, true);
 	CResources::m_cursor.setTexfilter(CIGUIFrameTexture::etFiltBilinear);
 	CResources::m_vkbd_hover.setTexfilter(CIGUIFrameTexture::etFiltBilinear);
-	m_x = x;
-	m_y = y;
-	m_exit_now = false;
-	m_caps = false;
-	m_shift = false;
-	m_tmp_shift = false;
-	m_curx = 0;
-	m_cury = 0;
-	m_display_caret = false;
-	m_caret_ticks = 0;
-	m_filename = false;
 }
-
-CGUIMcaVkbd::CGUIMcaVkbd(void)
-{
-	m_exit_now = false;
-	m_caps = false;
-	m_shift = false;
-	m_tmp_shift = false;
-	m_curx = 0;
-	m_cury = 0;
-	m_filename = false;
-}
-
 
 CGUIMcaVkbd::~CGUIMcaVkbd(void)
 {
@@ -63,29 +52,6 @@ void CGUIMcaVkbd::drawCursor(float alpha)
 		, CResources::m_cursor.getWidth(), CResources::m_cursor.getHeight()
 		, 128, 128, 128, alpha
 	);
-}
-
-void CGUIMcaVkbd::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out)
-{
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
-
-	float alpha = 0.0f;
-	u32 ticks = 0;
-	do
-	{
-		ticks = currTick - oldTick;
-		alpha = (float)ticks/(float)ms;
-		if (alpha > 1.0f) alpha = 1.0f;
-		if (out) alpha = 1.0f - alpha;
-
-		drawAll(prevBuffTex, alpha);
-		m_renderer->swapBuffers();
-
-		currTick = timer->getTicks();
-	} while (ticks <= ms);
-	drawAll(prevBuffTex, alpha);
-	m_renderer->swapBuffers();
 }
 
 void CGUIMcaVkbd::drawText(float alpha)
@@ -222,8 +188,8 @@ bool CGUIMcaVkbd::checkMessages()
 					if (m_filename && m_text.find_first_of("\\/:*?\"<>|") != std::string::npos)
 					{
 						m_exit_now = false;
-						CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
-						myMessage.display(m_renderer, m_input, m_timer, true);
+						CGUIMcaDisplayMessage myMessage(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+						myMessage.display(true);
 					} else if (m_filename)
 					{
 						CGUIMcaLang::trimLeft(m_text, " ");
@@ -245,8 +211,8 @@ bool CGUIMcaVkbd::checkMessages()
 		if (m_filename && m_text.find_first_of("\\/:*?\"<>|") != std::string::npos)
 		{
 			m_exit_now = false;
-			CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
-			myMessage.display(m_renderer, m_input, m_timer, true);
+			CGUIMcaDisplayMessage myMessage(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+			myMessage.display(true);
 		} else if (m_filename)
 		{
 			CGUIMcaLang::trimLeft(m_text, " ");
@@ -257,13 +223,10 @@ bool CGUIMcaVkbd::checkMessages()
 	return windowCalled;
 }
 
-int CGUIMcaVkbd::getEntry(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, const char *defname, std::string &ret, u32 max_chars, CIGUIFrameTexture *prevtex, bool blur, bool filename_mode)
+int CGUIMcaVkbd::getEntry(const char *defname, std::string &ret, u32 max_chars, CIGUIFrameTexture *prevtex, bool blur, bool filename_mode)
 {
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
 	m_text = defname;
 	m_curx = 0;
 	m_cury = 0;
@@ -282,28 +245,28 @@ int CGUIMcaVkbd::getEntry(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, 
 	{
 		if (blur)
 		{
-			prevBuffTex = renderer->getFrameTex(1);
+			prevBuffTex = m_renderer->getFrameTex(1);
 			prevBuffTex->blur(0);
 			prevBuffTex->blur(0);
 		} else
 		{
-			prevBuffTex = renderer->getFrameTex();
+			prevBuffTex = m_renderer->getFrameTex();
 		}
 	}
 	m_ticks = 0;
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex, 25000, false);
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
 		if (m_exit_now) break;
 		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
 
 		float cxadd, cyadd;
-		input->getAdditive(cxadd, cyadd);
+		m_input->getAdditive(cxadd, cyadd);
 		if (m_input_state_all & CIGUIFrameInput::enInLeft) cxadd = -1.0f;
 		else if (m_input_state_all & CIGUIFrameInput::enInRight) cxadd = 1.0f;
 		if (m_input_state_all & CIGUIFrameInput::enInUp) cyadd = -1.0f;
@@ -318,17 +281,17 @@ int CGUIMcaVkbd::getEntry(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, 
 
 		if (checkMessages())
 		{
-			currTick = oldTick = timer->getTicks();
+			currTick = oldTick = m_timer->getTicks();
 			continue;
 		}
 		drawAll(prevBuffTex);
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 
 	} while ((m_input_state_new & CIGUIFrameInput::enInTriangle) == 0);
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	if (prevtex == NULL) delete prevBuffTex;
 

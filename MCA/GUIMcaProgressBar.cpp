@@ -1,7 +1,15 @@
 #include "GUIMcaProgressBar.h"
 
 
-CGUIMcaProgressBar::CGUIMcaProgressBar(void)
+CGUIMcaProgressBar::CGUIMcaProgressBar(CIGUIFrameRenderer* renderer, float x, float y)
+	: m_x(x), m_y(y)
+	, m_progress(0.0f)
+	, m_r1(255), m_g1(133), m_b1(112)
+	, m_r2(244), m_g2(116), m_b2(94)
+	, m_r3(207), m_g3(31), m_b3(0)
+	, m_r4(149), m_g4(22), m_b4(0)
+	, m_state(ensPending)
+	, m_renderer(renderer)
 {
 	CResources::m_bar_red.loadTextureBuffer(CResources::progress_red_tm2, CResources::size_progress_red_tm2, true);
 	CResources::m_bar_green.loadTextureBuffer(CResources::progress_green_tm2, CResources::size_progress_green_tm2, true);
@@ -9,54 +17,6 @@ CGUIMcaProgressBar::CGUIMcaProgressBar(void)
 
 	CResources::m_bar_lead_green.loadTextureBuffer(CResources::progress_lead_green_tm2, CResources::size_progress_lead_green_tm2, true);
 	CResources::m_bar_lead_red.loadTextureBuffer(CResources::progress_lead_red_tm2, CResources::size_progress_lead_red_tm2, true);
-
-	m_x = 0.0f;
-	m_y = 0.0f;
-
-	m_r1 = 255;
-	m_g1 = 133;
-	m_b1 = 112;
-	m_r2 = 244;
-	m_g2 = 116;
-	m_b2 = 94;
-
-	m_r3 = 207;
-	m_g3 = 31;
-	m_b3 = 0;
-	m_r4 = 149;
-	m_g4 = 22;
-	m_b4 = 0;
-
-	m_state = ensPending;
-}
-
-CGUIMcaProgressBar::CGUIMcaProgressBar(float x, float y)
-{
-	CResources::m_bar_red.loadTextureBuffer(CResources::progress_red_tm2, CResources::size_progress_red_tm2, true);
-	CResources::m_bar_green.loadTextureBuffer(CResources::progress_green_tm2, CResources::size_progress_green_tm2, true);
-	CResources::m_bar_black.loadTextureBuffer(CResources::progress_black_tm2, CResources::size_progress_black_tm2, true);
-
-	CResources::m_bar_lead_green.loadTextureBuffer(CResources::progress_lead_green_tm2, CResources::size_progress_lead_green_tm2, true);
-	CResources::m_bar_lead_red.loadTextureBuffer(CResources::progress_lead_red_tm2, CResources::size_progress_lead_red_tm2, true);
-
-	m_x = x;
-	m_y = y;
-
-	m_r1 = 255;
-	m_g1 = 133;
-	m_b1 = 112;
-	m_r2 = 244;
-	m_g2 = 116;
-	m_b2 = 94;
-
-	m_r3 = 207;
-	m_g3 = 31;
-	m_b3 = 0;
-	m_r4 = 149;
-	m_g4 = 22;
-	m_b4 = 0;
-
-	m_state = ensPending;
 }
 
 
@@ -69,10 +29,10 @@ void CGUIMcaProgressBar::setState(enStateProgress state)
 	m_state = state;
 }
 
-void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
+void CGUIMcaProgressBar::display(float alpha)
 {
 	float shadowpos = 20.0f;
-	renderer->drawSpriteT(
+	m_renderer->drawSpriteT(
 		&CResources::m_bar_black
 		, m_x, m_y
 		, CResources::m_bar_black.getWidth(), CResources::m_bar_black.getHeight()
@@ -81,7 +41,7 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 		, 128, 128, 128, alpha*0.18f
 	);
 
-	renderer->drawQuadGT(
+	m_renderer->drawQuadGT(
 		&CResources::m_bar_black
 		, m_x, m_y+shadowpos
 		, 0.5f, CResources::m_bar_black.getHeight()-0.5f
@@ -122,7 +82,7 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 		{
 			if (362.0f*m_progress >= 3.0f && 362.0f*m_progress <= 361.0f)
 			{
-				renderer->drawSpriteT(
+				m_renderer->drawSpriteT(
 					state_lead
 					, m_x+3.0f -4.0f +362.0f*m_progress, m_y
 					, state_lead->getWidth(), state_lead->getHeight()
@@ -131,7 +91,7 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 					, 128, 128, 128, alpha
 				);
 
-				renderer->drawQuadGT(
+				m_renderer->drawQuadGT(
 					state_lead
 					, m_x+3.0f -4.0f +362.0f*m_progress, m_y+shadowpos
 					, 0.5f, state_lead->getHeight()-0.5f
@@ -152,7 +112,7 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 				);
 			}
 		}
-		renderer->drawSpriteT(
+		m_renderer->drawSpriteT(
 			state_bar
 			, m_x, m_y
 			, 3.0f + 362.0f*m_progress, state_bar->getHeight()
@@ -160,7 +120,7 @@ void CGUIMcaProgressBar::display(CIGUIFrameRenderer *renderer, float alpha)
 			, 3.0f + 362.0f*m_progress, state_bar->getHeight()
 			, 128, 128, 128, alpha
 		);
-		renderer->drawQuadGT(
+		m_renderer->drawQuadGT(
 			state_bar
 			, m_x, m_y+shadowpos
 			, 0.5f, state_bar->getHeight()-0.5f

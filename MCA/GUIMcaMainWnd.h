@@ -2,21 +2,20 @@
 #define _GUIMCAMAINWND_H_
 
 #include "IGUIFrameWindow.h"
+#include "GUIMcaBaseWindow.h"
 #include "GUITypes.h"
 #include "GUIMcaHover.h"
 #include "GUIMcaOperWnd.h"
 
 class CGUIMcaMainWnd :
-	public CIGUIFrameWindow
+	public CIGUIFrameWindow,
+	public CGUIMcaBaseWindow
 {
 private:
 	int m_slot_chosen;
 	u32 m_input_state_new;
 	u32 m_input_state_all;
 	u32 m_ticks;
-	CIGUIFrameRenderer *m_renderer;
-	CIGUIFrameInput *m_input;
-	CIGUIFrameTimer *m_timer;
 
 	//CGUITexture m_bgimage;
 	CGUITexture m_slot[2];
@@ -64,16 +63,15 @@ private:
 
 	bool checkMessages();
 
-	void fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out = false);
 	void drawAll(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
 	void drawBackground(float alpha = 1.0f);
 	void drawSlots(float alpha = 1.0f);
 	void drawMcIcons(float alpha = 1.0f);
 	void drawChoseSlot(float alpha = 1.0f);
 public:
-	CGUIMcaMainWnd(void);
+	CGUIMcaMainWnd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer);
 	~CGUIMcaMainWnd(void);
-	int display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur = false);
+	int display(bool blur = false);
 };
 
 #endif //_GUIMCAMAINWND_H_
