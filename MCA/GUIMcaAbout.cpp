@@ -41,9 +41,7 @@ void CGUIMcaAbout::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *ti
 }
 
 void CGUIMcaAbout::drawMessage(float alpha)
-{
-	std::string formatted = CResources::mainLang.getText("LNG_WARN_NO_CARD_IN_SLOT");
-	
+{	
 	CResources::headerFont.printUTF8BoxShadow(
 		CResources::mainLang.getText("LNG_INFO_THX_CAP")
 		, m_x+8, m_y+15
