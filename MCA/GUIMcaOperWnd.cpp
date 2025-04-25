@@ -440,7 +440,7 @@ int CGUIMcaOperWnd::display(bool blur)
 	m_menu_item_format = 0;
 	m_hover_menu.setDest(70, 248 +26*m_menu_item, true);
 
-	CIGUIFrameTexture *prevBuffTex = m_renderer->getFrameTex();
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture();
 	checkMessages();
 	fadeInOut(prevBuffTex, 25000, false);
 	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle);

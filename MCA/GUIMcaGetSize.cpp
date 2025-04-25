@@ -104,16 +104,8 @@ int CGUIMcaGetSize::display(bool blur)
 	m_input_state_new = 0;
 	m_input_state_all = 0;
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
+
 	fadeInOut(prevBuffTex, 25000, false);
 	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
 	fadeInOut(prevBuffTex, 25000, true);

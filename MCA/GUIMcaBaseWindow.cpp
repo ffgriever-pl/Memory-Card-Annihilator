@@ -70,3 +70,14 @@ bool CGUIMcaBaseWindow::checkMessages()
 {
 	return false;
 }
+
+CIGUIFrameTexture* CGUIMcaBaseWindow::getFrameTexture(bool blur)
+{
+	CIGUIFrameTexture* prevBuffTex = m_renderer->getFrameTex(blur); //false always zero, true always one
+	if (blur)
+	{
+		prevBuffTex->blur(0);
+		prevBuffTex->blur(0);
+	}
+	return prevBuffTex;
+}

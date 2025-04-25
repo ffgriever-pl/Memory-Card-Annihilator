@@ -255,22 +255,8 @@ int CGUIMcaVkbd::getEntry(const char *defname, std::string &ret, u32 max_chars, 
 	m_over_num = -1;
 	m_filename = filename_mode;
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (prevtex != NULL)
-	{
-		prevBuffTex = prevtex;
-	} else
-	{
-		if (blur)
-		{
-			prevBuffTex = m_renderer->getFrameTex(1);
-			prevBuffTex->blur(0);
-			prevBuffTex->blur(0);
-		} else
-		{
-			prevBuffTex = m_renderer->getFrameTex();
-		}
-	}
+	CIGUIFrameTexture *prevBuffTex = (prevtex != NULL) ? prevtex : getFrameTexture(blur);
+
 	fadeInOut(prevBuffTex, 25000, false);
 	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle);
 	fadeInOut(prevBuffTex, 25000, true);

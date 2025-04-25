@@ -89,16 +89,7 @@ int CGUIMcaGetYesNo::display(bool blur)
 	else
 		m_hover_yesno.setDest(m_x+8+20,m_y+232, true);
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
 
 	fadeInOut(prevBuffTex, 25000, false);
 	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);

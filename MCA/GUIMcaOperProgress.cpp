@@ -113,16 +113,7 @@ int CGUIMcaOperProgress::doFormat(int slot, bool fast, bool psx, int pagestotal,
 	CGUIMcaMan::progressBarData.finished = 0;
 
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
 
 	fadeInOut(prevBuffTex, 25000, false);
 	CGUIMcaMan::doFormat(slot, psx, fast, pagestotal);
@@ -145,16 +136,7 @@ int CGUIMcaOperProgress::doUnformat(int slot, bool psx, int pagestotal, bool blu
 	CGUIMcaMan::progressBarData.promil = 0;
 	CGUIMcaMan::progressBarData.finished = 0;
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
 
 	fadeInOut(prevBuffTex, 25000, false);
 	CGUIMcaMan::doUnformat(slot, psx, pagestotal);
@@ -176,16 +158,7 @@ int CGUIMcaOperProgress::doCreateImage(int slot, bool psx, int pagestotal, const
 	CGUIMcaMan::progressBarData.promil = 0;
 	CGUIMcaMan::progressBarData.finished = 0;
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
 
 	fadeInOut(prevBuffTex, 25000, false);
 	CGUIMcaMan::doCreateImage(slot, psx, pagestotal, path);
@@ -207,16 +180,7 @@ int CGUIMcaOperProgress::doRestoreImage(int slot, bool psx, const char *path, bo
 	CGUIMcaMan::progressBarData.promil = 0;
 	CGUIMcaMan::progressBarData.finished = 0;
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture *prevBuffTex = getFrameTexture(blur);
 
 	fadeInOut(prevBuffTex, 25000, false);
 	CGUIMcaMan::doRestoreImage(slot, psx, path);

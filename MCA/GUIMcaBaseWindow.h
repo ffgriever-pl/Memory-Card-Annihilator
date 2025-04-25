@@ -31,6 +31,7 @@ protected:
 	* @return true if a new window was called (requires one frame advance)
 	*/
 	virtual bool checkMessages();
+	virtual CIGUIFrameTexture* getFrameTexture(bool blur = false);
 };
 
 #endif //_GUIMCABASEWINDOW_H_

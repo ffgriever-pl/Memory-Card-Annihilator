@@ -71,16 +71,8 @@ void CGUIMcaAbout::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 
 int CGUIMcaAbout::display(bool blur)
 {
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture *prevBuffTex = getFrameTexture(blur);
+
 	fadeInOut(prevBuffTex, 25000, false);
 	drawLoop(prevBuffTex);
 	fadeInOut(prevBuffTex, 25000, true);
