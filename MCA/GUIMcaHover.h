@@ -6,7 +6,6 @@
 class CGUIMcaHover
 {
 private:
-	CGUIMcaHover(void);
 	float m_x;
 	float m_y;
 	float m_w;
@@ -29,12 +28,14 @@ private:
 	bool m_visible;
 	float m_cstate; u32 m_cspd; bool m_creverse;//for color blinking
 	float m_astate; u32 m_aspd; bool m_areverse;//for alpha blinking
+
+	CIGUIFrameRenderer* m_renderer;
 public:
-	CGUIMcaHover(float x, float y, float w, float h, float divpoint, u32 speed_ms, u8 r, u8 g, u8 b, u8 br, u8 bg, u8 bb, float alpha, float balpha, bool visible);
+	CGUIMcaHover(CIGUIFrameRenderer* renderer, float x, float y, float w, float h, float divpoint, u32 speed_ms, u8 r, u8 g, u8 b, u8 br, u8 bg, u8 bb, float alpha, float balpha, bool visible);
 	virtual ~CGUIMcaHover(void);
 
 	virtual void setDest(float dx, float dy, bool instantly = false);
-	virtual void drawHover(CIGUIFrameRenderer *renderer, u32 ticks, float alpha);
+	virtual void drawHover(u32 ticks, float alpha);
 	void setVisibility(bool value) { m_visible = value; }
 };
 

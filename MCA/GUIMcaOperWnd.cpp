@@ -32,8 +32,8 @@ bool CGUIMcaOperWnd::checkMessages()
 
 	if ((m_psx_mode && (CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPsx && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPda)) || (!m_psx_mode && CGUIMcaMan::mce_memcards[m_oper_slot].type != CGUIMcaMan::enctPs2))
 	{
-		CGUIMcaWarrningNoCard myWarn(110, 106, m_oper_slot);
-		myWarn.display(m_renderer, m_input, m_timer, true);
+		CGUIMcaWarrningNoCard myWarn(m_renderer, m_input, m_timer, 110, 106, m_oper_slot);
+		myWarn.display(true);
 		m_exit_now = true;
 		windowCalled = true;
 		return windowCalled;
@@ -67,15 +67,15 @@ bool CGUIMcaOperWnd::checkMessages()
 
 	if (m_input_state_new & CIGUIFrameInput::enInSelect)
 	{
-		CGUIMcaCardInfo myCardInfo(138, 166);
-		myCardInfo.displayInfo(m_renderer, m_input, m_timer, true, m_oper_slot, m_psx_mode);
+		CGUIMcaCardInfo myCardInfo(m_renderer, m_input, m_timer, 138, 166);
+		myCardInfo.displayInfo(true, m_oper_slot, m_psx_mode);
 		windowCalled = true;
 		return windowCalled;
 	}
 	else if (m_input_state_new & CIGUIFrameInput::enInStart)
 	{
-		CGUIMcaAbout myAbout(110, 106);
-		myAbout.display(m_renderer, m_input, m_timer, true);
+		CGUIMcaAbout myAbout(m_renderer, m_input, m_timer, 110, 106);
+		myAbout.display(true);
 		windowCalled = true;
 	}
 
@@ -92,14 +92,14 @@ bool CGUIMcaOperWnd::checkMessages()
 				if (!m_psx_mode)
 				{
 					int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages * CGUIMcaMan::mce_memcards[m_oper_slot].pageSize / 1024 / 1024;
-					CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
-					cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
+					CGUIMcaGetSize getCardSize(m_renderer, m_input, m_timer, 110, 106, defaultsize);//change to real size
+					cardSize = getCardSize.display(true);
 
 					if (cardSize != -1 && cardSize > defaultsize)
 					{
 						int resYesNo;
-						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_SIZE_MISMATCH"), CGUIMcaGetYesNo::enresNo);
-						if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
+						CGUIMcaGetYesNo getYesNo(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_SIZE_MISMATCH"), CGUIMcaGetYesNo::enresNo);
+						if ((resYesNo = getYesNo.display(m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
 							skip = true;
 					}
 				}
@@ -108,16 +108,16 @@ bool CGUIMcaOperWnd::checkMessages()
 					int resYesNo;
 					if (!skip)
 					{
-						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_FORMAT_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
-						if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresYes)
+						CGUIMcaGetYesNo getYesNo(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_FORMAT_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
+						if ((resYesNo = getYesNo.display(m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresYes)
 						{
 							//here call format progress
 							if (!m_psx_mode)
 							{
 								totalpages = (cardSize * 1024 * 1024) / CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
 							}
-							CGUIMcaOperProgress formatProgress(110, 106);
-							formatProgress.doFormat(m_renderer, m_input, m_timer, m_oper_slot, m_menu_item_format == 0 ? true : false, m_psx_mode, totalpages);
+							CGUIMcaOperProgress formatProgress(m_renderer, m_input, m_timer, 110, 106);
+							formatProgress.doFormat(m_oper_slot, m_menu_item_format == 0 ? true : false, m_psx_mode, totalpages);
 							m_exit_now = true;
 						}
 					}
@@ -134,14 +134,14 @@ bool CGUIMcaOperWnd::checkMessages()
 				if (!m_psx_mode)
 				{
 					int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages * CGUIMcaMan::mce_memcards[m_oper_slot].pageSize / 1024 / 1024;
-					CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
-					cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
+					CGUIMcaGetSize getCardSize(m_renderer, m_input, m_timer, 110, 106, defaultsize);//change to real size
+					cardSize = getCardSize.display(true);
 
 					if (cardSize != -1 && cardSize > defaultsize)
 					{
 						int resYesNo;
-						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_SIZE_MISMATCH"), CGUIMcaGetYesNo::enresNo);
-						if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
+						CGUIMcaGetYesNo getYesNo(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_SIZE_MISMATCH"), CGUIMcaGetYesNo::enresNo);
+						if ((resYesNo = getYesNo.display(m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
 							skip = true;
 					}
 				}
@@ -150,16 +150,16 @@ bool CGUIMcaOperWnd::checkMessages()
 					int resYesNo;
 					if (!skip)
 					{
-						CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_UNFORMAT_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
-						if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresYes)
+						CGUIMcaGetYesNo getYesNo(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_UNFORMAT_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
+						if ((resYesNo = getYesNo.display(m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresYes)
 						{
 							//here call format progress
 							if (!m_psx_mode)
 							{
 								totalpages = (cardSize * 1024 * 1024) / CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
 							}
-							CGUIMcaOperProgress unformatProgress(110, 106);
-							unformatProgress.doUnformat(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, totalpages);
+							CGUIMcaOperProgress unformatProgress(m_renderer, m_input, m_timer, 110, 106);
+							unformatProgress.doUnformat(m_oper_slot, m_psx_mode, totalpages);
 							m_exit_now = true;
 						}
 					}
@@ -175,8 +175,8 @@ bool CGUIMcaOperWnd::checkMessages()
 				if (!m_psx_mode)
 				{
 					int defaultsize = CGUIMcaMan::mce_memcards[m_oper_slot].totalPages * CGUIMcaMan::mce_memcards[m_oper_slot].pageSize / 1024 / 1024;
-					CGUIMcaGetSize getCardSize(110, 106, defaultsize);//change to real size
-					cardSize = getCardSize.display(m_renderer, m_input, m_timer, true);
+					CGUIMcaGetSize getCardSize(m_renderer, m_input, m_timer, 110, 106, defaultsize);//change to real size
+					cardSize = getCardSize.display(true);
 				}
 				if (cardSize != -1)
 				{
@@ -189,7 +189,7 @@ bool CGUIMcaOperWnd::checkMessages()
 						defname += ".mcr";
 					else
 						defname += ".bin";
-					CGUIMcaGetPath getPath(67, 106, defname.c_str());
+					CGUIMcaGetPath getPath(m_renderer, m_input, m_timer, 67, 106, defname.c_str());
 					if (m_psx_mode)
 					{
 						getPath.addMaskEntry(".mcr");
@@ -205,7 +205,7 @@ bool CGUIMcaOperWnd::checkMessages()
 					}
 					getPath.enableMask(true);
 					std::string result;
-					getPath.doGetName(m_renderer, m_input, m_timer, result, true, m_psx_mode ? true : false);
+					getPath.doGetName(result, true, m_psx_mode ? true : false);
 
 					//here call create image progress
 					if (!result.empty())
@@ -228,8 +228,8 @@ bool CGUIMcaOperWnd::checkMessages()
 						{
 							fioClose(chkfd);
 							int resYesNo;
-							CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_OVERWRITE"), CGUIMcaGetYesNo::enresNo);
-							if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
+							CGUIMcaGetYesNo getYesNo(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_OVERWRITE"), CGUIMcaGetYesNo::enresNo);
+							if ((resYesNo = getYesNo.display(m_psx_mode ? true : false)) == CGUIMcaGetYesNo::enresNo)
 							{
 								windowCalled = true;
 								return windowCalled;
@@ -240,8 +240,8 @@ bool CGUIMcaOperWnd::checkMessages()
 						{
 							totalpages = (cardSize * 1024 * 1024) / CGUIMcaMan::mce_memcards[m_oper_slot].pageSize;
 						}
-						CGUIMcaOperProgress createProgress(110, 106);
-						createProgress.doCreateImage(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, totalpages, result.c_str(), false);
+						CGUIMcaOperProgress createProgress(m_renderer, m_input, m_timer, 110, 106);
+						createProgress.doCreateImage(m_oper_slot, m_psx_mode, totalpages, result.c_str(), false);
 						if (result.substr(0, 5) == "hdd0:") fileXioUmount("pfs0:");
 						m_exit_now = true;
 					}
@@ -255,7 +255,7 @@ bool CGUIMcaOperWnd::checkMessages()
 				std::string defname = "memorycard";
 				defname += m_oper_slot;
 				defname += ".bin";
-				CGUIMcaGetPath getPath(67, 106, defname.c_str());
+				CGUIMcaGetPath getPath(m_renderer, m_input, m_timer, 67, 106, defname.c_str());
 				if (m_psx_mode)
 				{
 					getPath.addMaskEntry(".mcr");
@@ -271,18 +271,18 @@ bool CGUIMcaOperWnd::checkMessages()
 				}
 				getPath.enableMask(true);
 				std::string result;
-				getPath.doGetName(m_renderer, m_input, m_timer, result, false, true);
+				getPath.doGetName(result, false, true);
 
 				//here call create image progress
 				if (!result.empty())
 				{
 					int resYesNo;
-					CGUIMcaGetYesNo getYesNo(110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_RESTORE_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
-					if ((resYesNo = getYesNo.display(m_renderer, m_input, m_timer, false)) == CGUIMcaGetYesNo::enresYes)
+					CGUIMcaGetYesNo getYesNo(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_OPER_QUESTION_RESTORE_DATA_LOST"), CGUIMcaGetYesNo::enresNo);
+					if ((resYesNo = getYesNo.display(false)) == CGUIMcaGetYesNo::enresYes)
 					{
 						//here call restore progress
-						CGUIMcaOperProgress restoreProgress(110, 106);
-						restoreProgress.doRestoreImage(m_renderer, m_input, m_timer, m_oper_slot, m_psx_mode, result.c_str(), false);
+						CGUIMcaOperProgress restoreProgress(m_renderer, m_input, m_timer, 110, 106);
+						restoreProgress.doRestoreImage(m_oper_slot, m_psx_mode, result.c_str(), false);
 						if (result.substr(0, 5) == "hdd0:") fileXioUmount("pfs0:");
 						m_exit_now = true;
 					}
@@ -293,8 +293,8 @@ bool CGUIMcaOperWnd::checkMessages()
 			break;
 			case 4://card info
 			{
-				CGUIMcaCardInfo myCardInfo(138, 166);
-				myCardInfo.displayInfo(m_renderer, m_input, m_timer, true, m_oper_slot, m_psx_mode);
+				CGUIMcaCardInfo myCardInfo(m_renderer, m_input, m_timer, 138, 166);
+				myCardInfo.displayInfo(m_oper_slot, m_psx_mode);
 				windowCalled = true;
 				return windowCalled;
 			}
@@ -313,14 +313,14 @@ void CGUIMcaOperWnd::setOperSlot(int operslot)
 	m_oper_slot = operslot;
 }
 
-CGUIMcaOperWnd::CGUIMcaOperWnd(void)
-	: m_psx_mode(false)
+CGUIMcaOperWnd::CGUIMcaOperWnd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer)
+	: CGUIMcaBaseWindow(renderer, input, timer, 0, 0)
+	, m_menu_item(0)
+	, m_menu_item_format(0)
+	, m_psx_mode(false)
 	, m_exit_now(false)
-	, m_hover_menu(70, 248, 450, 24, 0.1f, 600, 255, 255, 255, 32, 32, 32, 0.50f, 0.25f, true)
+	, m_hover_menu(renderer, 70, 248, 450, 24, 0.1f, 600, 255, 255, 255, 32, 32, 32, 0.50f, 0.25f, true)
 {
-	m_menu_item = 0;
-	m_menu_item_format = 0;
-
 	CResources::m_bgimage.loadTextureBuffer(CResources::bgimg_tm2, CResources::size_bgimg_tm2, true);
 	CResources::m_popup_pal.loadTextureBuffer(CResources::popup_pal_tm2, CResources::size_popup_pal_tm2, true);
 
@@ -333,29 +333,6 @@ CGUIMcaOperWnd::~CGUIMcaOperWnd(void)
 {
 }
 
-void CGUIMcaOperWnd::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out)
-{
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
-
-	float alpha = 0.0f;
-	u32 ticks = 0;
-	do
-	{
-		ticks = currTick - oldTick;
-		alpha = (float)ticks/(float)ms;
-		if (alpha > 1.0f) alpha = 1.0f;
-		if (out) alpha = 1.0f - alpha;
-
-		drawAll(prevBuffTex, alpha);
-		m_renderer->swapBuffers();
-
-		currTick = timer->getTicks();
-	} while (ticks <= ms);
-	drawAll(prevBuffTex, alpha);
-	m_renderer->swapBuffers();
-}
-
 void CGUIMcaOperWnd::drawBackground(float alpha)
 {
 	m_renderer->drawSpriteT(&CResources::m_bgimage, 0, 0, CResources::m_bgimage.getWidth(), CResources::m_bgimage.getHeight(), 0, 0, CResources::m_bgimage.getWidth(), CResources::m_bgimage.getHeight(), 128, 128, 128, alpha);
@@ -363,7 +340,7 @@ void CGUIMcaOperWnd::drawBackground(float alpha)
 
 void CGUIMcaOperWnd::drawMenu(float alpha)
 {
-	m_hover_menu.drawHover(m_renderer, m_ticks, alpha);
+	m_hover_menu.drawHover(m_ticks, alpha);
 
 	for (u32 i = 0; i < countof(m_menu_options); i++)
 	{
@@ -454,36 +431,33 @@ void CGUIMcaOperWnd::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 	drawMenu(alpha);
 }
 
-int CGUIMcaOperWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur)
+int CGUIMcaOperWnd::display(bool blur)
 {
 	m_exit_now = false;
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
 
 	m_menu_item = 0;
 	m_menu_item_format = 0;
 	m_hover_menu.setDest(70, 248 +26*m_menu_item, true);
 
-	CIGUIFrameTexture *prevBuffTex = renderer->getFrameTex();
+	CIGUIFrameTexture *prevBuffTex = m_renderer->getFrameTex();
 	m_ticks = 0;
 	checkMessages();
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex, 25000, false);
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
 		if (m_exit_now) break;
 		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
 
 		if (checkMessages())
 		{
-			currTick = oldTick = timer->getTicks();
+			currTick = oldTick = m_timer->getTicks();
 			continue;
 		}
 
@@ -492,10 +466,10 @@ int CGUIMcaOperWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 
 	} while ((m_input_state_new & CIGUIFrameInput::enInTriangle) == 0);
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
 

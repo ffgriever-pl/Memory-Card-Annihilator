@@ -104,12 +104,12 @@ int CPS2Application::main(int argc, char *argv[])
 		return -1;
 	}
 
-	CGUIMcaMainWnd mainWindow;
+	CGUIMcaMainWnd mainWindow(&ps2renderer, &ps2input, &ps2Timer);
 
 	ps2renderer.setAlpha(false);
 	ps2renderer.setTestAlpha(false);
 
-	mainWindow.display(&ps2renderer, &ps2input, &ps2Timer);
+	mainWindow.display();
 
 	ps2renderer.deinitRenderer();
 	ps2Timer.deinitTimer();
@@ -221,24 +221,25 @@ std::string CPS2Application::processBootPath(const std::string& bootPath)
 bool CPS2Application::loadLanguage(const std::string& langfile)
 {
 	int fd = fioOpen(langfile.c_str(), O_BINARY | O_RDONLY);
-	if (fd > 0)
-	{
-		size_t filesize = fioLseek(fd, 0, SEEK_END);
-		fioLseek(fd, 0, SEEK_SET);
-		if (filesize > 0)
-		{
-			char *buff = new char[filesize+1];
-			fioRead(fd, buff, filesize);
-			buff[filesize] = 0;
+	if (fd <= 0)
+		return false;
 
-			CResources::mainLang.initLang(buff);
-			delete [] buff;
-			fioClose(fd);
-			return true;
-		}
+	size_t filesize = fioLseek(fd, 0, SEEK_END);
+	fioLseek(fd, 0, SEEK_SET);
+	if (filesize <= 0)
+	{
 		fioClose(fd);
+		return false;
 	}
-	return false;
+
+	char *buff = new char[filesize + 1];
+	fioRead(fd, buff, filesize);
+	buff[filesize] = 0;
+
+	CResources::mainLang.initLang(buff);
+	delete[] buff;
+	fioClose(fd);
+	return true;
 }
 
 void CPS2Application::setBootPath(const char* path)

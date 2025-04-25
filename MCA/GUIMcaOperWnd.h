@@ -2,11 +2,13 @@
 #define _GUIMCAOPERWND_H_
 
 #include "IGUIFrameWindow.h"
+#include "GUIMcaBaseWindow.h"
 #include "GUITypes.h"
 #include "GUIMcaHover.h"
 
 class CGUIMcaOperWnd :
-	public CIGUIFrameWindow
+	public CIGUIFrameWindow,
+	public CGUIMcaBaseWindow
 {
 private:
 	int m_menu_item;
@@ -16,9 +18,6 @@ private:
 	u32 m_input_state_all;
 	u32 m_ticks;
 	bool m_psx_mode;
-	CIGUIFrameRenderer *m_renderer;
-	CIGUIFrameInput *m_input;
-	CIGUIFrameTimer *m_timer;
 	bool m_exit_now;
 
 	CGUITexture m_mca_logo;
@@ -32,15 +31,14 @@ private:
 
 	bool checkMessages();
 
-	void fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out = false);
 	void drawAll(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
 	void drawBackground(float alpha = 1.0f);
 	void drawStatic(float alpha = 1.0f);
 	void drawMenu(float alpha = 1.0f);
 public:
-	CGUIMcaOperWnd(void);
+	CGUIMcaOperWnd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer);
 	~CGUIMcaOperWnd(void);
-	int display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur = false);
+	int display(bool blur = false);
 	void setPsxMode(bool psxmode = false);
 	void setOperSlot(int operslot);
 };

@@ -6,9 +6,11 @@
 #include "IGUIFrameRenderer.h"
 #include "IGUIFrameInput.h"
 #include "IGUIFrameTimer.h"
+#include "GUIMcaBaseWindow.h"
 #include "GUITypes.h"
 
 class CGUIMcaVkbd
+	: public CGUIMcaBaseWindow
 {
 public:
 	struct t_key
@@ -48,17 +50,12 @@ private:
 	u32 m_max_chars;
 	bool m_display_caret;
 	u32 m_caret_ticks;
-	float m_x;
-	float m_y;
 	float m_curx;
 	float m_cury;
 	bool m_exit_now;
 	bool m_caps;
 	bool m_shift;
 	bool m_tmp_shift;
-	CIGUIFrameRenderer *m_renderer;
-	CIGUIFrameInput *m_input;
-	CIGUIFrameTimer *m_timer;
 	u32 m_input_state_new;
 	u32 m_input_state_all;
 	u32 m_ticks;
@@ -67,15 +64,13 @@ private:
 	void drawWindow(float alpha = 1.0f);
 	void drawCursor(float alpha = 1.0f);
 	void drawAll(CIGUIFrameTexture *prevBuffTex = NULL, float alpha = 1.0f);
-	void fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out = false);
 	void drawText(float alpha = 1.0f);
 	void drawKeys(float alpha = 1.0f);
-	CGUIMcaVkbd(void);
 	bool checkMessages();
 public:
-	CGUIMcaVkbd(float x, float y);
+	CGUIMcaVkbd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y);
 	~CGUIMcaVkbd(void);
-	int getEntry(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, const char *defname, std::string &ret, u32 max_chars = 0, CIGUIFrameTexture *prevtex = NULL, bool blur = false, bool filename_mode = false);
+	int getEntry(const char *defname, std::string &ret, u32 max_chars = 0, CIGUIFrameTexture *prevtex = NULL, bool blur = false, bool filename_mode = false);
 };
 
 #endif //_GUIMCAVKBD_H_

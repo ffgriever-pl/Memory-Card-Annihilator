@@ -12,10 +12,9 @@ class CIGUIFrameWindow
 {
 protected:
 	std::vector<CIGUIFrameControl*> m_control_list;
-public:
 	CIGUIFrameWindow(void);
+public:
 	virtual ~CIGUIFrameWindow(void);
-	virtual int display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur = false) = 0;
 };
 
 #endif //_IGUIFRAMEWINDOW_H_

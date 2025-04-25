@@ -36,13 +36,13 @@ bool CGUIMcaMainWnd::checkMessages()
 
 	if (m_input_state_all & CIGUIFrameInput::enInSelect)
 	{
-		CGUIMcaGetPath getPath(67,106,"mc0:/BOOT/BOOT.ELF");
+		CGUIMcaGetPath getPath(m_renderer, m_input, m_timer, 67, 106, "mc0:/BOOT/BOOT.ELF");
 		getPath.addMaskEntry(".elf");
 		getPath.addMaskEntry(".ELF");
 
 		getPath.enableMask(true);
 		std::string result;
-		getPath.doGetName(m_renderer, m_input, m_timer, result, false, true, CResources::mainLang.getText("LNG_EXIT_SELECT_ELF"));
+		getPath.doGetName(result, false, true, CResources::mainLang.getText("LNG_EXIT_SELECT_ELF"));
 						
 		//here call create image progress
 		if (!result.empty())
@@ -73,8 +73,8 @@ bool CGUIMcaMainWnd::checkMessages()
 				fioClose(chkfd);
 				if (magic != 0x464c457f)
 				{
-					CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_EXIT_INVALID"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
-					myMessage.display(m_renderer, m_input, m_timer, false);
+					CGUIMcaDisplayMessage myMessage(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_EXIT_INVALID"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+					myMessage.display(false);
 				} else
 				{
 					m_timer->deinitTimer();
@@ -152,8 +152,8 @@ bool CGUIMcaMainWnd::checkMessages()
 				}
 			} else
 			{
-				CGUIMcaDisplayMessage myMessage(110, 106, CResources::mainLang.getText("LNG_EXIT_FAILED"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
-				myMessage.display(m_renderer, m_input, m_timer, false);
+				CGUIMcaDisplayMessage myMessage(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_EXIT_FAILED"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
+				myMessage.display(false);
 			}
 		}
 		windowCalled = true;
@@ -185,30 +185,32 @@ bool CGUIMcaMainWnd::checkMessages()
 			{
 				m_oper_wnd.setPsxMode(false);
 				m_oper_wnd.setOperSlot(m_slot_chosen);
-				m_oper_wnd.display(m_renderer, m_input, m_timer);
+				m_oper_wnd.display();
 				windowCalled = true;
 			} else if (CGUIMcaMan::mce_memcards[m_slot_chosen].type == CGUIMcaMan::enctPsx || CGUIMcaMan::mce_memcards[m_slot_chosen].type == CGUIMcaMan::enctPda)
 			{
 				m_oper_wnd.setPsxMode(true);
 				m_oper_wnd.setOperSlot(m_slot_chosen);
-				m_oper_wnd.display(m_renderer, m_input, m_timer);
+				m_oper_wnd.display();
 				windowCalled = true;
 			}
 		}
 	} else if (m_input_state_new & CIGUIFrameInput::enInStart)
 	{
-		CGUIMcaAbout myAbout(110, 106);
-		myAbout.display(m_renderer, m_input, m_timer, true);
+		CGUIMcaAbout myAbout(m_renderer, m_input, m_timer, 110, 106);
+		myAbout.display(true);
 		windowCalled = true;
 	}
 	
 	return windowCalled;
 }
 
-CGUIMcaMainWnd::CGUIMcaMainWnd(void)
-	: m_hover_slots(158, 368, 110, 19, 0.5f, 100, 255, 255, 255, 32, 32, 32, 0.50f, 0.25f, true)
+CGUIMcaMainWnd::CGUIMcaMainWnd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer)
+	: CGUIMcaBaseWindow(renderer, input, timer, 0, 0)
+	, m_slot_chosen(-1)
+	, m_hover_slots(renderer, 158, 368, 110, 19, 0.5f, 100, 255, 255, 255, 32, 32, 32, 0.50f, 0.25f, true)
+	, m_oper_wnd(renderer, input, timer)
 {
-	m_slot_chosen = -1;
 	m_hover_slots.setVisibility(false);
 
 	CResources::m_bgimage.loadTextureBuffer(CResources::bgimg_tm2, CResources::size_bgimg_tm2, true);
@@ -227,29 +229,6 @@ CGUIMcaMainWnd::~CGUIMcaMainWnd(void)
 {
 }
 
-void CGUIMcaMainWnd::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out)
-{
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
-
-	float alpha = 0.0f;
-	u32 ticks = 0;
-	do
-	{
-		ticks = currTick - oldTick;
-		alpha = (float)ticks/(float)ms;
-		if (alpha > 1.0f) alpha = 1.0f;
-		if (out) alpha = 1.0f - alpha;
-
-		drawAll(prevBuffTex, alpha);
-		m_renderer->swapBuffers();
-
-		currTick = timer->getTicks();
-	} while (ticks <= ms);
-	drawAll(prevBuffTex, alpha);
-	m_renderer->swapBuffers();
-}
-
 void CGUIMcaMainWnd::drawBackground(float alpha)
 {
 	m_renderer->drawSpriteT(&CResources::m_bgimage, 0, 0, CResources::m_bgimage.getWidth(), CResources::m_bgimage.getHeight(), 0, 0, CResources::m_bgimage.getWidth(), CResources::m_bgimage.getHeight(), 128, 128, 128, alpha);
@@ -257,7 +236,7 @@ void CGUIMcaMainWnd::drawBackground(float alpha)
 
 void CGUIMcaMainWnd::drawSlots(float alpha)
 {
-	m_hover_slots.drawHover(m_renderer, m_ticks, alpha);
+	m_hover_slots.drawHover(m_ticks, alpha);
 	m_renderer->drawSpriteT(
 		&m_slot[0]
 		, 146, 369
@@ -374,31 +353,28 @@ void CGUIMcaMainWnd::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 	drawSlots(alpha);
 }
 
-int CGUIMcaMainWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur)
+int CGUIMcaMainWnd::display(bool blur)
 {
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
 
 	CIGUIFrameTexture *prevBuffTex = NULL;
 	m_ticks = 0;
 	checkMessages();
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex,  25000, false);
 
 	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
+	currTick = oldTick = m_timer->getTicks();
 	do
 	{
 		m_ticks = currTick - oldTick;
-		input->update();
-		m_input_state_new = input->getNew(m_ticks);
-		m_input_state_all = input->getAll();
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
 
 		if (checkMessages())
 		{
-			currTick = oldTick = timer->getTicks();
+			currTick = oldTick = m_timer->getTicks();
 			continue;
 		}
 
@@ -406,9 +382,9 @@ int CGUIMcaMainWnd::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input
 		m_renderer->swapBuffers();
 
 		oldTick = currTick;
-		currTick = timer->getTicks();
+		currTick = m_timer->getTicks();
 	} while (true);
-	fadeInOut(prevBuffTex, timer, 25000, true);
+	fadeInOut(prevBuffTex, 25000, true);
 
 	return 1;
 }

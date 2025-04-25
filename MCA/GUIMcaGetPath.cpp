@@ -18,9 +18,19 @@
 #define CDVD_STAT_ERROR    SCECdStatEmg
 
 #define LIST_POSITION (11)
-CGUIMcaGetPath::CGUIMcaGetPath(float x, float y, const char *defaultname)
-	: m_hover_files(NULL)
-	, m_tips(146, 300, 25000)
+CGUIMcaGetPath::CGUIMcaGetPath(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y, const char *defaultname)
+	: CGUIMcaPopup(renderer, input, timer, x, y)
+	, m_prevBuffTex(NULL)
+	, m_curr_dir(NULL)
+	, m_curr_path(NULL)
+	, m_defaultname(defaultname)
+	, m_save(false)
+	, m_maskItems(1)
+	, m_hover_files(renderer, x + 9, y + 33, 468, 21, 0.01f, 600, 255, 255, 255, 96, 96, 96, 0.70f, 0.20f, true)
+	, m_tips(renderer, 146, 300, 25000)
+	, m_keyb_tip_shown(false)
+	, m_mask_enabled(false)
+	, m_caption(NULL)
 {
 	CResources::m_icon_dir.loadTextureBuffer(CResources::icon_dir_tm2, CResources::size_icon_dir_tm2, true);
 	CResources::m_icon_file.loadTextureBuffer(CResources::icon_file_tm2, CResources::size_icon_file_tm2, true);
@@ -31,42 +41,10 @@ CGUIMcaGetPath::CGUIMcaGetPath(float x, float y, const char *defaultname)
 	CResources::m_icon_file.setTexfilter(CIGUIFrameTexture::etFiltBilinear);
 	CResources::m_popup_mgr.setTexfilter(CIGUIFrameTexture::etFiltBilinear);
 	CResources::m_scroll.setTexfilter(CIGUIFrameTexture::etFiltBilinear);
-
-	m_x = x;
-	m_y = y;
-	m_defaultname = defaultname;
-	m_save = false;
-	m_curr_dir = NULL;
-	m_prevBuffTex = NULL;
-	m_curr_path = NULL;
-	m_mask.clear();
-
-	m_keyb_tip_shown = false;
-	m_mask_enabled = false;
-	m_maskItems = 1;
-
-	m_hover_files = new CGUIMcaHover(m_x+9, m_y+33, 468, 21, 0.01f, 600, 255, 255, 255, 96, 96, 96, 0.70f, 0.20f, true);
 }
-
-CGUIMcaGetPath::CGUIMcaGetPath(void)
-	: m_hover_files(NULL)
-	, m_tips(146, 300, 25000)
-{
-	m_curr_dir = NULL;
-	m_prevBuffTex = NULL;
-	m_curr_path = NULL;
-
-	m_keyb_tip_shown = false;
-	m_mask_enabled = false;
-	m_maskItems = 1;
-	m_mask.clear();
-}
-
 
 CGUIMcaGetPath::~CGUIMcaGetPath(void)
 {
-	if (m_hover_files) delete m_hover_files;
-	m_hover_files = NULL;
 }
 
 void CGUIMcaGetPath::clearMask()
@@ -405,7 +383,7 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 					//enter
 					doSubLevel(m_prevBuffTex);
 					windowCalled = true;
-					if (m_hover_files) m_hover_files->setDest(m_x+9, m_y+33 + (m_listChosen - m_listBegin)*21, true);
+					m_hover_files.setDest(m_x+9, m_y+33 + (m_listChosen - m_listBegin)*21, true);
 					return windowCalled;
 				} else
 				{
@@ -414,10 +392,10 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 			}
 			if (m_save && m_input_state_new & CIGUIFrameInput::enInStart && m_all_path.size() > 0 && !(m_all_path.size() == 1 && m_all_path.front() == "hdd0:") )
 			{
-				CGUIMcaVkbd myKbd(74, 170);
+				CGUIMcaVkbd myKbd(m_renderer, m_input, m_timer, 74, 170);
 				std::string kbdret;
-				fadeInOut(m_prevBuffTex, m_timer, 25000, true);
-				if (myKbd.getEntry(m_renderer, m_input, m_timer, m_defaultname, kbdret, 32, m_prevBuffTex, true, true) == 1)
+				fadeInOut(m_prevBuffTex, 25000, true);
+				if (myKbd.getEntry(m_defaultname, kbdret, 32, m_prevBuffTex, true, true) == 1)
 				{
 					//check if proper name
 					if (kbdret.size() > 0)
@@ -427,16 +405,16 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 						m_exit = true;
 					} else
 					{
-						fadeInOut(m_prevBuffTex, m_timer, 25000, false);
+						fadeInOut(m_prevBuffTex, 25000, false);
 					}
 				} else
 				{
-					fadeInOut(m_prevBuffTex, m_timer, 25000, false);
+					fadeInOut(m_prevBuffTex, 25000, false);
 				}
 				windowCalled = true;
 				return windowCalled;
 			}
-			if (m_hover_files && pos_changed) m_hover_files->setDest(m_x+9, m_y+33 + (m_listChosen - m_listBegin)*21, pos_instant);
+			if (pos_changed) m_hover_files.setDest(m_x+9, m_y+33 + (m_listChosen - m_listBegin)*21, pos_instant);
 		}
 	}
 
@@ -446,29 +424,6 @@ bool CGUIMcaGetPath::checkMessagesTop(bool topdir)
 	}
 
 	return windowCalled;
-}
-
-void CGUIMcaGetPath::fadeInOut(CIGUIFrameTexture *prevBuffTex, CIGUIFrameTimer *timer, u32 ms, bool out)
-{
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = timer->getTicks();
-
-	float alpha = 0.0f;
-	u32 ticks = 0;
-	do
-	{
-		ticks = currTick - oldTick;
-		alpha = (float)ticks/(float)ms;
-		if (alpha > 1.0f) alpha = 1.0f;
-		if (out) alpha = 1.0f - alpha;
-
-		drawAll(prevBuffTex, alpha);
-		m_renderer->swapBuffers();
-
-		currTick = timer->getTicks();
-	} while (ticks <= ms);
-	drawAll(prevBuffTex, alpha);
-	m_renderer->swapBuffers();
 }
 
 void CGUIMcaGetPath::drawBoxArea(float alpha)
@@ -520,7 +475,7 @@ void CGUIMcaGetPath::drawFilelist(float alpha)
 		std::list<t_fileentry>::const_iterator i;
 		std::string currstring;
 
-		if (m_hover_files && m_curr_dir->size() > 0) m_hover_files->drawHover(m_renderer, m_ticks, alpha);
+		if (m_curr_dir->size() > 0) m_hover_files.drawHover(m_ticks, alpha);
 		for (i = m_curr_dir->begin(); i != m_curr_dir->end(); i++)
 		{
 			if (!(*i).directory && m_mask_enabled)
@@ -598,7 +553,7 @@ void CGUIMcaGetPath::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 	drawFilelist(alpha);
 	m_renderer->setScissor(false);
 
-	m_tips.drawTip(m_renderer, m_input_state_new, m_ticks, alpha*0.90f);
+	m_tips.drawTip(m_input_state_new, m_ticks, alpha*0.90f);
 }
 
 void CGUIMcaGetPath::doTopLevel(CIGUIFrameTexture *prevBuffTex, float alpha)
@@ -610,7 +565,7 @@ void CGUIMcaGetPath::doTopLevel(CIGUIFrameTexture *prevBuffTex, float alpha)
 	std::list<t_fileentry> top_dir;
 	m_listChosen = 0;
 	m_listBegin = 0;
-	if (m_hover_files) m_hover_files->setDest(m_x+9, m_y+33 + (m_listChosen - m_listBegin)*21, true);
+	m_hover_files.setDest(m_x+9, m_y+33 + (m_listChosen - m_listBegin)*21, true);
 
 	std::string caption;
 	if (m_caption == NULL)
@@ -689,7 +644,7 @@ void CGUIMcaGetPath::doSubLevel(CIGUIFrameTexture *prevBuffTex, float alpha)
 	std::list<t_fileentry> sub_dir;
 	m_listChosen = 0;
 	m_listBegin = 0;
-	if (m_hover_files) m_hover_files->setDest(m_x+9, m_y+33 + (m_listChosen - m_listBegin)*21, true);
+	m_hover_files.setDest(m_x+9, m_y+33 + (m_listChosen - m_listBegin)*21, true);
 
 	std::string totalpath = "";
 	std::list<std::string>::const_iterator i;
@@ -898,18 +853,15 @@ void CGUIMcaGetPath::doSubLevel(CIGUIFrameTexture *prevBuffTex, float alpha)
 	m_curr_path = lastPath;
 }
 
-int CGUIMcaGetPath::display(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, bool blur)
+int CGUIMcaGetPath::display(bool blur)
 {
 	return 0;
 }
 
-int CGUIMcaGetPath::doGetName(CIGUIFrameRenderer *renderer, CIGUIFrameInput *input, CIGUIFrameTimer *timer, std::string &ret, bool save, bool blur, const char *caption)
+int CGUIMcaGetPath::doGetName(std::string &ret, bool save, bool blur, const char *caption)
 {
 	m_input_state_new = 0;
 	m_input_state_all = 0;
-	m_renderer = renderer;
-	m_input = input;
-	m_timer = timer;
 
 	m_mountpath[0] = ""; m_mountpath[1] = ""; m_mountpath[2] = ""; m_mountpath[3] = "";
 	m_retpath = "";
@@ -924,20 +876,20 @@ int CGUIMcaGetPath::doGetName(CIGUIFrameRenderer *renderer, CIGUIFrameInput *inp
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
-		prevBuffTex = renderer->getFrameTex(1);
+		prevBuffTex = m_renderer->getFrameTex(1);
 		prevBuffTex->blur(0);
 		prevBuffTex->blur(0);
 	} else
 	{
-		prevBuffTex = renderer->getFrameTex();
+		prevBuffTex = m_renderer->getFrameTex();
 	}
 	m_prevBuffTex = prevBuffTex;
 	m_ticks = 0;
-	fadeInOut(prevBuffTex, timer, 25000, false);
+	fadeInOut(prevBuffTex, 25000, false);
 	
 	doTopLevel(prevBuffTex, 1.0f);
 
-	if (!m_no_out) fadeInOut(prevBuffTex, timer, 25000, true);
+	if (!m_no_out) fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
 
