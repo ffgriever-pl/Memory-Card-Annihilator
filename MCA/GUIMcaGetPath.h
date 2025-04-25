@@ -49,12 +49,8 @@ private:
 	std::string *m_curr_path;
 	std::string m_retpath;
 	std::string m_mountpath[4];
-	u32 m_input_state_new;
-	u32 m_input_state_all;
-	u32 m_ticks;
 	const char *m_defaultname;
 	bool m_save;
-	bool m_exit;
 	bool m_exit_one;
 	bool m_no_out;
 	int m_listChosen;

@@ -52,13 +52,9 @@ private:
 	u32 m_caret_ticks;
 	float m_curx;
 	float m_cury;
-	bool m_exit_now;
 	bool m_caps;
 	bool m_shift;
 	bool m_tmp_shift;
-	u32 m_input_state_new;
-	u32 m_input_state_all;
-	u32 m_ticks;
 	std::string m_text;
 	bool m_filename;
 	void drawWindow(float alpha = 1.0f);
@@ -67,6 +63,7 @@ private:
 	void drawText(float alpha = 1.0f);
 	void drawKeys(float alpha = 1.0f);
 	bool checkMessages();
+	void updateKbPosition();
 public:
 	CGUIMcaVkbd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y);
 	~CGUIMcaVkbd(void);

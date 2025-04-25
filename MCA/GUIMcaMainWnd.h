@@ -13,9 +13,6 @@ class CGUIMcaMainWnd :
 {
 private:
 	int m_slot_chosen;
-	u32 m_input_state_new;
-	u32 m_input_state_all;
-	u32 m_ticks;
 
 	//CGUITexture m_bgimage;
 	CGUITexture m_slot[2];
@@ -53,7 +50,7 @@ private:
 	{
 		u32	type;				// struct definition for ELF program section header
 		u32	offset;
-		void	*vaddr;
+		void *vaddr;
 		u32	paddr;
 		u32	filesz;
 		u32	memsz;

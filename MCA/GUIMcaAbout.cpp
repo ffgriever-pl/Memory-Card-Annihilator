@@ -71,9 +71,6 @@ void CGUIMcaAbout::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 
 int CGUIMcaAbout::display(bool blur)
 {
-	u32 state_new = 0;
-	u32 state_all = 0;
-
 	CIGUIFrameTexture *prevBuffTex;
 	if (blur)
 	{
@@ -84,24 +81,8 @@ int CGUIMcaAbout::display(bool blur)
 	{
 		prevBuffTex = m_renderer->getFrameTex();
 	}
-	u32 ticks = 0;
 	fadeInOut(prevBuffTex, 25000, false);
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		ticks = currTick - oldTick;
-		m_input->update();
-		state_new = m_input->getNew(ticks);
-		state_all = m_input->getAll();
-
-		drawAll(prevBuffTex);
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while (state_new == 0);
+	drawLoop(prevBuffTex);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;

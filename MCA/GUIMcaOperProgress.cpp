@@ -7,7 +7,6 @@ CGUIMcaOperProgress::CGUIMcaOperProgress(CIGUIFrameRenderer* renderer, CIGUIFram
 	: CGUIMcaPopup(renderer, input, timer, x, y)
 	, m_result(enresFail)
 	, m_default(enresFail)
-	, m_return(false)
 	, m_locked(true)
 	, m_progressBar(renderer, x + 25, y + 224)
 {
@@ -19,8 +18,6 @@ CGUIMcaOperProgress::~CGUIMcaOperProgress(void)
 
 bool CGUIMcaOperProgress::checkMessages()
 {
-	bool windowCalled = false;
-
 	CGUIMcaMan::getProgress();
 
 	m_progressBar.setProgress(CGUIMcaMan::progressBarData.promil/1000.0f);
@@ -38,23 +35,13 @@ bool CGUIMcaOperProgress::checkMessages()
 		}
 	}
 
-	if (!m_locked)
-	{
-		if (m_input_state_new & CIGUIFrameInput::enInTriangle)
-		{
-			m_return = true;
-		} else if (m_input_state_new & CIGUIFrameInput::enInCross)
-		{
-			m_return = true;
-		}
-	}
+	if (m_locked)
+		m_input_state_new = 0; //operation in progress, do not allow exit
 
 	if (CGUIMcaMan::progressBarData.finished == 1)
-	{
 		m_locked = false;
-	}
 		
-	return windowCalled;
+	return false;
 }
 
 void CGUIMcaOperProgress::drawMessage(float alpha)
@@ -137,33 +124,9 @@ int CGUIMcaOperProgress::doFormat(int slot, bool fast, bool psx, int pagestotal,
 		prevBuffTex = m_renderer->getFrameTex();
 	}
 
-	m_ticks = 0;
 	fadeInOut(prevBuffTex, 25000, false);
-
 	CGUIMcaMan::doFormat(slot, psx, fast, pagestotal);
-
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-
-		drawAll(prevBuffTex);
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while ( !m_return );
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
@@ -193,33 +156,9 @@ int CGUIMcaOperProgress::doUnformat(int slot, bool psx, int pagestotal, bool blu
 		prevBuffTex = m_renderer->getFrameTex();
 	}
 
-	m_ticks = 0;
 	fadeInOut(prevBuffTex, 25000, false);
-
 	CGUIMcaMan::doUnformat(slot, psx, pagestotal);
-
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-
-		drawAll(prevBuffTex);
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while ( !m_return );
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
@@ -248,33 +187,9 @@ int CGUIMcaOperProgress::doCreateImage(int slot, bool psx, int pagestotal, const
 		prevBuffTex = m_renderer->getFrameTex();
 	}
 
-	m_ticks = 0;
 	fadeInOut(prevBuffTex, 25000, false);
-
 	CGUIMcaMan::doCreateImage(slot, psx, pagestotal, path);
-
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-
-		drawAll(prevBuffTex);
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while ( !m_return );
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
@@ -303,33 +218,9 @@ int CGUIMcaOperProgress::doRestoreImage(int slot, bool psx, const char *path, bo
 		prevBuffTex = m_renderer->getFrameTex();
 	}
 
-	m_ticks = 0;
 	fadeInOut(prevBuffTex, 25000, false);
-
 	CGUIMcaMan::doRestoreImage(slot, psx, path);
-
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-
-		drawAll(prevBuffTex);
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while ( !m_return );
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
