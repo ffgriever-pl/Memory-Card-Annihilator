@@ -1,6 +1,5 @@
 #include <string>
 #include "GUIMcaOperProgress.h"
-#include "GUIMcaMan.h"
 #include "res/resources.h"
 
 CGUIMcaOperProgress::CGUIMcaOperProgress(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y)
@@ -14,6 +13,22 @@ CGUIMcaOperProgress::CGUIMcaOperProgress(CIGUIFrameRenderer* renderer, CIGUIFram
 
 CGUIMcaOperProgress::~CGUIMcaOperProgress(void)
 {
+}
+
+int CGUIMcaOperProgress::doOperation(const CGUIMcaMan::opParams& params, void(*operation)(const CGUIMcaMan::opParams&), float blur)
+{
+	resetProgress();
+
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
+
+	fadeInOut(prevBuffTex, 25000, false);
+	operation(params);
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
+	fadeInOut(prevBuffTex, 25000, true);
+
+	delete prevBuffTex;
+
+	return m_result;
 }
 
 bool CGUIMcaOperProgress::checkMessages()
@@ -102,7 +117,7 @@ int CGUIMcaOperProgress::display(bool blur)
 	return 0;
 }
 
-int CGUIMcaOperProgress::doFormat(int slot, bool fast, bool psx, int pagestotal, bool blur)
+void CGUIMcaOperProgress::resetProgress()
 {
 	m_result = m_default;
 	m_input_state_new = 0;
@@ -111,83 +126,24 @@ int CGUIMcaOperProgress::doFormat(int slot, bool fast, bool psx, int pagestotal,
 	CGUIMcaMan::progressBarData.error = 0;
 	CGUIMcaMan::progressBarData.promil = 0;
 	CGUIMcaMan::progressBarData.finished = 0;
+}
 
-
-	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
-
-	fadeInOut(prevBuffTex, 25000, false);
-	CGUIMcaMan::doFormat(slot, psx, fast, pagestotal);
-	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
-	fadeInOut(prevBuffTex, 25000, true);
-
-	delete prevBuffTex;
-
-	return m_result;
+int CGUIMcaOperProgress::doFormat(int slot, bool fast, bool psx, int pagestotal, bool blur)
+{
+	return doOperation(CGUIMcaMan::opParams(slot, psx, fast, pagestotal, ""), CGUIMcaMan::doFormat, blur);
 }
 
 int CGUIMcaOperProgress::doUnformat(int slot, bool psx, int pagestotal, bool blur)
 {
-	m_result = m_default;
-	m_input_state_new = 0;
-	m_input_state_all = 0;
-
-	m_progressBar.setProgress(0);
-	CGUIMcaMan::progressBarData.error = 0;
-	CGUIMcaMan::progressBarData.promil = 0;
-	CGUIMcaMan::progressBarData.finished = 0;
-
-	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
-
-	fadeInOut(prevBuffTex, 25000, false);
-	CGUIMcaMan::doUnformat(slot, psx, pagestotal);
-	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
-	fadeInOut(prevBuffTex, 25000, true);
-
-	delete prevBuffTex;
-
-	return m_result;
+	return doOperation(CGUIMcaMan::opParams(slot, psx, false, pagestotal, ""), CGUIMcaMan::doUnformat, blur);
 }
 
 int CGUIMcaOperProgress::doCreateImage(int slot, bool psx, int pagestotal, const char *path, bool blur)
 {
-	m_result = m_default;
-	m_input_state_new = 0;
-	m_input_state_all = 0;
-	m_progressBar.setProgress(0);
-	CGUIMcaMan::progressBarData.error = 0;
-	CGUIMcaMan::progressBarData.promil = 0;
-	CGUIMcaMan::progressBarData.finished = 0;
-
-	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
-
-	fadeInOut(prevBuffTex, 25000, false);
-	CGUIMcaMan::doCreateImage(slot, psx, pagestotal, path);
-	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
-	fadeInOut(prevBuffTex, 25000, true);
-
-	delete prevBuffTex;
-
-	return m_result;
+	return doOperation(CGUIMcaMan::opParams(slot, psx, false, pagestotal, path), CGUIMcaMan::doCreateImage, blur);
 }
 
 int CGUIMcaOperProgress::doRestoreImage(int slot, bool psx, const char *path, bool blur)
 {
-	m_result = m_default;
-	m_input_state_new = 0;
-	m_input_state_all = 0;
-	m_progressBar.setProgress(0);
-	CGUIMcaMan::progressBarData.error = 0;
-	CGUIMcaMan::progressBarData.promil = 0;
-	CGUIMcaMan::progressBarData.finished = 0;
-
-	CIGUIFrameTexture *prevBuffTex = getFrameTexture(blur);
-
-	fadeInOut(prevBuffTex, 25000, false);
-	CGUIMcaMan::doRestoreImage(slot, psx, path);
-	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
-	fadeInOut(prevBuffTex, 25000, true);
-
-	delete prevBuffTex;
-
-	return m_result;
+	return doOperation(CGUIMcaMan::opParams(slot, psx, false, 0, path), CGUIMcaMan::doRestoreImage, blur);
 }

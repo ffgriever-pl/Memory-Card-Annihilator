@@ -60,7 +60,7 @@ void CGUIMcaMan::getProgress()
 	_InvalidDCache(&progressBarData, &progressBarData + sizeof(progressBarData));
 }
 
-void CGUIMcaMan::doFormat(int slot, bool psx, bool fast, int totalpages)
+void CGUIMcaMan::doFormat(const opParams& param)
 {
 	progressBarData.error = 0;
 	progressBarData.finished = 0;
@@ -73,18 +73,17 @@ void CGUIMcaMan::doFormat(int slot, bool psx, bool fast, int totalpages)
 		return;
 	}
 	memset(&iopMcaCommand, 0, sizeof(iopMcaCommand));
-	iopMcaCommand.slot = slot;
-	iopMcaCommand.type = (psx ? 1 : 2);
-	iopMcaCommand.fast = (fast ? 1 : 0);
-	if (totalpages == 1) totalpages = 0;
-	iopMcaCommand.special = totalpages;
+	iopMcaCommand.slot = param.slot;
+	iopMcaCommand.type = (param.psx ? 1 : 2);
+	iopMcaCommand.fast = (param.fast ? 1 : 0);
+	iopMcaCommand.special = param.totalpages == 1 ? 0 : param.totalpages;
 	iopMcaCommand.podslot = 0;
 	SifWriteBackDCache(&iopMcaCommand, sizeof(iopMcaCommand));
-	if (psx) SifCallRpc(&mca_cd0, MCA_FORMAT_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
+	if (param.psx) SifCallRpc(&mca_cd0, MCA_FORMAT_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 	else SifCallRpc(&mca_cd0, MCA_FORMAT_PS2, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 }
 
-void CGUIMcaMan::doUnformat(int slot, bool psx, int totalpages)
+void CGUIMcaMan::doUnformat(const opParams& param)
 {
 	progressBarData.error = 0;
 	progressBarData.finished = 0;
@@ -97,18 +96,17 @@ void CGUIMcaMan::doUnformat(int slot, bool psx, int totalpages)
 		return;
 	}
 	memset(&iopMcaCommand, 0, sizeof(iopMcaCommand));
-	iopMcaCommand.slot = slot;
-	iopMcaCommand.type = (psx ? 1 : 2);
+	iopMcaCommand.slot = param.slot;
+	iopMcaCommand.type = (param.psx ? 1 : 2);
 	iopMcaCommand.fast = 0;
-	if (totalpages == 1) totalpages = 0;
-	iopMcaCommand.special = totalpages;
+	iopMcaCommand.special = param.totalpages == 1 ? 0 : param.totalpages;
 	iopMcaCommand.podslot = 0;
 	SifWriteBackDCache(&iopMcaCommand, sizeof(iopMcaCommand));
-	if (psx) SifCallRpc(&mca_cd0, MCA_UNFORMAT_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
+	if (param.psx) SifCallRpc(&mca_cd0, MCA_UNFORMAT_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 	else SifCallRpc(&mca_cd0, MCA_UNFORMAT_PS2, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 }
 
-void CGUIMcaMan::doCreateImage(int slot, bool psx, int totalpages, const char* path)
+void CGUIMcaMan::doCreateImage(const opParams& param)
 {
 	progressBarData.error = 0;
 	progressBarData.finished = 0;
@@ -121,12 +119,11 @@ void CGUIMcaMan::doCreateImage(int slot, bool psx, int totalpages, const char* p
 		return;
 	}
 	memset(&iopMcaCommand, 0, sizeof(iopMcaCommand));
-	iopMcaCommand.slot = slot;
-	iopMcaCommand.type = (psx ? 1 : 2);
-	if (totalpages == 1) totalpages = 0;
-	iopMcaCommand.special = totalpages;
+	iopMcaCommand.slot = param.slot;
+	iopMcaCommand.type = (param.psx ? 1 : 2);
+	iopMcaCommand.special = param.totalpages == 1 ? 0 : param.totalpages;
 	iopMcaCommand.podslot = 0;
-	std::string filePath(path);
+	std::string filePath(param.path);
 	if (filePath.substr(0, 5) == "hdd0:")
 	{
 		u32 pos = filePath.find('/');
@@ -145,7 +142,7 @@ void CGUIMcaMan::doCreateImage(int slot, bool psx, int totalpages, const char* p
 		sio_printf("Mounted path: '%s'\n", filePath.c_str());
 	}
 	strncpy(iopMcaCommand.filePath, filePath.c_str(), 255);
-	if (!psx)
+	if (!param.psx)
 	{
 		std::string mciPath;
 		u32 posslash = filePath.rfind('/');
@@ -166,11 +163,11 @@ void CGUIMcaMan::doCreateImage(int slot, bool psx, int totalpages, const char* p
 		strncpy(iopMcaCommand.filePathMci, mciPath.c_str(), 255);
 	}
 	SifWriteBackDCache(&iopMcaCommand, sizeof(iopMcaCommand));
-	if (psx) SifCallRpc(&mca_cd0, MCA_WRITE_IMAGE_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
+	if (param.psx) SifCallRpc(&mca_cd0, MCA_WRITE_IMAGE_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 	else SifCallRpc(&mca_cd0, MCA_WRITE_IMAGE_PS2, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 }
 
-void CGUIMcaMan::doRestoreImage(int slot, bool psx, const char* path)
+void CGUIMcaMan::doRestoreImage(const opParams& param)
 {
 	progressBarData.error = 0;
 	progressBarData.finished = 0;
@@ -183,10 +180,10 @@ void CGUIMcaMan::doRestoreImage(int slot, bool psx, const char* path)
 		return;
 	}
 	memset(&iopMcaCommand, 0, sizeof(iopMcaCommand));
-	iopMcaCommand.slot = slot;
-	iopMcaCommand.type = (psx ? 1 : 2);
+	iopMcaCommand.slot = param.slot;
+	iopMcaCommand.type = (param.psx ? 1 : 2);
 	iopMcaCommand.podslot = 0;
-	std::string filePath(path);
+	std::string filePath(param.path);
 	if (filePath.substr(0, 5) == "hdd0:")
 	{
 		u32 pos = filePath.find('/');
@@ -205,6 +202,6 @@ void CGUIMcaMan::doRestoreImage(int slot, bool psx, const char* path)
 	strncpy(iopMcaCommand.filePath, filePath.c_str(), 255);
 
 	SifWriteBackDCache(&iopMcaCommand, sizeof(iopMcaCommand));
-	if (psx) SifCallRpc(&mca_cd0, MCA_READ_IMAGE_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
+	if (param.psx) SifCallRpc(&mca_cd0, MCA_READ_IMAGE_PSX, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 	else SifCallRpc(&mca_cd0, MCA_READ_IMAGE_PS2, MCA_WAIT, &iopMcaCommand, sizeof(iopMcaCommand), NULL, 0, 0, 0);
 }
