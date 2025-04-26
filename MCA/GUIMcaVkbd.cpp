@@ -13,7 +13,6 @@ CGUIMcaVkbd::CGUIMcaVkbd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, C
 	, m_caret_ticks(0)
 	, m_curx(0)
 	, m_cury(0)
-	, m_exit_now(false)
 	, m_caps(false)
 	, m_shift(false)
 	, m_tmp_shift(false)
@@ -135,6 +134,8 @@ bool CGUIMcaVkbd::checkMessages()
 {
 	bool windowCalled = false;
 
+	updateKbPosition();
+
 	if (m_input_state_new & CIGUIFrameInput::enInL1) m_caps = !m_caps;
 	m_shift = m_input_state_all & CIGUIFrameInput::enInR1;
 	if (m_input_state_new & CIGUIFrameInput::enInR1) m_tmp_shift = false;
@@ -183,11 +184,11 @@ bool CGUIMcaVkbd::checkMessages()
 					if (m_text.size() > 0) m_text.resize(m_text.size()-1);
 					break;
 				case enfkEnter:
-					m_exit_now = true;
+					m_exit = true;
 					windowCalled = true;
 					if (m_filename && m_text.find_first_of("\\/:*?\"<>|") != std::string::npos)
 					{
-						m_exit_now = false;
+						m_exit = false;
 						CGUIMcaDisplayMessage myMessage(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
 						myMessage.display(true);
 					} else if (m_filename)
@@ -206,11 +207,11 @@ bool CGUIMcaVkbd::checkMessages()
 		if (m_text.size() > 0) m_text.resize(m_text.size()-1);
 	} else if (m_input_state_new & CIGUIFrameInput::enInStart)
 	{
-		m_exit_now = true;
+		m_exit = true;
 		windowCalled = true;
 		if (m_filename && m_text.find_first_of("\\/:*?\"<>|") != std::string::npos)
 		{
-			m_exit_now = false;
+			m_exit = false;
 			CGUIMcaDisplayMessage myMessage(m_renderer, m_input, m_timer, 110, 106, CResources::mainLang.getText("LNG_VKBD_WARN_WRONG_NAME"), NULL, CGUIMcaDisplayMessage::enIcFail, CIGUIFrameFont<CGUITexture>::etxAlignCenter);
 			myMessage.display(true);
 		} else if (m_filename)
@@ -223,6 +224,23 @@ bool CGUIMcaVkbd::checkMessages()
 	return windowCalled;
 }
 
+void CGUIMcaVkbd::updateKbPosition()
+{
+	float cxadd, cyadd;
+	m_input->getAdditive(cxadd, cyadd);
+	if (m_input_state_all & CIGUIFrameInput::enInLeft) cxadd = -1.0f;
+	else if (m_input_state_all & CIGUIFrameInput::enInRight) cxadd = 1.0f;
+	if (m_input_state_all & CIGUIFrameInput::enInUp) cyadd = -1.0f;
+	else if (m_input_state_all & CIGUIFrameInput::enInDown) cyadd = 1.0f;
+
+	m_curx += (cxadd * ((float)m_ticks / 450.0f));
+	m_cury += (cyadd * ((float)m_ticks / 450.0f));
+	if (m_curx + m_x < 0) m_curx = -m_x;
+	else if (m_curx + m_x > 640) m_curx = 640 - m_x;
+	if (m_cury + m_y < 0) m_cury = -m_y;
+	else if (m_cury + m_y > 512) m_cury = 512 - m_y;
+}
+
 int CGUIMcaVkbd::getEntry(const char *defname, std::string &ret, u32 max_chars, CIGUIFrameTexture *prevtex, bool blur, bool filename_mode)
 {
 	m_input_state_new = 0;
@@ -233,69 +251,19 @@ int CGUIMcaVkbd::getEntry(const char *defname, std::string &ret, u32 max_chars, 
 	m_max_chars = max_chars;
 	m_display_caret = false;
 	m_caret_ticks = 0;
-	m_exit_now = false;
+	m_exit = false;
 	m_over_num = -1;
 	m_filename = filename_mode;
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (prevtex != NULL)
-	{
-		prevBuffTex = prevtex;
-	} else
-	{
-		if (blur)
-		{
-			prevBuffTex = m_renderer->getFrameTex(1);
-			prevBuffTex->blur(0);
-			prevBuffTex->blur(0);
-		} else
-		{
-			prevBuffTex = m_renderer->getFrameTex();
-		}
-	}
-	m_ticks = 0;
+	CIGUIFrameTexture *prevBuffTex = (prevtex != NULL) ? prevtex : getFrameTexture(blur);
+
 	fadeInOut(prevBuffTex, 25000, false);
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		if (m_exit_now) break;
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		float cxadd, cyadd;
-		m_input->getAdditive(cxadd, cyadd);
-		if (m_input_state_all & CIGUIFrameInput::enInLeft) cxadd = -1.0f;
-		else if (m_input_state_all & CIGUIFrameInput::enInRight) cxadd = 1.0f;
-		if (m_input_state_all & CIGUIFrameInput::enInUp) cyadd = -1.0f;
-		else if (m_input_state_all & CIGUIFrameInput::enInDown) cyadd = 1.0f;
-
-		m_curx += (cxadd*((float)m_ticks/450.0f));
-		m_cury += (cyadd*((float)m_ticks/450.0f));
-		if (m_curx + m_x < 0) m_curx = -m_x;
-		else if (m_curx + m_x > 640) m_curx = 640-m_x;
-		if (m_cury + m_y < 0) m_cury = -m_y;
-		else if (m_cury + m_y > 512) m_cury = 512-m_y;
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-		drawAll(prevBuffTex);
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while ((m_input_state_new & CIGUIFrameInput::enInTriangle) == 0);
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	if (prevtex == NULL) delete prevBuffTex;
 
-	if (m_exit_now)
+	if (m_exit)
 	{
 		ret = m_text;
 		return 1;

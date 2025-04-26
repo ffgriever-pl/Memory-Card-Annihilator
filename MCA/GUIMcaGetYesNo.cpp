@@ -6,7 +6,6 @@ CGUIMcaGetYesNo::CGUIMcaGetYesNo(CIGUIFrameRenderer* renderer, CIGUIFrameInput* 
 	: CGUIMcaPopup(renderer, input, timer, x, y)
 	, m_result(defaultpos)
 	, m_default(defaultpos)
-	, m_return(false)
 	, m_message(message)
 	, m_hover_yesno(renderer, 222, 230, 150, 38, 0.5f, 100, 255, 255, 255, 32, 32, 32, 0.50f, 0.25f, true)
 {
@@ -18,16 +17,10 @@ CGUIMcaGetYesNo::~CGUIMcaGetYesNo(void)
 
 bool CGUIMcaGetYesNo::checkMessages()
 {
-	bool windowCalled = false;
-
 	if (m_input_state_new & CIGUIFrameInput::enInTriangle)
 	{
-		m_return = true;
 		m_result = enresNo;
 		m_hover_yesno.setDest(m_x+222+20,m_y+232, true);
-	} else if (m_input_state_new & CIGUIFrameInput::enInCross)
-	{
-		m_return = true;
 	} else if (m_input_state_new & CIGUIFrameInput::enInLeft)
 	{
 		m_result = enresYes;
@@ -38,7 +31,7 @@ bool CGUIMcaGetYesNo::checkMessages()
 		m_hover_yesno.setDest(m_x+222+20,m_y+232);
 	}
 		
-	return windowCalled;
+	return false;
 }
 
 void CGUIMcaGetYesNo::drawMessage(float alpha)
@@ -96,41 +89,10 @@ int CGUIMcaGetYesNo::display(bool blur)
 	else
 		m_hover_yesno.setDest(m_x+8+20,m_y+232, true);
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
 
-	m_ticks = 0;
 	fadeInOut(prevBuffTex, 25000, false);
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-
-		drawAll(prevBuffTex);
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while ( !m_return );
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;

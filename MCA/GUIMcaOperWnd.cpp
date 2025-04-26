@@ -34,7 +34,7 @@ bool CGUIMcaOperWnd::checkMessages()
 	{
 		CGUIMcaWarrningNoCard myWarn(m_renderer, m_input, m_timer, 110, 106, m_oper_slot);
 		myWarn.display(true);
-		m_exit_now = true;
+		m_exit = true;
 		windowCalled = true;
 		return windowCalled;
 	}
@@ -118,7 +118,7 @@ bool CGUIMcaOperWnd::checkMessages()
 							}
 							CGUIMcaOperProgress formatProgress(m_renderer, m_input, m_timer, 110, 106);
 							formatProgress.doFormat(m_oper_slot, m_menu_item_format == 0 ? true : false, m_psx_mode, totalpages);
-							m_exit_now = true;
+							m_exit = true;
 						}
 					}
 				}
@@ -160,7 +160,7 @@ bool CGUIMcaOperWnd::checkMessages()
 							}
 							CGUIMcaOperProgress unformatProgress(m_renderer, m_input, m_timer, 110, 106);
 							unformatProgress.doUnformat(m_oper_slot, m_psx_mode, totalpages);
-							m_exit_now = true;
+							m_exit = true;
 						}
 					}
 				}
@@ -243,7 +243,7 @@ bool CGUIMcaOperWnd::checkMessages()
 						CGUIMcaOperProgress createProgress(m_renderer, m_input, m_timer, 110, 106);
 						createProgress.doCreateImage(m_oper_slot, m_psx_mode, totalpages, result.c_str(), false);
 						if (result.substr(0, 5) == "hdd0:") fileXioUmount("pfs0:");
-						m_exit_now = true;
+						m_exit = true;
 					}
 				}
 				windowCalled = true;
@@ -284,7 +284,7 @@ bool CGUIMcaOperWnd::checkMessages()
 						CGUIMcaOperProgress restoreProgress(m_renderer, m_input, m_timer, 110, 106);
 						restoreProgress.doRestoreImage(m_oper_slot, m_psx_mode, result.c_str(), false);
 						if (result.substr(0, 5) == "hdd0:") fileXioUmount("pfs0:");
-						m_exit_now = true;
+						m_exit = true;
 					}
 				}
 				windowCalled = true;
@@ -318,7 +318,6 @@ CGUIMcaOperWnd::CGUIMcaOperWnd(CIGUIFrameRenderer* renderer, CIGUIFrameInput* in
 	, m_menu_item(0)
 	, m_menu_item_format(0)
 	, m_psx_mode(false)
-	, m_exit_now(false)
 	, m_hover_menu(renderer, 70, 248, 450, 24, 0.1f, 600, 255, 255, 255, 32, 32, 32, 0.50f, 0.25f, true)
 {
 	CResources::m_bgimage.loadTextureBuffer(CResources::bgimg_tm2, CResources::size_bgimg_tm2, true);
@@ -433,7 +432,7 @@ void CGUIMcaOperWnd::drawAll(CIGUIFrameTexture *prevBuffTex, float alpha)
 
 int CGUIMcaOperWnd::display(bool blur)
 {
-	m_exit_now = false;
+	m_exit = false;
 	m_input_state_new = 0;
 	m_input_state_all = 0;
 
@@ -441,34 +440,10 @@ int CGUIMcaOperWnd::display(bool blur)
 	m_menu_item_format = 0;
 	m_hover_menu.setDest(70, 248 +26*m_menu_item, true);
 
-	CIGUIFrameTexture *prevBuffTex = m_renderer->getFrameTex();
-	m_ticks = 0;
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture();
 	checkMessages();
 	fadeInOut(prevBuffTex, 25000, false);
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		if (m_exit_now) break;
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-
-		drawAll();
-
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while ((m_input_state_new & CIGUIFrameInput::enInTriangle) == 0);
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;

@@ -873,16 +873,7 @@ int CGUIMcaGetPath::doGetName(std::string &ret, bool save, bool blur, const char
 	m_save = save;
 	m_caption = caption;
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
 	m_prevBuffTex = prevBuffTex;
 	m_ticks = 0;
 	fadeInOut(prevBuffTex, 25000, false);

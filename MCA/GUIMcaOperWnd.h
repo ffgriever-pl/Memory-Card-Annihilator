@@ -14,11 +14,7 @@ private:
 	int m_menu_item;
 	int m_menu_item_format;
 	int m_oper_slot;
-	u32 m_input_state_new;
-	u32 m_input_state_all;
-	u32 m_ticks;
 	bool m_psx_mode;
-	bool m_exit_now;
 
 	CGUITexture m_mca_logo;
 	CGUITexture m_mc_bg;

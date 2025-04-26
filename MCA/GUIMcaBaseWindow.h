@@ -17,9 +17,21 @@ protected:
 	CIGUIFrameRenderer* m_renderer;
 	CIGUIFrameInput* m_input;
 	CIGUIFrameTimer* m_timer;
+	u32 m_input_state_new;
+	u32 m_input_state_all;
+	u32 m_ticks;
+	bool m_exit;
 
 	CGUIMcaBaseWindow(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x = 0, float y = 0);
 	virtual ~CGUIMcaBaseWindow();
+	virtual void drawLoop(CIGUIFrameTexture* prevBuffTex = NULL, u32 exit_buttons = 0xFFFFFFFF, float alpha = 1.0f);
+	/**
+	* @brief Check and process input messages
+	* 
+	* @return true if a new window was called (requires one frame advance)
+	*/
+	virtual bool checkMessages();
+	virtual CIGUIFrameTexture* getFrameTexture(bool blur = false);
 };
 
 #endif //_GUIMCABASEWINDOW_H_

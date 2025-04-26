@@ -29,8 +29,55 @@ CGUIMcaBaseWindow::CGUIMcaBaseWindow(CIGUIFrameRenderer* renderer, CIGUIFrameInp
 	, m_renderer(renderer)
 	, m_input(input)
 	, m_timer(timer)
+	, m_input_state_new(0)
+	, m_input_state_all(0)
+	, m_ticks(0)
+	, m_exit(false)
 {
 }
 CGUIMcaBaseWindow::~CGUIMcaBaseWindow()
 {
+}
+
+void CGUIMcaBaseWindow::drawLoop(CIGUIFrameTexture* prevBuffTex, u32 exit_buttons, float alpha)
+{
+	u32 currTick = 0, oldTick = 0;
+	currTick = oldTick = m_timer->getTicks();
+	do
+	{
+		m_ticks = currTick - oldTick;
+		m_input->update();
+		m_input_state_new = m_input->getNew(m_ticks);
+		m_input_state_all = m_input->getAll();
+
+		if (checkMessages())
+		{
+			currTick = oldTick = m_timer->getTicks();
+			if (m_exit) break;
+			else continue;
+		}
+
+		drawAll(prevBuffTex);
+		m_renderer->swapBuffers();
+
+		oldTick = currTick;
+		currTick = m_timer->getTicks();
+
+	} while ((m_input_state_new & exit_buttons) == 0);
+}
+
+bool CGUIMcaBaseWindow::checkMessages()
+{
+	return false;
+}
+
+CIGUIFrameTexture* CGUIMcaBaseWindow::getFrameTexture(bool blur)
+{
+	CIGUIFrameTexture* prevBuffTex = m_renderer->getFrameTex(blur); //false always zero, true always one
+	if (blur)
+	{
+		prevBuffTex->blur(0);
+		prevBuffTex->blur(0);
+	}
+	return prevBuffTex;
 }

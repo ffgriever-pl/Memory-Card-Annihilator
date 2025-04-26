@@ -358,33 +358,10 @@ int CGUIMcaMainWnd::display(bool blur)
 	m_input_state_new = 0;
 	m_input_state_all = 0;
 
-	CIGUIFrameTexture *prevBuffTex = NULL;
-	m_ticks = 0;
 	checkMessages();
-	fadeInOut(prevBuffTex,  25000, false);
-
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-
-		drawAll();
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-	} while (true);
-	fadeInOut(prevBuffTex, 25000, true);
+	fadeInOut(NULL,  25000, false);
+	drawLoop(NULL, 0);
+	fadeInOut(NULL, 25000, true);
 
 	return 1;
 }

@@ -79,14 +79,24 @@ private:
 	static bool init_done;
 	static bool init_failed;
 public:
+	struct opParams //a little trick to make all operation params the same
+	{
+		int slot;
+		bool psx;
+		bool fast;
+		int totalpages;
+		const char* path;
+		opParams(int pslot, bool ppsx, bool pfast, int ptpages, const char* ppath)
+			: slot(pslot), psx(ppsx), fast(pfast), totalpages(ptpages), path(ppath) {}
+	};
 	~CGUIMcaMan(void);
 	static void initMca();
 	static void updateMca();
 	static void getProgress();
-	static void doFormat(int slot, bool psx, bool fast, int totalpages);
-	static void doUnformat(int slot, bool psx, int totalpages);
-	static void doCreateImage(int slot, bool psx, int totalpages, const char* path);
-	static void doRestoreImage(int slot, bool psx, const char* path);
+	static void doFormat(const opParams& param);
+	static void doUnformat(const opParams& param);
+	static void doCreateImage(const opParams& param);
+	static void doRestoreImage(const opParams& param);
 };
 
 #endif //_GUIMCAMAN_H_

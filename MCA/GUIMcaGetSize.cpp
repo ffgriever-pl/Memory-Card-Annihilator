@@ -4,9 +4,8 @@
 
 CGUIMcaGetSize::CGUIMcaGetSize(CIGUIFrameRenderer* renderer, CIGUIFrameInput* input, CIGUIFrameTimer* timer, float x, float y, int defaultmbytes)
 	: CGUIMcaPopup(renderer, input, timer, x, y)
+	, m_card_mbytes(defaultmbytes)
 {
-	m_card_mbytes = defaultmbytes;
-	m_return = false;
 }
 
 CGUIMcaGetSize::~CGUIMcaGetSize(void)
@@ -55,11 +54,9 @@ bool CGUIMcaGetSize::checkMessages()
 		if (m_card_mbytes > 128) m_card_mbytes = 1;
 	} else if (m_input_state_new & CIGUIFrameInput::enInTriangle)
 	{
-		m_return = true;
 		m_card_mbytes_ret = -1;
 	} else if (m_input_state_new & CIGUIFrameInput::enInCross)
 	{
-		m_return = true;
 		m_card_mbytes_ret = m_card_mbytes;
 	}
 	
@@ -107,40 +104,10 @@ int CGUIMcaGetSize::display(bool blur)
 	m_input_state_new = 0;
 	m_input_state_all = 0;
 
-	CIGUIFrameTexture *prevBuffTex;
-	if (blur)
-	{
-		prevBuffTex = m_renderer->getFrameTex(1);
-		prevBuffTex->blur(0);
-		prevBuffTex->blur(0);
-	} else
-	{
-		prevBuffTex = m_renderer->getFrameTex();
-	}
-	m_ticks = 0;
+	CIGUIFrameTexture* prevBuffTex = getFrameTexture(blur);
+
 	fadeInOut(prevBuffTex, 25000, false);
-	u32 currTick = 0, oldTick = 0;
-	currTick = oldTick = m_timer->getTicks();
-	do
-	{
-		m_ticks = currTick - oldTick;
-		m_input->update();
-		m_input_state_new = m_input->getNew(m_ticks);
-		m_input_state_all = m_input->getAll();
-
-		if (checkMessages())
-		{
-			currTick = oldTick = m_timer->getTicks();
-			continue;
-		}
-
-		drawAll(prevBuffTex);
-		m_renderer->swapBuffers();
-
-		oldTick = currTick;
-		currTick = m_timer->getTicks();
-
-	} while ( !m_return );
+	drawLoop(prevBuffTex, CIGUIFrameInput::enInTriangle | CIGUIFrameInput::enInCross);
 	fadeInOut(prevBuffTex, 25000, true);
 
 	delete prevBuffTex;
