@@ -128,7 +128,9 @@ bool CPS2Application::initLanguage(const std::string& bootPath)
 		"lang_du.lng",
 		"lang_pt.lng",
 		"lang_ru.lng", // Russian and further languages require XEB+ 2024 or newer in order to be detected. Else, they will default to English.
-		// Korean, Traditional and Simplified Chinese do not have a valid font yet
+		"",            // 9  Korean
+		"",            // 10 Traditional Chinese
+		"lang_cn.lng", // 11 Simplified Chinese
 	};
 	
 	std::string defaultLangFile = bootPath + "lang.lng";
